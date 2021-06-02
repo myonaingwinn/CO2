@@ -15,4 +15,4 @@ Then visit `http://localhost:8765` to see the welcome page.
 
 
 ## Don't have PHP 7.4.13?
-Donwnload from [here](https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/7.4.13/xampp-portable-windows-x64-7.4.13-1-VC15.zip/download).
+Donwnload from [here](https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/7.4.13/xampp-portable-windows-x64-7.4.13-1-VC15-installer.exe/download).
