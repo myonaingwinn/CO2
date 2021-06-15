@@ -1,6 +1,5 @@
 <?php
 echo $this->Html->css('form');
-echo $this->Html->script('style');
 
 
 ?>
@@ -17,14 +16,14 @@ echo $this->Html->script('style');
     <div class="container">
         <div class="row">
             <div class="col-sm-3"></div>
-            <div class="col-sm-5 login">
+            <div class="col-sm-6 login">
                 <div class="card">
                     <div class="row">
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
                             <img src="/img/gic.png">
                         </div>
-                        <div class="col-sm-4"></div>
+                        <div class="col-sm-3"></div>
                     </div>
 
                     <div class="card-body">
@@ -109,15 +108,3 @@ echo $this->Html->script('style');
 
                         </div>
                         <?= $this->Form->end() ?>
-
-
-
-                        <!-- 
-                        <body style="margin-top: 90px;">
-                            <?= $this->Flash->render() ?>
-                            <?= $this->Form->create() ?>
-                            <?= $this->Form->control('email') ?>
-                            <?= $this->Form->control('password') ?>
-                            <?= $this->Form->submit() ?>
-
-                            <?= $this->Form->end() ?> -->

@@ -8,7 +8,7 @@ echo $this->Html->css('form');
 <html>
 
 <head>
-    <title>ForgetPassword</title>
+    <title>ForgotPassword</title>
 
 </head>
 
@@ -21,7 +21,7 @@ echo $this->Html->css('form');
                 <div class="card">
 
                     <div class="card-body">
-                        <p class="title">Forget Password</p>
+                        <p class="title">Request Password</p>
                         <?= $this->Form->create() ?>
                         <div class="email">
 

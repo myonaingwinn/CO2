@@ -16,7 +16,7 @@ echo $this->Html->css('form');
     <div class="container">
         <div class="row">
             <div class="col-sm-3"></div>
-            <div class="col-sm-5 login">
+            <div class="col-sm-6 login">
                 <div class="card">
 
                     <div class="card-body">
@@ -25,40 +25,25 @@ echo $this->Html->css('form');
                         <?= $this->Form->create($user) ?>
 
                         <div class="row">
-                            <div class="col-sm-1"></div>
+                            <div class="col-sm-1">
 
-                            <div class="col-sm-10">
-                                <div class="user">
-                                    <p>Name</p>
-                                    <div class="input-group flex-nowrap">
-                                        <span class="input-group-text"><i class="fa fa-user" aria-hidden="true"></i></span>
-                                        <input type="text" class="form-control " placeholder="UserName" aria-label="Name" name="name" aria-describedby="addon-wrapping" id="textbox" required />
-                                    </div>
-                                </div>
                             </div>
-
-                            <div class="col-sm-1"></div>
-
+                            <div class="col-sm-4">
+                                <p>Name</p>
+                            </div>
+                            <div class="col-sm-7"></div>
                         </div>
-
-
-
-
                         <div class="row">
                             <div class="col-sm-1"></div>
 
                             <div class="col-sm-10">
 
-                                <div class="email">
 
-
-                                    <p>Email</p>
-                                    <div class="input-group flex-nowrap">
-
-                                        <span class="input-group-text"> <i class=" fa fas fa-envelope" aria-hidden="true"></i></span>
-                                        <input type="email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="addon-wrapping" name="email" id="textbox" required />
-                                    </div>
+                                <div class="input-group flex-nowrap">
+                                    <span class="input-group-text"><i class="fa fa-user" aria-hidden="true"></i></span>
+                                    <input type="text" class="form-control " placeholder="UserName" aria-label="Name" name="name" aria-describedby="addon-wrapping" id="textbox" required />
                                 </div>
+
                             </div>
 
                             <div class="col-sm-1"></div>
@@ -66,35 +51,63 @@ echo $this->Html->css('form');
                         </div>
 
                         <div class="row">
+                            <div class="col-sm-1">
+
+                            </div>
+                            <div class="col-sm-4">
+                                <p>Email</p>
+                            </div>
+                            <div class="col-sm-7"></div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-sm-1"></div>
 
                             <div class="col-sm-10">
 
-                                <div class="password">
-                                    <p>Password</p>
-                                    <div class="input-group flex-nowrap">
-                                        <span class="input-group-text"><i class="fa fa-lock" aria-hidden="true"></i></span>
-                                        <input type="password" class="form-control" placeholder="Password" aria-label="password" name="password" aria-describedby="addon-wrapping" id="textbox" required />
-                                    </div>
+
+                                <div class="input-group flex-nowrap">
+
+                                    <span class="input-group-text"> <i class=" fa fas fa-envelope" aria-hidden="true"></i></span>
+                                    <input type="email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="addon-wrapping" name="email" id="textbox" required />
                                 </div>
+
                             </div>
+
                             <div class="col-sm-1"></div>
-
-
-
 
                         </div>
 
+                        <div class="row">
+                            <div class="col-sm-1">
 
+                            </div>
+                            <div class="col-sm-4">
+                                <p>Password</p>
+                            </div>
+                            <div class="col-sm-7"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-1"></div>
+
+                            <div class="col-sm-10">
+                                <div class="input-group flex-nowrap">
+                                    <span class="input-group-text"><i class="fa fa-lock" aria-hidden="true"></i></span>
+                                    <input type="password" class="form-control" placeholder="Password" aria-label="password" name="password" aria-describedby="addon-wrapping" id="textbox" required />
+                                </div>
+
+                            </div>
+
+
+                        </div>
 
                         <div class="row">
                             <div class="col-sm-3">
                                 <p class="role">Role</p>
                             </div>
 
-                            <div class="col-sm-6">
-
-
+                            <div class="col-sm-7">
                                 <div class="role-type">
 
                                     <div class="btn-group">
