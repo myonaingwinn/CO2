@@ -49,15 +49,15 @@ class UsersFixture extends TestFixture
         $this->records = [
             [
                 'id' => 1,
-                'uid' => 'e8bdaef0-1771-42ee-81f6-2248a2e0f856',
+                'uid' => 'e346ac08-6463-4be0-8956-30594b3f5464',
                 'name' => 'Lorem ipsum dolor sit amet',
                 'email' => 'Lorem ipsum dolor sit amet',
                 'password' => 'Lorem ipsum dolor sit amet',
                 'role' => 'Lorem ipsum dolor sit amet',
-                'last_login' => '2021-06-08 02:31:29',
+                'last_login' => '2021-06-14 10:42:51',
                 'other' => 'Lorem ipsum dolor sit amet',
                 'token' => 'Lorem ipsum dolor sit amet',
-                'created' => '2021-06-08 02:31:29',
+                'created' => '2021-06-14 10:42:51',
                 'del_flg' => 'Lorem ipsum dolor sit amet',
             ],
         ];

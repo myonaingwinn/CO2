@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Routes configuration.
  *
@@ -41,6 +42,7 @@ use Cake\Routing\RouteBuilder;
  * inconsistently cased URLs when used with `:plugin`, `:controller` and
  * `:action` markers.
  */
+
 /** @var \Cake\Routing\RouteBuilder $routes */
 $routes->setRouteClass(DashedRoute::class);
 
@@ -57,6 +59,14 @@ $routes->scope('/', function (RouteBuilder $builder) {
      */
     $builder->connect('/pages/*', 'Pages::display');
 
+    // $builder->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
+
+    $builder->connect('/login', ['controller' => 'Users', 'action' => 'login']);
+    $builder->connect('/logout', ['controller' => 'Users', 'action' => 'logout']);
+    $builder->connect('/users/add', ['controller' => 'Users', 'action' => 'add']);
+    $builder->connect('/forgotpassword', ['controller' => 'Users', 'action' => 'forgotpassword']);
+    $builder->connect('/resetpassword', ['controller' => 'Users', 'action' => 'resetpassword']);
+    /*
     /*
      * Connect catchall routes for all controllers.
      *

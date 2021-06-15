@@ -242,6 +242,16 @@ return [
             'tls' => false,
             'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
         ],
+        'mailForget' => [
+            'host' => 'smtp.gmail.com',
+            'port' => 587,
+            'username' => 'soetest1991@gmail.com',
+            'password' => 'fortesting',
+            'className' => 'Smtp',
+            'tls' => true,
+            'client' => null,
+            'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
+        ],
     ],
 
     /*
@@ -262,6 +272,10 @@ return [
              */
             //'charset' => 'utf-8',
             //'headerCharset' => 'utf-8',
+        ],
+        'mailForget' => [
+            'transport' => 'mailForget',
+            'from' => ['soetest1991@gmail.com' => 'CO2'],
         ],
     ],
 

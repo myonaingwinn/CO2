@@ -1,13 +1,3 @@
-<?php
-
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\User[]|\Cake\Collection\CollectionInterface $users
- */
-
-use PHP_CodeSniffer\Reports\Diff;
-
-?>
 <style>
     .capitalize {
         text-transform: capitalize;
@@ -38,17 +28,15 @@ use PHP_CodeSniffer\Reports\Diff;
 
     }
 </style>
+                          
 <div class="users index content">
-    <br> <br> <br> <br>
     <h3 style="text-align: center;"><?= __('Users List') ?></h3>
     <!-- search area -->
     <div class="searchArea">
         <?= $this->Form->text('search', ['id' => 'search', 'size' => '100', 'maxlength' => '100', 'placeholder' => 'Search...']) ?>
         <!-- <button type="button" class="btn btn-primary">New User</button> -->
         <?= $this->Html->link(__('New User'), ['action' => 'add'], ['class' => 'btn btn-primary btn-user']) ?>
-
     </div>
-
     <div class="table-responsive">
         <table id="paginationNumbers" class="table" width="100%">
             <thead>
@@ -102,7 +90,6 @@ use PHP_CodeSniffer\Reports\Diff;
                                 }
                                 ?>
                             </select>
-
                         </td>
                     </tr>
                 <?php endforeach; ?>
