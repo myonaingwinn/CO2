@@ -10,8 +10,6 @@ use Cake\Auth\DefaultPasswordHasher;
 use Cake\Mailer\Mailer;
 use Cake\Event\EventInterface;
 
-
-
 /**
  * Users Controller
  *
@@ -20,26 +18,20 @@ use Cake\Event\EventInterface;
  */
 class UsersController extends AppController
 {
-
-
     public function admin()
     {
     }
 
-
     public function editor()
     {
     }
+  
     public function login()
     {
-
         if ($this->request->is('post')) {
-
             $user = $this->Auth->identify();
 
-
             if (!$user) {
-
                 $this->Flash->error(__('Username or password is incorrect'));
             } else {
 
@@ -59,16 +51,10 @@ class UsersController extends AppController
                 if ($user['role'] == 'A') {
                     return $this->redirect(['controller' => 'Users', 'action' => 'admin']);
                 } else if ($user['role'] == 'U') {
-
-
                     $this->Auth->setUser($user);
-
                     return $this->redirect(['controller' => 'Users', 'action' => 'index']);
                 } else if ($user['role'] == 'E') {
-
-
                     // $this->Auth->setUser($user);
-
                     return $this->redirect(['controller' => 'Users', 'action' => 'editor']);
                 }
             }
@@ -82,7 +68,6 @@ class UsersController extends AppController
 
     public function forgotpassword()
     {
-
         if ($this->request->is('post')) {
 
             $email = $this->request->getData('email');
@@ -126,7 +111,6 @@ class UsersController extends AppController
 
             $user->password = $newpass;
 
-
             if ($userTable->save($user)) {
 
                 $this->Flash->success(__('Password successfully reset. Please login using your new password'));
@@ -135,6 +119,7 @@ class UsersController extends AppController
             }
         }
     }
+  
     /**
      * Index method
      *
@@ -142,8 +127,8 @@ class UsersController extends AppController
      */
     public function index()
     {
-        $users = $this->paginate($this->Users);
-
+        $data = $this->Users->find('all', array('conditions' => array('Users.del_flg' => 'N')));
+        $users = $this->paginate($data);
         $this->set(compact('users'));
     }
 
@@ -209,19 +194,27 @@ class UsersController extends AppController
      */
     public function edit($id = null)
     {
-        $user = $this->Users->get($id, [
-            'contain' => [],
+        //change role
+        $this->request->allowMethod('get');
+        $roleData = $this->request->getQuery('role');
+        $id = $this->request->getQuery('userID');
+        $data = $this->Users->find('all', [
+            'conditions' => ([
+                ['Users.id' => $id],
+                ['Users.del_flg' => 'N']
+            ])
         ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
-            if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
+        $users = $data->toArray();
+        $users[0]->role = $roleData;
+        if ($this->Users->save($users[0])) {
+            $this->Flash->success(__('The user has been saved.'));
+            return $this->redirect(['action' => 'edit']);
+        } else {
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
-        $this->set(compact('user'));
+        $data = $this->Users->find('all', array('conditions' => array('Users.del_flg' => 'N')));
+        $users = $this->paginate($data);
+        $this->set(compact('users'));
     }
 
     /**
@@ -242,5 +235,30 @@ class UsersController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    public function search()
+    {
+        $this->request->allowMethod('ajax');
+
+        $keyword = $this->request->getQuery('keyword');
+
+        $query = $this->Users->find('all', [
+            'conditions' => ([
+                'Or' => [
+                    ['Users.name LIKE' => '%' . $keyword . '%'],
+                    ['Users.email like' => '%' . $keyword . '%'],
+                    ['Users.role like' => '%' . $keyword . '%'],
+                    ['Users.last_login like' => '%' . $keyword . '%']
+                ],
+                'AND' => ['Users.del_flg' => 'N']
+            ]),
+            'order' => ['Users.name' => 'ASC']
+
+        ]);
+        $users = $this->paginate($query);
+
+        $this->set(compact('users'));
+        $this->set('_serialize', ['users']);
     }
 }

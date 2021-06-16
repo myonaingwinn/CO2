@@ -1,7 +1,5 @@
 <?php
 echo $this->Html->css('form');
-
-
 ?>
 
 <!DOCTYPE html>
@@ -24,7 +22,6 @@ echo $this->Html->css('form');
                         <p class="title">Request Password</p>
                         <?= $this->Form->create() ?>
                         <div class="email">
-
 
                             <p>Email</p>
                             <div class="input-group flex-nowrap">
