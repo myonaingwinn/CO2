@@ -30,21 +30,29 @@ class UsersController extends AppController
     {
         if ($this->request->is('post')) {
             $user = $this->Auth->identify();
+
             if (!$user) {
                 $this->Flash->error(__('Username or password is incorrect'));
             } else {
-                // echo "incorrect username and password";
+
+                $last_login = date("Y-m-d H:i:s");
+
+                $id = $user['id'];
+                $data = $this->Users->find('all', [
+                    'conditions' => ([
+                        ['Users.id' => $id],
+                        ['Users.del_flg' => 'N']
+                    ])
+                ]);
+                $users = $data->toArray();
+                $users[0]->last_login = $last_login;
+                $this->Users->save($users[0]);
+
                 if ($user['role'] == 'A') {
-
-                    // echo "user condition";
-                    // $this->Auth->setUser($user);
-
                     return $this->redirect(['controller' => 'Users', 'action' => 'admin']);
-                    // return $this->redirect($this->Auth->redirectUrl());
                 } else if ($user['role'] == 'U') {
                     $this->Auth->setUser($user);
                     return $this->redirect(['controller' => 'Users', 'action' => 'index']);
-                    // return $this->redirect($this->Auth->redirectUrl());
                 } else if ($user['role'] == 'E') {
                     // $this->Auth->setUser($user);
                     return $this->redirect(['controller' => 'Users', 'action' => 'editor']);
@@ -57,7 +65,6 @@ class UsersController extends AppController
     {
         return $this->redirect($this->Auth->logout());
     }
-
 
     public function forgotpassword()
     {
@@ -152,9 +159,6 @@ class UsersController extends AppController
         if ($this->request->is('post')) {
             $email = $this->request->getData('email');
 
-            // $hasher = new DefaultPasswordHasher();
-            //    $pass = $hasher->hash($this->request->getData('password'));
-
             $user_c = $this->Users->find()->where(['email' => $email])->count();
             if ($user_c >= 1) {
                 $this->Flash->success(__('The Email name is existed.'));
@@ -165,7 +169,7 @@ class UsersController extends AppController
                 $currDateTime = Time::now();
 
                 $user->uid = $uid;
-                //$user->password = $pass;
+
                 $user->created = $currDateTime;
 
                 $user->del_flg = 'N';

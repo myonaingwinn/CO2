@@ -6,7 +6,7 @@ echo $this->Html->css('form');
 <html>
 
 <head>
-    <title>ForgetPassword</title>
+    <title>ForgotPassword</title>
 
 </head>
 
