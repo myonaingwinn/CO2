@@ -38,23 +38,23 @@ class GraphsController extends AppController
         if (isset($_POST['image'])) {
 
             //----------Create Json File For Post Image
-            if (file_exists(WWW_ROOT . '/graphImg.json')) {
-                unlink(WWW_ROOT . '/graphImg.json');
+            if (file_exists(WWW_ROOT . '/graph/graphImg.json')) {
+                unlink(WWW_ROOT . '/graph/graphImg.json');
             }
-            $json_file = fopen(WWW_ROOT . '/graphImg.json', "a") or die("Unable to open file!");
-            $current_data = file_get_contents(WWW_ROOT . '/graphImg.json');
+            $json_file = fopen(WWW_ROOT . '/graph/graphImg.json', "a") or die("Unable to open file!");
+            $current_data = file_get_contents(WWW_ROOT . '/graph/graphImg.json');
             $array_data = json_decode($current_data, true);
             $extra = array(
                 'imageURL' => $_POST['image']
             );
             $array_data[] = $extra;
             $final_data = json_encode($array_data);
-            file_put_contents(WWW_ROOT . '/graphImg.json', $final_data);
+            file_put_contents(WWW_ROOT . '/graph/graphImg.json', $final_data);
             fclose($json_file);
             //----------End Create Json File
 
             //----------Convert Json to Image with Base64 Decoder
-            $imgContents = file_get_contents(WWW_ROOT . '/graphImg.json');
+            $imgContents = file_get_contents(WWW_ROOT . '/graph/graphImg.json');
             $str_length = strlen($imgContents);
             $sparrow = substr($imgContents, 37, $str_length - 40);
             $decoder = base64_decode($sparrow);
@@ -64,7 +64,7 @@ class GraphsController extends AppController
                 die('base 64 value is not a valid image');
             } else {
                 header('Content-Type:image/jpeg');
-                imagejpeg($img, WWW_ROOT . '/graphImage.jpeg');
+                imagejpeg($img, WWW_ROOT . '/graph/graphImage.jpeg');
                 imagedestroy($img);
             }
             //----------End Convert Json to Image 
@@ -77,7 +77,7 @@ class GraphsController extends AppController
             $message = 'CO2 Level Message';    //text max 1,000 charecter
             $image_thumbnail_url = 'https://dummyimage.com/1024x1024/f598f5/fff.jpg';  // max size 240x240px JPEG
             $image_fullsize_url = 'https://dummyimage.com/1024x1024/844334/fff.jpg'; //max size 1024x1024px JPEG
-            $file_name_with_full_path = WWW_ROOT . '/graphImage.jpeg';
+            $file_name_with_full_path = WWW_ROOT . '/graph/graphImage.jpeg';
             $imageFile = curl_file_create($file_name_with_full_path);
             $sticker_package_id = '';  // Package ID sticker
             $sticker_id = '';    // ID sticker
