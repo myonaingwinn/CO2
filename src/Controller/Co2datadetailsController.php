@@ -23,7 +23,7 @@ class Co2datadetailsController extends AppController
         // ];
         // $co2datadetails = $this->paginate($this->Co2datadetails);
 
-        $results = $this->paginate($this->Co2datadetails->find('all')->order(['time_measured' => 'DESC'])->limit(20)->toArray());
+        $results = $this->Co2datadetails->find('all')->order(['time_measured' => 'DESC'])->limit(20)->toArray();
 
         $this->set(compact('results'));
 
