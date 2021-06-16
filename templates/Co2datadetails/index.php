@@ -11,8 +11,8 @@ include("fusioncharts.php");
 </head>
 <body>
     <?php
-    $data = file_get_contents('templates\Pages\data.json');
-    $schema = file_get_contents('templates\Pages\schema.json');
+    $data = file_get_contents('webroot\json\data.json');
+    $schema = file_get_contents('webroot\json\schema.json');
  
     $fusionTable = new FusionTable($schema, $data);
     $timeSeries = new TimeSeries($fusionTable);
