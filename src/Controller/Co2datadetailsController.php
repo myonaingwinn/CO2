@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -23,11 +24,13 @@ class Co2datadetailsController extends AppController
         // ];
         // $co2datadetails = $this->paginate($this->Co2datadetails);
 
-        $results = $this->Co2datadetails->find('all')->order(['time_measured' => 'DESC'])->limit(20)->toArray();
+        $devices = $this->Co2datadetails->find()->select(['device' => 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'date'  => 'max(time_measured)', 'room' => 'r.room_no'])->join(['r' => [
+            'table' => 'Room_Info',
+            'type' => 'INNER',
+            'conditions' => 'r.device_id = Co2datadetails.co2_device_id'
+        ]])->group('r.device_id')->toArray();
 
-        $this->set(compact('results'));
-
-        // $this->set(compact('co2datadetails'));
+        $this->set(compact(['devices']));
     }
 
     /**

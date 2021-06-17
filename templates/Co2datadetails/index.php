@@ -76,38 +76,25 @@
 </body>
 </html> -->
 
-<h3>Dashboard</h3>
+<h2>Dashboard</h2>
 <div class="container-fluid">
     <section class="border p-3 text-center mb-1 shadow-4">
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">部屋１</th>
-                    <th scope="col">部屋２</th>
-                    <th scope="col">部屋３</th>
-                    <th scope="col">部屋４</th>
+                    <th scope="col" colspan="2"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <th id="thNow" scope="row" rowspan="3">現在</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@fatto joe</td>
-                    <td>@mdo</td>
+                    <td id="thNow" scope="row" class="std" rowspan="3">現在</td>
+                    <td class="std">温度</td>
                 </tr>
                 <tr>
-                    <td scope="row">Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                    <td>@fatty</td>
+                    <td class="std" scope="row">湿度</td>
                 </tr>
                 <tr>
-                    <td scope="row">Larry Bird</td>
-                    <td>@txa</td>
-                    <td>@twitter</td>
-                    <td>@twitter weekly</td>
+                    <td class="std" scope="row">CO2</td>
                 </tr>
             </tbody>
         </table>
@@ -213,9 +200,50 @@
 </div>
 <hr class="my-4">
 
+<script>
+    var devices = <?php echo json_encode($devices); ?>;
+    // console.log(devices);
+
+    // add new table column
+    devices.forEach(device => {
+        var columnData = ['部屋 ' + device.room, device.temperature + ' °C', device.humidity + ' %', device.co2 + ' ppm'];
+        var table = $('table');
+        insertTableColumn(table, columnData, table.find('tr > td:last').index() + 1);
+    });
+
+    function insertTableColumn(table, columnData, index) {
+        var newColumn = [],
+            colsCount = table.find('tr > td:last').index();
+
+        table.find("tr").each(function(rowIndex) {
+            var cell = $("<t" + (rowIndex == 0 ? "h" : "d") + "/>").text(columnData[rowIndex]);
+            newColumn.push(
+                index > colsCount ?
+                cell.appendTo(this) :
+                cell.insertBefore($(this).children().eq(index))
+            );
+        });
+
+        return newColumn;
+    }
+</script>
+
 <style>
     #thNow {
         vertical-align: middle;
+    }
+
+    thead {
+        border-top: white !important;
+    }
+
+    th {
+        border: none;
+        font-weight: 700 !important;
+    }
+
+    .std {
+        font-weight: 700 !important;
     }
 
     body {
@@ -230,8 +258,9 @@
         margin-top: 1rem;
     }
 
-    h3 {
-        margin-top: 2rem;
+    h2 {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
     }
 
     #fhr {
