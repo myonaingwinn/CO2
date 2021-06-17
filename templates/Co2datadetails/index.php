@@ -1,6 +1,6 @@
-<?php
-include("fusioncharts.php");
-?>
+<!-- <?php
+        include("fusioncharts.php");
+        ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +13,7 @@ include("fusioncharts.php");
     <?php
     $data = file_get_contents('webroot\json\data.json');
     $schema = file_get_contents('webroot\json\schema.json');
- 
+
     $fusionTable = new FusionTable($schema, $data);
     $timeSeries = new TimeSeries($fusionTable);
 
@@ -26,7 +26,7 @@ include("fusioncharts.php");
     // chart object
     $Chart = new FusionCharts(
         "timeseries",
-        "MyFirstChart" ,
+        "MyFirstChart",
         "100%",
         "700",
         "device1",
@@ -74,4 +74,167 @@ include("fusioncharts.php");
         </div>
     </div>
 </body>
-</html>
+</html> -->
+
+<h3>Dashboard</h3>
+<div class="container-fluid">
+    <section class="border p-3 text-center mb-1 shadow-4">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">部屋１</th>
+                    <th scope="col">部屋２</th>
+                    <th scope="col">部屋３</th>
+                    <th scope="col">部屋４</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th id="thNow" scope="row" rowspan="3">現在</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@fatto joe</td>
+                    <td>@mdo</td>
+                </tr>
+                <tr>
+                    <td scope="row">Jacob</td>
+                    <td>Thornton</td>
+                    <td>@fat</td>
+                    <td>@fatty</td>
+                </tr>
+                <tr>
+                    <td scope="row">Larry Bird</td>
+                    <td>@txa</td>
+                    <td>@twitter</td>
+                    <td>@twitter weekly</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+</div>
+<hr id="fhr" class="my-5">
+<h4>Device 001</h4>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">
+                        Some quick example text to build on the card title and make up the bulk of the
+                        card's content.
+                    </p>
+                    <button type="button" class="btn btn-primary">Button</button>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">
+                        Some quick example text to build on the card title and make up the bulk of the
+                        card's content.
+                    </p>
+                    <button type="button" class="btn btn-primary">Button</button>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">
+                        Some quick example text to build on the card title and make up the bulk of the
+                        card's content.
+                    </p>
+                    <button type="button" class="btn btn-primary">Button</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr class="my-4">
+<h4>Device 002</h4>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">
+                        Some quick example text to build on the card title and make up the bulk of the
+                        card's content.
+                    </p>
+                    <button type="button" class="btn btn-primary">Button</button>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">
+                        Some quick example text to build on the card title and make up the bulk of the
+                        card's content.
+                    </p>
+                    <button type="button" class="btn btn-primary">Button</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">
+                        Some quick example text to build on the card title and make up the bulk of the
+                        card's content.
+                    </p>
+                    <button type="button" class="btn btn-primary">Button</button>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">
+                        Some quick example text to build on the card title and make up the bulk of the
+                        card's content.
+                    </p>
+                    <button type="button" class="btn btn-primary">Button</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr class="my-4">
+
+<style>
+    #thNow {
+        vertical-align: middle;
+    }
+
+    body {
+        background: #EFEFEF;
+    }
+
+    section {
+        background: white;
+    }
+
+    .row {
+        margin-top: 1rem;
+    }
+
+    h3 {
+        margin-top: 2rem;
+    }
+
+    #fhr {
+        margin-bottom: 1.5rem !important;
+    }
+</style>
