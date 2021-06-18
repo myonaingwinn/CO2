@@ -19,18 +19,47 @@ class Co2datadetailsController extends AppController
      */
     public function index()
     {
-        // $this->paginate = [
-        //     'contain' => ['RoomInfo'],
-        // ];
-        // $co2datadetails = $this->paginate($this->Co2datadetails);
-
-        $devices = $this->Co2datadetails->find()->select(['device' => 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'date'  => 'max(time_measured)', 'room' => 'r.room_no'])->join(['r' => [
+        //  Table data   
+            $devices = $this->Co2datadetails->find()->select(['device' => 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'date'  => 'max(time_measured)', 'room' => 'r.room_no'])->join(['r' => [
             'table' => 'Room_Info',
             'type' => 'INNER',
             'conditions' => 'r.device_id = Co2datadetails.co2_device_id'
         ]])->group('r.device_id')->toArray();
 
         $this->set(compact(['devices']));
+        // co2datadetail table query
+        $query = $this->Co2datadetails->find();
+        
+        // declare for each graph data array
+        $temp = $hum = $co2 = $noise = [];
+
+        // data split loop
+        foreach($query as $row) {
+
+            // time measured standard schema
+            $dateArr = (array) $row["time_measured"];
+            $dateStr = implode("", $dateArr);
+            $date = explode(".", $dateStr);
+
+            // array push for each graph
+            array_push($temp, array($date[0],$row["temperature"]));
+            array_push($hum, array($date[0],$row["humidity"]));
+            array_push($co2, array($date[0],$row["co2"]));
+            array_push($noise, array($date[0],$row["noise"]));
+        }
+
+        $lastTimeStr = $temp[count($temp) - 1][0];
+        $lastDataTemp = $temp[count($temp) - 1][1];
+
+        // sent array data to template
+        $this->set(compact('temp', 'hum', 'co2', 'noise'));
+        $this->set(compact('lastTimeStr', 'lastDataTemp'));
+        $this->set(compact('devices');
+    }
+    
+    public function updateTemp()
+    {
+
     }
 
     /**

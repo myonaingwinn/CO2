@@ -1,0 +1,9 @@
+[{
+    "name": "Date",
+    "type": "date",
+    "format": "%Y-%m-%d %H:%M:%S"
+},
+{
+    "name": "CO2",
+    "type": "number"
+}]
