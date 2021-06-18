@@ -27,8 +27,17 @@ class Co2datadetailsController extends AppController
         ]])->group('r.device_id')->toArray();
 
         $this->set(compact(['devices']));
+
+        $currentDateTime = date('Y-m-d');
+
         // co2datadetail table query
-        $query = $this->Co2datadetails->find();
+        $query = $this->Co2datadetails->find()
+            ->select(['rows' => 'count(*)'])
+            ->where(['Co2datadetails.time_measured >=' => $currentDateTime])
+            ->toArray();
+
+        $this->set(compact('query'));
+
 
         // declare for each graph data array
         $temp = $hum = $co2 = $noise = [];
