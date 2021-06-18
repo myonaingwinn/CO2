@@ -1,80 +1,90 @@
-<!-- <?php
-        include("fusioncharts.php");
-        ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <?php
-    $data = file_get_contents('webroot\json\data.json');
-    $schema = file_get_contents('webroot\json\schema.json');
+<?php
+    include("fusioncharts.php");
 
-    $fusionTable = new FusionTable($schema, $data);
-    $timeSeries = new TimeSeries($fusionTable);
+    // encode json
+    $jsonTemp = json_encode($temp);
+    $jsonHum = json_encode($hum);
+    $jsonCo2 = json_encode($co2);
+    $jsonNoise = json_encode($noise);
 
-    $timeSeries->AddAttribute('chart', '{"theme":"candy"}');
-    $timeSeries->AddAttribute('caption', '{"text":"Thermal flow of machinery"}');
-    $timeSeries->AddAttribute('subcaption', '{"text":"Observation from east region thermal sensor"}');
-    $timeSeries->AddAttribute('yaxis', '[{"plot":{"value":"Heat Flux"},"title":"Heat Flux (in W/m²)","type":"log"}]');
+    // schema for fusionchart
+    $schemaTemp = file_get_contents('webroot\json\schemaTemp.json');
+    $schemaHum = file_get_contents('webroot\json\schemaHum.json');
+    $schemaCo2 = file_get_contents('webroot\json\schemaCo2.json');
+    $schemaNoise = file_get_contents('webroot\json\schemaNoise.json');
 
+    // fusionTable for schema and json data
+    $tempFusionTable = new FusionTable($schemaTemp, $jsonTemp);
+    $humFusionTable = new FusionTable($schemaHum, $jsonHum);
+    $co2FusionTable = new FusionTable($schemaCo2, $jsonCo2);
+    $noiseFusionTable = new FusionTable($schemaNoise, $jsonNoise);
+
+    // time series graph
+    $temptimeSeries = new TimeSeries($tempFusionTable);
+    $humtimeSeries = new TimeSeries($humFusionTable);
+    $co2timeSeries = new TimeSeries($co2FusionTable);
+    $noisetimeSeries = new TimeSeries($noiseFusionTable);
+
+    $temptimeSeries->AddAttribute('chart', '{"exportenabled":true}');
+    $temptimeSeries->AddAttribute('navigator', '{"enabled":0}');
+    $temptimeSeries->AddAttribute('legend', '{"enabled":"0"}');
+
+    $humtimeSeries->AddAttribute('chart', '{"exportenabled":true}');
+    $humtimeSeries->AddAttribute('navigator', '{"enabled":0}');
+    $humtimeSeries->AddAttribute('legend', '{"enabled":"0"}');
+
+    $co2timeSeries->AddAttribute('chart', '{"exportenabled":true}');
+    $co2timeSeries->AddAttribute('navigator', '{"enabled":0}');
+    $co2timeSeries->AddAttribute('legend', '{"enabled":"0"}');
+
+    $noisetimeSeries->AddAttribute('chart', '{"exportenabled":true}');
+    $noisetimeSeries->AddAttribute('navigator', '{"enabled":0}');
+    $noisetimeSeries->AddAttribute('legend', '{"enabled":"0"}');
 
     // chart object
-    $Chart = new FusionCharts(
+    $ChartTemp = new FusionCharts(
         "timeseries",
-        "MyFirstChart",
+        "MyFirstChart" ,
         "100%",
-        "700",
-        "device1",
+        "450",
+        "temperature",
         "json",
-        $timeSeries
+        $temptimeSeries
+    );
+    $ChartHum = new FusionCharts(
+        "timeseries",
+        "MyFirstChart2" ,
+        "100%",
+        "450",
+        "humidity",
+        "json",
+        $humtimeSeries
+    );
+    $ChartCo2 = new FusionCharts(
+        "timeseries",
+        "MyFirstChart3" ,
+        "100%",
+        "450",
+        "co2",
+        "json",
+        $co2timeSeries
+    );
+    $ChartNoise = new FusionCharts(
+        "timeseries",
+        "MyFirstChart4" ,
+        "100%",
+        "450",
+        "noise",
+        "json",
+        $noisetimeSeries
     );
 
     // Render the chart
-    $Chart->render();
-    ?>
-    <div class="container">
-        <h1>Dashboard</h1>
-        <div class="row">
-            <table class="table table-dark table-bordered">
-                <tr>
-                    <th scope="col">Device/Data</th>
-                    <th scope="col">Device 1</th>
-                    <th scope="col">Device 2</th>
-                    <th scope="col">Device 3</th>
-                </tr>
-                <tr>
-                    <th scope="col">Temperature</th>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>        
-                </tr>
-                <tr>
-                    <th scope="col">Humidity</th>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>        
-                </tr>
-                <tr>
-                    <th scope="col">CO2</th>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>3</td>        
-                </tr>
-            </table>
-        </div>
-        <hr>
-        <div class="row">
-            <h1>Device 1</h1>
-            <div class="col" id="device1"></div>
-        </div>
-    </div>
-</body>
-</html> -->
+    $ChartTemp->render();
+    $ChartHum->render();
+    $ChartCo2->render();
+    $ChartNoise->render();
+?>
 
 <h3>Dashboard</h3>
 <div class="container-fluid">
@@ -120,65 +130,18 @@
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">
-                        Some quick example text to build on the card title and make up the bulk of the
-                        card's content.
-                    </p>
+                    <h5 class="card-title">Temperature</h5>
+                    <div id="temperature">Chart will render here!</div>
                     <button type="button" class="btn btn-primary">Button</button>
+                    <button type="button"  class="btn realtime-btn btn-primary-grad btn-sm" id="update-data">Update Data</button>
                 </div>
             </div>
         </div>
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">
-                        Some quick example text to build on the card title and make up the bulk of the
-                        card's content.
-                    </p>
-                    <button type="button" class="btn btn-primary">Button</button>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">
-                        Some quick example text to build on the card title and make up the bulk of the
-                        card's content.
-                    </p>
-                    <button type="button" class="btn btn-primary">Button</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<hr class="my-4">
-<h4>Device 002</h4>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">
-                        Some quick example text to build on the card title and make up the bulk of the
-                        card's content.
-                    </p>
-                    <button type="button" class="btn btn-primary">Button</button>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">
-                        Some quick example text to build on the card title and make up the bulk of the
-                        card's content.
-                    </p>
+                    <h5 class="card-title">Humidity</h5>
+                    <div id="humidity">Chart will render here!</div>
                     <button type="button" class="btn btn-primary">Button</button>
                 </div>
             </div>
@@ -188,11 +151,8 @@
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">
-                        Some quick example text to build on the card title and make up the bulk of the
-                        card's content.
-                    </p>
+                    <h5 class="card-title">CO2</h5>
+                    <div id="co2">Chart will render here!</div>
                     <button type="button" class="btn btn-primary">Button</button>
                 </div>
             </div>
@@ -200,11 +160,8 @@
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">
-                        Some quick example text to build on the card title and make up the bulk of the
-                        card's content.
-                    </p>
+                    <h5 class="card-title">Noise</h5>
+                    <div id="noise">Chart will render here!</div>
                     <button type="button" class="btn btn-primary">Button</button>
                 </div>
             </div>
@@ -238,3 +195,19 @@
         margin-bottom: 1.5rem !important;
     }
 </style>
+
+<script>
+document.getElementById('update-data').addEventListener('click', function() {
+    $.ajax({
+			url: "<?= $this->Url->build(['controller' => 'Co2datadetails', 'action' => '']) ?>",
+			type: "POST",
+			data: {
+				image: imageURL
+			},
+			dataType: "html",
+			headers: {
+				'X-CSRF-Token': $('meta[name="csrfToken"]').attr('content')
+			}
+		});
+});
+</script>

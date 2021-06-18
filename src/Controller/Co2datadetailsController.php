@@ -18,16 +18,39 @@ class Co2datadetailsController extends AppController
      */
     public function index()
     {
-        // $this->paginate = [
-        //     'contain' => ['RoomInfo'],
-        // ];
-        // $co2datadetails = $this->paginate($this->Co2datadetails);
+        // co2datadetail table query
+        $query = $this->Co2datadetails->find();
+        
+        // declare for each graph data array
+        $temp = $hum = $co2 = $noise = [];
 
-        $results = $this->Co2datadetails->find('all')->order(['time_measured' => 'DESC'])->limit(20)->toArray();
+        // data split loop
+        foreach($query as $row) {
 
-        $this->set(compact('results'));
+            // time measured standard schema
+            $dateArr = (array) $row["time_measured"];
+            $dateStr = implode("", $dateArr);
+            $date = explode(".", $dateStr);
 
-        // $this->set(compact('co2datadetails'));
+            // array push for each graph
+            array_push($temp, array($date[0],$row["temperature"]));
+            array_push($hum, array($date[0],$row["humidity"]));
+            array_push($co2, array($date[0],$row["co2"]));
+            array_push($noise, array($date[0],$row["noise"]));
+        }
+
+        $lastTimeStr = $temp[count($temp) - 1][0];
+        $lastDataTemp = $temp[count($temp) - 1][1];
+
+        // sent array data to template
+        $this->set(compact('temp', 'hum', 'co2', 'noise'));
+        $this->set(compact('lastTimeStr', 'lastDataTemp'));
+        
+    }
+    
+    public function updateTemp()
+    {
+        
     }
 
     /**
