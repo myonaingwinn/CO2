@@ -133,7 +133,7 @@
                     <h5 class="card-title">Temperature</h5>
                     <div id="temperature">Chart will render here!</div>
                     <button type="button" class="btn btn-primary">Button</button>
-                    <button type="button"  class="btn realtime-btn btn-primary-grad btn-sm" id="update-data">Update Data</button>
+                    <!-- <button type="button"  class="btn realtime-btn btn-primary-grad btn-sm" id="update-data">Update Data</button> -->
                 </div>
             </div>
         </div>
