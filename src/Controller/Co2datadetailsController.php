@@ -26,13 +26,29 @@ class Co2datadetailsController extends AppController
             'conditions' => 'r.device_id = Co2datadetails.co2_device_id'
         ]])->group('r.device_id')->toArray();
 
-        $this->set(compact(['devices']));
+        $this->set(compact('devices'));
+
         // co2datadetail table query
-        $query = $this->Co2datadetails->find();
+        $currentDateTime = date('Y-m-d H:m:s');
+
+        $query = $this->Co2datadetails->find()
+            ->select(['co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room' => 'r.room_no'])
+            ->join(['r' => ['table' => 'Room_Info', 'type' => 'INNER', 'conditions' => 'r.device_id = Co2datadetails.co2_device_id']])
+            ->where(['Co2datadetails.time_measured >=' => $currentDateTime])
+            ->order(['co2_device_id' => 'ASC', 'time_measured' => 'DESC'])
+            ->limit(86400)
+            ->toArray();
+
+        // $query = $this->Co2datadetails->find()
+        //     ->where(['Co2datadetails.time_measured <=' => $currentDateTime])
+        //     ->limit(86400)
+        //     ->toArray();
+
+        // print_r($query);
         
         // declare for each graph data array
-        $temp = $hum = $co2 = $noise = [];
-
+        $num_devices = $temp = $hum = $co2 = $noise = [];
+        $current_dev = $next_dev = '';
         // data split loop
         foreach($query as $row) {
 
@@ -42,24 +58,18 @@ class Co2datadetailsController extends AppController
             $date = explode(".", $dateStr);
 
             // array push for each graph
-            array_push($temp, array($date[0],$row["temperature"]));
-            array_push($hum, array($date[0],$row["humidity"]));
-            array_push($co2, array($date[0],$row["co2"]));
-            array_push($noise, array($date[0],$row["noise"]));
+            array_push($temp, array($row["co2_device_id"],$date[0],$row["temperature"]));
+            array_push($hum, array($row["co2_device_id"],$date[0],$row["humidity"]));
+            array_push($co2, array($row["co2_device_id"],$date[0],$row["co2"]));
+            array_push($noise, array($row["co2_device_id"],$date[0],$row["noise"]));
+            $current_dev = $row["co2_device_id"];
+            if ($current_dev != $next_dev)
+            array_push($num_devices, array($row["co2_device_id"]));
+            $next_dev = $row["co2_device_id"];
         }
 
-        $lastTimeStr = $temp[count($temp) - 1][0];
-        $lastDataTemp = $temp[count($temp) - 1][1];
-
         // sent array data to template
-        $this->set(compact('temp', 'hum', 'co2', 'noise'));
-        $this->set(compact('lastTimeStr', 'lastDataTemp'));
-        $this->set(compact('devices');
-    }
-    
-    public function updateTemp()
-    {
-
+        $this->set(compact('temp', 'hum', 'co2', 'noise', 'num_devices'));
     }
 
     /**
