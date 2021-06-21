@@ -5,42 +5,46 @@
     $graph_name_arr = ['temperature', 'humidity', 'co2', 'noise'];
     $num = 0;
     $num_name = 1;
+    $i = 1;
 
-    foreach($graph_arr as $graph)
-    {
-        // encode json
-        ${"json$num_name"} = json_encode($graph);
+    for ($i; $i <=count($num_devices); $i++) {
+        
+        foreach($graph_arr as $graph)
+        {
+            // encode json
+            ${"json$num_name"} = json_encode($graph);
 
-        // schema for fusionchart
-        ${"schema$num_name"} = file_get_contents('webroot\json\schema'.$num_name.'.json');
+            // schema for fusionchart
+            ${"schema$num_name"} = file_get_contents('webroot\json\schema'.$num_name.'.json');
 
-        // fusionTable for schema and json data
-        ${"FusionTable$num_name"} = new FusionTable(${"schema$num_name"}, ${"json$num_name"});
+            // fusionTable for schema and json data
+            ${"FusionTable$num_name"} = new FusionTable(${"schema$num_name"}, ${"json$num_name"});
 
-        // time series graph
-        ${"timeSeries$num_name"} = new TimeSeries(${"FusionTable$num_name"});
+            // time series graph
+            ${"timeSeries$num_name"} = new TimeSeries(${"FusionTable$num_name"});
 
-        // attribute in graph
-        ${"timeSeries$num_name"}->AddAttribute('chart', '{"exportenabled":true}');
-        ${"timeSeries$num_name"}->AddAttribute('navigator', '{"enabled":0}');
-        ${"timeSeries$num_name"}->AddAttribute('legend', '{"enabled":"0"}');
-        ${"timeSeries$num_name"}->AddAttribute('yaxis', '{"plot":{"value":"","type":"smooth-area"}}');
+            // attribute in graph
+            ${"timeSeries$num_name"}->AddAttribute('chart', '{"exportenabled":true}');
+            ${"timeSeries$num_name"}->AddAttribute('navigator', '{"enabled":0}');
+            ${"timeSeries$num_name"}->AddAttribute('legend', '{"enabled":"0"}');
+            ${"timeSeries$num_name"}->AddAttribute('yaxis', '{"plot":{"value":"","type":"smooth-area"}}');
 
-        // chart object
-        ${"Chart$num_name"} = new FusionCharts(
-            "timeseries",
-            "MyFirstChart$num_name" ,
-            "100%",
-            "225",
-            $graph_name_arr[$num],
-            "json",
-            ${"timeSeries$num_name"}
-        );
+            // chart object
+            ${"Chart$num_name"} = new FusionCharts(
+                "timeseries",
+                "MyFirstChart$num_name" ,
+                "100%",
+                "250",
+                $graph_name_arr[$num].$i,
+                "json",
+                ${"timeSeries$num_name"}
+            );
 
-        // Render the chart
-        ${"Chart$num_name"}->render();
-        $num++;
-        $num_name++;
+            // Render the chart
+            ${"Chart$num_name"}->render();
+            if ($num == 3) $num = 0; else $num++;
+            if ($num_name == 4) $num_name = 1; else $num_name++;
+        }   
     }
 
 ?>
@@ -71,15 +75,14 @@
 </div>
 <hr id="fhr" class="my-5">
 
-<h4>Device 001</h4>
 <div class="container-fluid">
+<h4>Device 001</h4>
     <div class="row">
         <div class="col">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Temperature</h5>
-                    <div id="temperature">Chart will render here!</div>
-                    <button type="button" class="btn btn-primary">Button</button>
+                    <div id="temperature1">Chart will render here!</div>
                 </div>
             </div>
         </div>
@@ -87,8 +90,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Humidity</h5>
-                    <div id="humidity">Chart will render here!</div>
-                    <button type="button" class="btn btn-primary">Button</button>
+                    <div id="humidity1">Chart will render here!</div>
                 </div>
             </div>
         </div>
@@ -98,8 +100,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">CO2</h5>
-                    <div id="co2">Chart will render here!</div>
-                    <button type="button" class="btn btn-primary">Button</button>
+                    <div id="co21">Chart will render here!</div>
                 </div>
             </div>
         </div>
@@ -107,14 +108,52 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Noise</h5>
-                    <div id="noise">Chart will render here!</div>
-                    <button type="button" class="btn btn-primary">Button</button>
+                    <div id="noise1">Chart will render here!</div>
                 </div>
             </div>
         </div>
     </div>
+    <hr class="my-4">
+<h4>Device 002</h4>
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Temperature</h5>
+                    <div id="temperature2">Chart will render here!</div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Humidity</h5>
+                    <div id="humidity2">Chart will render here!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">CO2</h5>
+                    <div id="co22">Chart will render here!</div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Noise</h5>
+                    <div id="noise2">Chart will render here!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr class="my-4">
 </div>
-<hr class="my-4">
+
 
 <script>
     var devices = <?php echo json_encode($devices); ?>;
