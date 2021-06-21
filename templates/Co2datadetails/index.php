@@ -1,16 +1,26 @@
 <?php
     include("fusioncharts.php");
 
-    $graph_arr = [$temp,$hum,$co2,$noise];
-    $graph_name_arr = ['temperature', 'humidity', 'co2', 'noise'];
-    $num = 0;
-    $num_name = 1;
-    $i = 1;
+    // foreach loop variable declare
+    $graph_arr = [];
+    $i = $y = $num_name = $chart_id = 1;
+    $x = $z = $num = 0;
 
     for ($i; $i <=count($num_devices); $i++) {
-        
+
+        // retrieve array data from controller
+        ${"temp$i"} = ${"hum$i"} = ${"co2$i"} = ${"noise$i"} = [];
+        ${"temp$i"} = $tempalldata[$i-1];
+        ${"hum$i"} = $humalldata[$i-1];
+        ${"co2$i"} = $co2alldata[$i-1];
+        ${"noise$i"} = $noisealldata[$i-1];
+        $graph_arr = [${"temp$i"}, ${"hum$i"}, ${"co2$i"},${"noise$i"}];
+    
         foreach($graph_arr as $graph)
         {
+            // graph id declare
+            $graph_id = 'row-'.$x.'-col-'.$y.'-'.$z.'-graph';
+            
             // encode json
             ${"json$num_name"} = json_encode($graph);
 
@@ -30,21 +40,30 @@
             ${"timeSeries$num_name"}->AddAttribute('yaxis', '{"plot":{"value":"","type":"smooth-area"}}');
 
             // chart object
-            ${"Chart$num_name"} = new FusionCharts(
+            ${"Chart$chart_id"} = new FusionCharts(
                 "timeseries",
-                "MyFirstChart$num_name" ,
+                "MyFirstChart$chart_id" ,
                 "100%",
                 "250",
-                $graph_name_arr[$num].$i,
+                $graph_id,
                 "json",
                 ${"timeSeries$num_name"}
             );
 
             // Render the chart
-            ${"Chart$num_name"}->render();
+            ${"Chart$chart_id"}->render();
             if ($num == 3) $num = 0; else $num++;
             if ($num_name == 4) $num_name = 1; else $num_name++;
-        }   
+            $chart_id++;
+
+            // graph id variables
+            if ($z == 1) {$z = 0; $y++;} 
+            else {$z++;}
+        }
+        // graph id variables
+        $x++;
+        $y = 1;
+        $graph_arr = [];
     }
 
 ?>
@@ -75,88 +94,13 @@
 </div>
 <hr id="fhr" class="my-5">
 
-<div class="container-fluid">
-<h4>Device 001</h4>
-    <div class="row">
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Temperature</h5>
-                    <div id="temperature1">Chart will render here!</div>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Humidity</h5>
-                    <div id="humidity1">Chart will render here!</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">CO2</h5>
-                    <div id="co21">Chart will render here!</div>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Noise</h5>
-                    <div id="noise1">Chart will render here!</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <hr class="my-4">
-<h4>Device 002</h4>
-    <div class="row">
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Temperature</h5>
-                    <div id="temperature2">Chart will render here!</div>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Humidity</h5>
-                    <div id="humidity2">Chart will render here!</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">CO2</h5>
-                    <div id="co22">Chart will render here!</div>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Noise</h5>
-                    <div id="noise2">Chart will render here!</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <hr class="my-4">
-</div>
-
+<div id="devicesList"></div>
 
 <script>
+    var titles = ['Temperature', 'Humidity', 'CO2', 'Noise'];
+
     var devices = <?php echo json_encode($devices); ?>;
+    // console.log(devices);
 
     // add new table column
     devices.forEach(device => {
@@ -181,6 +125,34 @@
         return newColumn;
     }
 
+    // generate device list with graphs
+    $.each(devices, function(index, device) {
+        $('#devicesList').append($('<h4>' + device.device + '</h4>'));
+        $('#devicesList').append($('<div id="container-' + index + '" class="container-fluid"></div>'));
+        // add row
+        for (i = 1; i <= 2; i++) {
+            $('#container-' + index).append($('<div id="row-' + index + '-' + i + '" class="row"></div>'));
+
+            // add column
+            for (j = 0; j < 2; j++) {
+                $('#row-' + index + '-' + i).append($('<div id="row-' + index + '-col-' + i + '-' + j + '" class="col"></div>'));
+                addCard('row-' + index + '-col-' + i + '-' + j, i, j);
+            }
+        }
+        $('#container-' + index).after('<hr class="my-4">');
+    });
+
+    // card details
+    function addCard(id, col, card) {
+        var index = card;
+
+        if (col == 2 && card == 0)
+            index = 2;
+        else if (col == 2 && card == 1)
+            index = 3;
+
+        $('#' + id).append($('<div class="card"><div class="card-body"><h5 class="card-title">' + titles[index] + '</h5><div id="' + id + '-graph"></div><button type="button" class="btn realtime-btn btn-primary btn-sm" id="update-data">Update Data</button></div></div>'));
+    }
 </script>
 
 <style>
@@ -222,3 +194,5 @@
         margin-bottom: 1.5rem !important;
     }
 </style>
+
+

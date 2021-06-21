@@ -34,22 +34,16 @@ class Co2datadetailsController extends AppController
         $query = $this->Co2datadetails->find()
             ->select(['co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room' => 'r.room_no'])
             ->join(['r' => ['table' => 'Room_Info', 'type' => 'INNER', 'conditions' => 'r.device_id = Co2datadetails.co2_device_id']])
-            ->where(['Co2datadetails.time_measured <=' => $currentDateTime])
+            ->where(['Co2datadetails.time_measured >=' => $currentDateTime])
             ->order(['co2_device_id' => 'ASC', 'time_measured' => 'DESC'])
             ->limit(86400)
             ->toArray();
 
-        // $query = $this->Co2datadetails->find()
-        //     ->where(['Co2datadetails.time_measured <=' => $currentDateTime])
-        //     ->limit(86400)
-        //     ->toArray();
-
-        // print_r($query);
-        
         // declare for each graph data array
         $num_devices = $temp = $hum = $co2 = $noise = [];
         $current_dev = $next_dev = '';
-        // data split loop
+        
+        // data split with censor data loop
         foreach($query as $row) {
 
             // time measured standard schema
@@ -62,14 +56,49 @@ class Co2datadetailsController extends AppController
             array_push($hum, array($row["co2_device_id"],$date[0],$row["humidity"]));
             array_push($co2, array($row["co2_device_id"],$date[0],$row["co2"]));
             array_push($noise, array($row["co2_device_id"],$date[0],$row["noise"]));
+            
+            // number of device
             $current_dev = $row["co2_device_id"];
             if ($current_dev != $next_dev)
             array_push($num_devices, array($row["co2_device_id"]));
             $next_dev = $row["co2_device_id"];
         }
 
+        $tempalldata = $humalldata = $co2alldata = $noisealldata = [];
+        $i = 1;
+
+        // data split with device loop
+        for ($i; $i <= count($num_devices); $i++) {
+            
+            ${"temp$i"} = ${"hum$i"} = ${"co2$i"} = ${"noise$i"} = [];
+            
+            foreach($temp as $tempdata) {
+                if ($tempdata[0] == "dvTest".$i) 
+                    array_push(${"temp$i"}, $tempdata);
+            }
+            array_push($tempalldata,${"temp$i"});
+            
+            foreach($hum as $humdata) {
+                if ($humdata[0] == "dvTest".$i) 
+                    array_push(${"hum$i"}, $humdata);
+            }
+            array_push($humalldata,${"hum$i"});
+
+            foreach($co2 as $co2data) {
+                if ($co2data[0] == "dvTest".$i) 
+                    array_push(${"co2$i"}, $co2data);
+            }
+            array_push($co2alldata,${"co2$i"});
+
+            foreach($noise as $noisedata) {
+                if ($noisedata[0] == "dvTest".$i) 
+                    array_push(${"noise$i"}, $noisedata);
+            }
+            array_push($noisealldata,${"noise$i"});
+        }
+
         // sent array data to template
-        $this->set(compact('temp', 'hum', 'co2', 'noise', 'num_devices'));
+        $this->set(compact('tempalldata', 'humalldata', 'co2alldata', 'noisealldata', 'num_devices'));
     }
 
     /**
