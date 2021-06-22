@@ -1,3 +1,11 @@
+<?php
+
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\User[]|\Cake\Collection\CollectionInterface $users
+ */
+use PHP_CodeSniffer\Reports\Diff;
+?>
 <style>
     .capitalize {
         text-transform: capitalize;
@@ -27,14 +35,15 @@
         border-radius: 3px;
 
     }
+    .body{
+        margin-top:50px;
+    }
 </style>
-                          
-<div class="users index content">
+<div class="users index content body">
     <h3 style="text-align: center;"><?= __('Users List') ?></h3>
     <!-- search area -->
     <div class="searchArea">
         <?= $this->Form->text('search', ['id' => 'search', 'size' => '100', 'maxlength' => '100', 'placeholder' => 'Search...']) ?>
-        <!-- <button type="button" class="btn btn-primary">New User</button> -->
         <?= $this->Html->link(__('New User'), ['action' => 'add'], ['class' => 'btn btn-primary btn-user']) ?>
     </div>
     <div class="table-responsive">
@@ -56,40 +65,36 @@
                 else if ($page == 2)
                     $no = $page * 10 + 1; ?>
                 <?php foreach ($users as $user) : ?>
-                    <!-- <input type="hidden" id="id" name="id" value=<?= h($user->id) ?>> -->
-                    <?php
-                    echo $this->Form->control('id', ['type' => 'hidden', 'id' => 'id', 'value' => $user->id]);
-                    ?>
                     <tr>
                         <td><?= $no++ ?></td>
                         <td><?= h($user->name) ?></td>
                         <td><?= h($user->email) ?></td>
                         <td><?= h($user->last_login) ?></td>
                         <td>
-
-                            <select name=" role" id="role-<?= $user->id ?>">
+                            <select name="role" id="role-<?= $user->id ?>">                           
                                 <?php
                                 $role = $user->role;
                                 if ($role == 'A') {
                                     echo
                                     '<option value="A" selected>Admin</option>
-                                         <option value="E">Editor</option>
-                                        <option value="U">User</option>';
+                                     <option value="E">Editor</option>
+                                     <option value="U">User</option>';
                                 }
                                 if ($role == 'E') {
                                     echo
                                     '<option value="A" >Admin</option>
-                                        <option value="E" selected>Editor</option>
-                                        <option value="U">User</option>';
+                                     <option value="E" selected>Editor</option>
+                                     <option value="U">User</option>';
                                 }
                                 if ($role == 'U') {
                                     echo
                                     '<option value="A" selected>Admin</option>
-                                        <option value="E">Editor</option>
-                                        <option value="U" selected>User</option>';
+                                     <option value="E">Editor</option>
+                                     <option value="U" selected>User</option>';
                                 }
                                 ?>
                             </select>
+                            <input type="hidden" id="origin-<?= $user->id ?>" value=<?= $role?>>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -110,9 +115,16 @@
 
 <script>
     $('select').change(function() {
-        var data = this.value;
-        var user_id = this.id.split('-');
-        $.ajax({
+        var data = this.value;        
+        var user_id = this.id.split('-');   
+        var id="origin-"+user_id[1];        
+        var origin_role=document.getElementById(id).value;          
+        if (!confirm("Are you sure you want to change role?")) {
+            //cancel
+            document.getElementById(this.id).value=origin_role;             
+            return false;                              
+        }  
+            $.ajax({          
             method: 'get',
             data: {
                 role: data,
@@ -120,7 +132,7 @@
             },
             url: "<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'edit']); ?>",
             success: function(response) {
-                $('.table-responsive').html(response);
+                          $('.table-responsive').html(response);
             }
         });
     });
@@ -134,7 +146,6 @@
                 searchUsers(searchkey);
             }
         });
-
         function searchUsers(keyword) {
             var data = keyword;
             $.ajax({
