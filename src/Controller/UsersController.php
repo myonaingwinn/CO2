@@ -193,8 +193,7 @@ class UsersController extends AppController
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function edit($id = null)
-    {
-        //change role
+    { //change role
         $this->request->allowMethod('get');
         $roleData = $this->request->getQuery('role');
         $id = $this->request->getQuery('userID');
@@ -206,15 +205,16 @@ class UsersController extends AppController
         ]);
         $users = $data->toArray();
         $users[0]->role = $roleData;
-        if ($this->Users->save($users[0])) {
-            $this->Flash->success(__('The user has been saved.'));
-            return $this->redirect(['action' => 'edit']);
+        if ($this->Users->save($users[0])) {    
+            $this->Flash->success(__('The user has been saved.'));                   
+            return $this->redirect(['action' => 'edit']);           
         } else {
-            $this->Flash->error(__('The user could not be saved. Please, try again.'));
-        }
+             $this->Flash->error(__('The user could not be saved. Please, try again.'));
+       }
         $data = $this->Users->find('all', array('conditions' => array('Users.del_flg' => 'N')));
         $users = $this->paginate($data);
-        $this->set(compact('users'));
+        $this->set(compact('users'));        
+        // return $this->redirect(['action' => 'index']); 
     }
 
     /**
@@ -236,29 +236,26 @@ class UsersController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
-
-    public function search()
-    {
-        $this->request->allowMethod('ajax');
-
-        $keyword = $this->request->getQuery('keyword');
-
-        $query = $this->Users->find('all', [
-            'conditions' => ([
-                'Or' => [
-                    ['Users.name LIKE' => '%' . $keyword . '%'],
-                    ['Users.email like' => '%' . $keyword . '%'],
-                    ['Users.role like' => '%' . $keyword . '%'],
-                    ['Users.last_login like' => '%' . $keyword . '%']
-                ],
-                'AND' => ['Users.del_flg' => 'N']
-            ]),
-            'order' => ['Users.name' => 'ASC']
-
-        ]);
-        $users = $this->paginate($query);
-
-        $this->set(compact('users'));
-        $this->set('_serialize', ['users']);
-    }
-}
+      //Search
+      public function search()
+      {
+          $this->request->allowMethod('ajax');
+          $keyword = $this->request->getQuery('keyword');
+          $query = $this->Users->find('all', [
+              'conditions' => ([
+                  'Or' => [
+                      ['Users.name LIKE' => '%' . $keyword . '%'],
+                      ['Users.email like' => '%' . $keyword . '%'],
+                      ['Users.role like' => '%' . $keyword . '%'],
+                      ['Users.last_login like' => '%' . $keyword . '%']
+                  ],
+                  'AND' => ['Users.del_flg' => 'N']
+              ]),
+              'order' => ['Users.name' => 'ASC']
+          ]);
+          $users = $this->paginate($query);  
+          $this->set(compact('users'));
+          $this->set('_serialize', ['users']);
+      }
+    
+  }
