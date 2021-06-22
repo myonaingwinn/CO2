@@ -1,89 +1,70 @@
 <?php
-include("fusioncharts.php");
+    include("fusioncharts.php");
 
-// encode json
-$jsonTemp = json_encode($temp);
-$jsonHum = json_encode($hum);
-$jsonCo2 = json_encode($co2);
-$jsonNoise = json_encode($noise);
+    // foreach loop variable declare
+    $graph_arr = [];
+    $i = $y = $num_name = $chart_id = 1;
+    $x = $z = $num = 0;
 
-// schema for fusionchart
-$schemaTemp = file_get_contents('webroot\json\schemaTemp.json');
-$schemaHum = file_get_contents('webroot\json\schemaHum.json');
-$schemaCo2 = file_get_contents('webroot\json\schemaCo2.json');
-$schemaNoise = file_get_contents('webroot\json\schemaNoise.json');
+    for ($i; $i <=count($num_devices); $i++) {
 
-// fusionTable for schema and json data
-$tempFusionTable = new FusionTable($schemaTemp, $jsonTemp);
-$humFusionTable = new FusionTable($schemaHum, $jsonHum);
-$co2FusionTable = new FusionTable($schemaCo2, $jsonCo2);
-$noiseFusionTable = new FusionTable($schemaNoise, $jsonNoise);
+        // retrieve array data from controller
+        ${"temp$i"} = ${"hum$i"} = ${"co2$i"} = ${"noise$i"} = [];
+        ${"temp$i"} = $tempalldata[$i-1];
+        ${"hum$i"} = $humalldata[$i-1];
+        ${"co2$i"} = $co2alldata[$i-1];
+        ${"noise$i"} = $noisealldata[$i-1];
+        $graph_arr = [${"temp$i"}, ${"hum$i"}, ${"co2$i"},${"noise$i"}];
+    
+        foreach($graph_arr as $graph)
+        {
+            // graph id declare
+            $graph_id = 'row-'.$x.'-col-'.$y.'-'.$z.'-graph';
+            
+            // encode json
+            ${"json$num_name"} = json_encode($graph);
 
-// time series graph
-$temptimeSeries = new TimeSeries($tempFusionTable);
-$humtimeSeries = new TimeSeries($humFusionTable);
-$co2timeSeries = new TimeSeries($co2FusionTable);
-$noisetimeSeries = new TimeSeries($noiseFusionTable);
+            // schema for fusionchart
+            ${"schema$num_name"} = file_get_contents('webroot\json\schema'.$num_name.'.json');
 
-$temptimeSeries->AddAttribute('chart', '{"exportenabled":true}');
-$temptimeSeries->AddAttribute('navigator', '{"enabled":0}');
-$temptimeSeries->AddAttribute('legend', '{"enabled":"0"}');
+            // fusionTable for schema and json data
+            ${"FusionTable$num_name"} = new FusionTable(${"schema$num_name"}, ${"json$num_name"});
 
-$humtimeSeries->AddAttribute('chart', '{"exportenabled":true}');
-$humtimeSeries->AddAttribute('navigator', '{"enabled":0}');
-$humtimeSeries->AddAttribute('legend', '{"enabled":"0"}');
+            // time series graph
+            ${"timeSeries$num_name"} = new TimeSeries(${"FusionTable$num_name"});
 
-$co2timeSeries->AddAttribute('chart', '{"exportenabled":true}');
-$co2timeSeries->AddAttribute('navigator', '{"enabled":0}');
-$co2timeSeries->AddAttribute('legend', '{"enabled":"0"}');
+            // attribute in graph
+            ${"timeSeries$num_name"}->AddAttribute('chart', '{"exportenabled":true}');
+            ${"timeSeries$num_name"}->AddAttribute('navigator', '{"enabled":0}');
+            ${"timeSeries$num_name"}->AddAttribute('legend', '{"enabled":"0"}');
+            ${"timeSeries$num_name"}->AddAttribute('yaxis', '{"plot":{"value":"","type":"smooth-area"}}');
 
-$noisetimeSeries->AddAttribute('chart', '{"exportenabled":true}');
-$noisetimeSeries->AddAttribute('navigator', '{"enabled":0}');
-$noisetimeSeries->AddAttribute('legend', '{"enabled":"0"}');
+            // chart object
+            ${"Chart$chart_id"} = new FusionCharts(
+                "timeseries",
+                "MyFirstChart$chart_id" ,
+                "100%",
+                "250",
+                $graph_id,
+                "json",
+                ${"timeSeries$num_name"}
+            );
 
-// chart object
-$ChartTemp = new FusionCharts(
-    "timeseries",
-    "MyFirstChart",
-    "100%",
-    "450",
-    "temperature",
-    "json",
-    $temptimeSeries
-);
-$ChartHum = new FusionCharts(
-    "timeseries",
-    "MyFirstChart2",
-    "100%",
-    "450",
-    "humidity",
-    "json",
-    $humtimeSeries
-);
-$ChartCo2 = new FusionCharts(
-    "timeseries",
-    "MyFirstChart3",
-    "100%",
-    "450",
-    "co2",
-    "json",
-    $co2timeSeries
-);
-$ChartNoise = new FusionCharts(
-    "timeseries",
-    "MyFirstChart4",
-    "100%",
-    "450",
-    "noise",
-    "json",
-    $noisetimeSeries
-);
+            // Render the chart
+            ${"Chart$chart_id"}->render();
+            if ($num == 3) $num = 0; else $num++;
+            if ($num_name == 4) $num_name = 1; else $num_name++;
+            $chart_id++;
 
-// Render the chart
-$ChartTemp->render();
-$ChartHum->render();
-$ChartCo2->render();
-$ChartNoise->render();
+            // graph id variables
+            if ($z == 1) {$z = 0; $y++;} 
+            else {$z++;}
+        }
+        // graph id variables
+        $x++;
+        $y = 1;
+        $graph_arr = [];
+    }
 ?>
 
 <h2>Dashboard</h2>
@@ -111,6 +92,7 @@ $ChartNoise->render();
     </section>
 </div>
 <hr id="fhr" class="my-5">
+
 <div id="devicesList"></div>
 
 <script>
@@ -211,19 +193,3 @@ $ChartNoise->render();
         margin-bottom: 1.5rem !important;
     }
 </style>
-
-<script>
-    document.getElementById('update-data').addEventListener('click', function() {
-        $.ajax({
-            url: "<?= $this->Url->build(['controller' => 'Co2datadetails', 'action' => '']) ?>",
-            type: "POST",
-            data: {
-                image: imageURL
-            },
-            dataType: "html",
-            headers: {
-                'X-CSRF-Token': $('meta[name="csrfToken"]').attr('content')
-            }
-        });
-    });
-</script>
