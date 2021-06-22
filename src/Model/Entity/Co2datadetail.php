@@ -16,7 +16,7 @@ use Cake\ORM\Entity;
  * @property float|null $noise
  * @property \Cake\I18n\FrozenTime|null $time_measured
  *
- * @property \App\Model\Entity\Co2Device $co2_device
+ * @property \App\Model\Entity\RoomInfo $room_info
  */
 class Co2datadetail extends Entity
 {
@@ -36,6 +36,6 @@ class Co2datadetail extends Entity
         'co2' => true,
         'noise' => true,
         'time_measured' => true,
-        'co2_device' => true,
+        'room_info' => true,
     ];
 }

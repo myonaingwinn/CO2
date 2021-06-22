@@ -78,6 +78,15 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     <footer>
     </footer>
 </body>
-<script type="text/javascript" src="js/mdb.min.js"></script>
+<script type="text/javascript" src="/js/mdb.min.js"></script>
+<style>
+    body {
+        background: #EFEFEF;
+    }
+
+    .container{
+        margin-top: 5rem;
+    }
+</style>
 
 </html>

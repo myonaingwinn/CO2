@@ -34,7 +34,7 @@ class RoomInfoFixture extends TestFixture
             'uid_key' => ['type' => 'index', 'columns' => ['user_uid'], 'length' => []],
         ],
         '_constraints' => [
-            'primary' => ['type' => 'primary', 'columns' => ['id', 'device_id'], 'length' => []],
+            'primary' => ['type' => 'primary', 'columns' => ['device_id'], 'length' => []],
             'id' => ['type' => 'unique', 'columns' => ['id'], 'length' => []],
             'device_id' => ['type' => 'unique', 'columns' => ['device_id'], 'length' => []],
             'uid_key' => ['type' => 'foreign', 'columns' => ['user_uid'], 'references' => ['users', 'uid'], 'update' => 'restrict', 'delete' => 'restrict', 'length' => []],
@@ -55,7 +55,7 @@ class RoomInfoFixture extends TestFixture
         $this->records = [
             [
                 'id' => 1,
-                'device_id' => 'db2c074f-5b7a-49b4-8c79-0e40d795fd8d',
+                'device_id' => '32e7fd6c-145d-4280-823d-c5e32c1d9d10',
                 'user_uid' => 'Lorem ipsum dolor sit amet',
                 'postal_code' => 'Lorem ipsum dolor sit amet',
                 'prefecture' => 'Lorem ipsum dolor sit amet',

@@ -11,7 +11,7 @@ use Cake\Validation\Validator;
 /**
  * Co2datadetails Model
  *
- * @property \App\Model\Table\Co2DevicesTable&\Cake\ORM\Association\BelongsTo $Co2Devices
+ * @property \App\Model\Table\RoomInfoTable&\Cake\ORM\Association\BelongsTo $RoomInfo
  *
  * @method \App\Model\Entity\Co2datadetail newEmptyEntity()
  * @method \App\Model\Entity\Co2datadetail newEntity(array $data, array $options = [])

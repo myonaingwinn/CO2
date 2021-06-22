@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -18,6 +19,7 @@ class RoomInfoController extends AppController
      */
     public function index()
     {
+        $this->loadModel('RoomInfo');
         $this->paginate = [
             'contain' => ['Co2datadetails'],
         ];
@@ -49,6 +51,7 @@ class RoomInfoController extends AppController
      */
     public function add()
     {
+        $this->loadModel('RoomInfo');
         $roomInfo = $this->RoomInfo->newEmptyEntity();
         if ($this->request->is('post')) {
             $roomInfo = $this->RoomInfo->patchEntity($roomInfo, $this->request->getData());

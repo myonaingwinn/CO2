@@ -25,16 +25,16 @@
                 <?php foreach ($roomInfo as $roomInfo): ?>
                 <tr>
                     <td><?= $this->Number->format($roomInfo->id) ?></td>
-                    <td><?= $roomInfo->has('co2datadetail') ? $this->Html->link($roomInfo->co2datadetail->id, ['controller' => 'Co2datadetails', 'action' => 'view', $roomInfo->co2datadetail->id]) : '' ?></td>
+                    <td><?= h($roomInfo->device_id) ?></td>
                     <td><?= h($roomInfo->user_uid) ?></td>
                     <td><?= h($roomInfo->postal_code) ?></td>
                     <td><?= h($roomInfo->prefecture) ?></td>
                     <td><?= h($roomInfo->address) ?></td>
                     <td><?= h($roomInfo->room_no) ?></td>
                     <td class="actions">
-                        <?= $this->Html->link(__('View'), ['action' => 'view', $roomInfo->id]) ?>
-                        <?= $this->Html->link(__('Edit'), ['action' => 'edit', $roomInfo->id]) ?>
-                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $roomInfo->id], ['confirm' => __('Are you sure you want to delete # {0}?', $roomInfo->id)]) ?>
+                        <?= $this->Html->link(__('View'), ['action' => 'view', $roomInfo->device_id]) ?>
+                        <?= $this->Html->link(__('Edit'), ['action' => 'edit', $roomInfo->device_id]) ?>
+                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $roomInfo->device_id], ['confirm' => __('Are you sure you want to delete # {0}?', $roomInfo->device_id)]) ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>
