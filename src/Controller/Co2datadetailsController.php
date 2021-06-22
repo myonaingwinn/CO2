@@ -20,7 +20,7 @@ class Co2datadetailsController extends AppController
     public function index()
     {
         //  Table data   
-            $devices = $this->Co2datadetails->find()->select(['device' => 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'date'  => 'max(time_measured)', 'room' => 'r.room_no'])->join(['r' => [
+        $devices = $this->Co2datadetails->find()->select(['device' => 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'date'  => 'max(time_measured)', 'room' => 'r.room_no'])->join(['r' => [
             'table' => 'Room_Info',
             'type' => 'INNER',
             'conditions' => 'r.device_id = Co2datadetails.co2_device_id'
@@ -45,7 +45,6 @@ class Co2datadetailsController extends AppController
         
         // data split with censor data loop
         foreach($query as $row) {
-
             // time measured standard schema
             $dateArr = (array) $row["time_measured"];
             $dateStr = implode("", $dateArr);

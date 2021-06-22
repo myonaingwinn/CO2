@@ -65,7 +65,6 @@
         $y = 1;
         $graph_arr = [];
     }
-
 ?>
 
 <h2>Dashboard</h2>
@@ -194,5 +193,3 @@
         margin-bottom: 1.5rem !important;
     }
 </style>
-
-
