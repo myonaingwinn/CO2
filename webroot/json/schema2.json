@@ -1,0 +1,13 @@
+[{
+    "name": "Device",
+    "type": "string"
+},
+{
+    "name": "Date",
+    "type": "date",
+    "format": "%Y-%m-%d %H:%M:%S"
+},
+{
+    "name": "Humidity",
+    "type": "number"
+}]
