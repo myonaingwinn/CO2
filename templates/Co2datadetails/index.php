@@ -172,10 +172,6 @@
         font-weight: 700 !important;
     }
 
-    body {
-        background: #EFEFEF;
-    }
-
     section {
         background: white;
     }

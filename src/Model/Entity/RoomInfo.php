@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Entity;
@@ -15,8 +16,6 @@ use Cake\ORM\Entity;
  * @property string $prefecture
  * @property string $address
  * @property string $room_no
- *
- * @property \App\Model\Entity\Co2datadetail $co2datadetail
  */
 class RoomInfo extends Entity
 {
@@ -30,11 +29,11 @@ class RoomInfo extends Entity
      * @var array
      */
     protected $_accessible = [
+        'device_id' => true,
         'user_uid' => true,
         'postal_code' => true,
         'prefecture' => true,
         'address' => true,
         'room_no' => true,
-        'co2datadetail' => true,
     ];
 }

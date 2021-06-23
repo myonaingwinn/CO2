@@ -25,11 +25,12 @@ class Co2datadetailsFixture extends TestFixture
         'noise' => ['type' => 'float', 'length' => null, 'precision' => null, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => ''],
         'time_measured' => ['type' => 'datetime', 'length' => null, 'precision' => null, 'null' => true, 'default' => null, 'comment' => ''],
         '_indexes' => [
-            'co2_device_id' => ['type' => 'index', 'columns' => ['co2_device_id'], 'length' => []],
+            'co2_device_id4data' => ['type' => 'index', 'columns' => ['co2_device_id'], 'length' => []],
         ],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
             'id' => ['type' => 'unique', 'columns' => ['id'], 'length' => []],
+            'co2_device_id4data' => ['type' => 'foreign', 'columns' => ['co2_device_id'], 'references' => ['room_info', 'device_id'], 'update' => 'restrict', 'delete' => 'restrict', 'length' => []],
         ],
         '_options' => [
             'engine' => 'InnoDB',
@@ -46,13 +47,13 @@ class Co2datadetailsFixture extends TestFixture
     {
         $this->records = [
             [
-                'id' => '32842e41-de05-4850-b92b-522bf3f1fe06',
+                'id' => '9378f8d9-9583-44e3-8e7f-8e51b51a0a25',
                 'co2_device_id' => 'Lorem ipsum dolor sit amet',
                 'temperature' => 1,
                 'humidity' => 1,
                 'co2' => 1,
                 'noise' => 1,
-                'time_measured' => '2021-06-15 09:52:26',
+                'time_measured' => '2021-06-22 06:53:04',
             ],
         ];
         parent::init();

@@ -68,6 +68,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
     $builder->connect('/forgotpassword', ['controller' => 'Users', 'action' => 'forgotpassword']);
     $builder->connect('/resetpassword', ['controller' => 'Users', 'action' => 'resetpassword']);
     $builder->connect('/graph', ['controller' => 'Graphs', 'action' => 'index']);
+    $builder->connect('/device_reg', ['controller' => 'RoomInfo', 'action' => 'add']);
     /*
     /*
      * Connect catchall routes for all controllers.
