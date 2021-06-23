@@ -1,5 +1,4 @@
  body {
-     overflow: hidden;
      background-color: #EBE0E0;
  }
  
@@ -22,11 +21,11 @@
  } */
  
  .submit {
-     margin-top: 40px;
+     margin-top: 27px;
      background-color: #ffffff;
      color: #03A9F4;
-     width: 150px;
-     height: 50px;
+     width: 140px;
+     height: 45px;
      font-weight: bold;
      font-size: 20px;
      border: 2px solid #1fbdd3;
@@ -43,24 +42,12 @@
      color: #333;
  }
  
- .user {
-     margin-top: 15px;
- }
- 
- .password {
-     margin-top: 13px;
- }
- 
  .roledrop {
      margin-top: 13px;
  }
  
- .email {
-     margin-top: 7px;
- }
- 
  .card {
-     margin-top: -38px;
+     margin-top: -82px;
  }
  
  .title {
@@ -74,12 +61,12 @@
  
  .forgot {
      color: #033952;
-     font-size: 21px;
+     font-size: 18px;
  }
  
  img {
-     width: 113px;
-     height: 104px;
+     width: 143px;
+     height: 108px;
  }
  
  .login {
@@ -98,17 +85,17 @@
      background-color: #ffffff;
      width: 0px;
      height: 60px;
-     margin-left: -15px;
+     margin-left: 2px;
  }
  
  .role {
      margin-top: 33px;
-     margin-left: 41px;
+     margin-left: 46px;
  }
  
  .role-type {
      margin-top: 33px;
-     margin-left: 15px;
+     margin-left: 14px;
  }
  
  .btn-check {
