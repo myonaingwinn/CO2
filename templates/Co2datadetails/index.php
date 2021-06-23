@@ -38,7 +38,6 @@
             ${"timeSeries$num_name"}->AddAttribute('navigator', '{"enabled":0}');
             ${"timeSeries$num_name"}->AddAttribute('legend', '{"enabled":"0"}');
             ${"timeSeries$num_name"}->AddAttribute('yaxis', '{"plot":{"value":"","type":"smooth-area"}}');
-
             // chart object
             ${"Chart$chart_id"} = new FusionCharts(
                 "timeseries",
