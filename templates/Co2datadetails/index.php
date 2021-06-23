@@ -42,7 +42,7 @@
             // chart object
             ${"Chart$chart_id"} = new FusionCharts(
                 "timeseries",
-                "MyFirstChart$chart_id" ,
+                "MyFirstChart$chart_id",
                 "100%",
                 "250",
                 $graph_id,

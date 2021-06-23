@@ -34,7 +34,7 @@ class Co2datadetailsController extends AppController
         $query = $this->Co2datadetails->find()
             ->select(['co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room' => 'r.room_no'])
             ->join(['r' => ['table' => 'Room_Info', 'type' => 'INNER', 'conditions' => 'r.device_id = Co2datadetails.co2_device_id']])
-            ->where(['Co2datadetails.time_measured >=' => $currentDateTime])
+            // ->where(['Co2datadetails.time_measured >=' => $currentDateTime])
             ->order(['co2_device_id' => 'ASC', 'time_measured' => 'DESC'])
             ->limit(86400)
             ->toArray();
@@ -66,7 +66,7 @@ class Co2datadetailsController extends AppController
 
         $tempalldata = $humalldata = $co2alldata = $noisealldata = [];
         $i = 1;
-
+        echo count($num_devices);
         // data split with device loop
         for ($i; $i <= count($num_devices); $i++) {
             
