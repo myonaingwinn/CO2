@@ -84,8 +84,8 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
         background: #EFEFEF;
     }
 
-    .container{
-        margin-top: 5rem;
+    .container {
+        margin-top: 3rem;
     }
 </style>
 

@@ -52,6 +52,7 @@ class RoomInfoController extends AppController
     public function add()
     {
         $this->loadModel('RoomInfo');
+        $this->loadModel('Users');
         $roomInfo = $this->RoomInfo->newEmptyEntity();
         if ($this->request->is('post')) {
             $roomInfo = $this->RoomInfo->patchEntity($roomInfo, $this->request->getData());
@@ -63,7 +64,8 @@ class RoomInfoController extends AppController
             $this->Flash->error(__('The room info could not be saved. Please, try again.'));
         }
         $co2datadetails = $this->RoomInfo->Co2datadetails->find('list', ['limit' => 200]);
-        $this->set(compact('roomInfo', 'co2datadetails'));
+        $users = $this->Users->find('all')->where(['del_flg' => 'N'])->toArray();
+        $this->set(compact('roomInfo', 'co2datadetails', 'users'));
     }
 
     /**
