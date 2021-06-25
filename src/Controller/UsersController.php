@@ -206,10 +206,10 @@ class UsersController extends AppController
         $users = $data->toArray();
         $users[0]->role = $roleData;
         if ($this->Users->save($users[0])) {    
-            $this->Flash->success(__('The user has been saved.'));                   
+            $this->Flash->success(__('ユーザーが保存されました。'));                   
             return $this->redirect(['action' => 'edit']);           
         } else {
-             $this->Flash->error(__('The user could not be saved. Please, try again.'));
+             $this->Flash->error(__('ユーザーを保存できませんでした。 もう一度やり直してください。'));
        }
         $data = $this->Users->find('all', array('conditions' => array('Users.del_flg' => 'N')));
         $users = $this->paginate($data);
@@ -229,9 +229,9 @@ class UsersController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $user = $this->Users->get($id);
         if ($this->Users->delete($user)) {
-            $this->Flash->success(__('The user has been deleted.'));
+            $this->Flash->success(__('ユーザーが削除されました。'));
         } else {
-            $this->Flash->error(__('The user could not be deleted. Please, try again.'));
+            $this->Flash->error(__('ユーザーを削除できませんでした。 もう一度やり直してください。'));
         }
 
         return $this->redirect(['action' => 'index']);
