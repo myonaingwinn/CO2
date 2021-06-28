@@ -21,16 +21,16 @@ echo $this->Html->css('form');
                 <div class="card">
 
                     <div class="card-body">
-                        <p class="title">Request Password</p>
+                        <p class="title"> パスワードをお忘れの方</p>
                         <?= $this->Form->create() ?>
                         <div class="email">
 
 
-                            <p>Email</p>
+                            <p>メールアドレス</p>
                             <div class="input-group flex-nowrap">
 
                                 <span class="input-group-text"> <i class=" fa fas fa-envelope" aria-hidden="true"></i></span>
-                                <input type="email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="addon-wrapping" name="email" id="textbox" required />
+                                <input type="email" class="form-control" placeholder="メールアドレス" aria-label="Email" aria-describedby="addon-wrapping" name="email" id="textbox" required />
                             </div>
                         </div>
 
@@ -40,7 +40,7 @@ echo $this->Html->css('form');
                                 </div>
 
                                 <div class="text-center">
-                                    <input type="submit" value="Submit" class="submit">
+                                    <input type="submit" value="送信" class="btnsub btn-primary">
                                     <?= $this->Form->end() ?>
 
                                 </div>

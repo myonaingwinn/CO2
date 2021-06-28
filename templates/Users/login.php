@@ -7,7 +7,7 @@ echo $this->Html->css('form');
 <html>
 
 <head>
-    <title>Register</title>
+    <title>ログイン</title>
 
 </head>
 
@@ -42,11 +42,11 @@ echo $this->Html->css('form');
                                 <div class="email">
 
 
-                                    <p>Email</p>
+                                    <p>メールアドレス</p>
                                     <div class="input-group flex-nowrap">
 
                                         <span class="input-group-text"> <i class=" fa fas fa-envelope" aria-hidden="true"></i></span>
-                                        <input type="email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="addon-wrapping" name="email" id="textbox" required />
+                                        <input type="email" class="form-control" placeholder="メールアドレス" aria-label="Email" aria-describedby="addon-wrapping" name="email" id="textbox" required />
                                     </div>
                                 </div>
                             </div>
@@ -61,10 +61,10 @@ echo $this->Html->css('form');
                             <div class="col-sm-10">
 
                                 <div class="password">
-                                    <p>Password</p>
+                                    <p>パスワード</p>
                                     <div class="input-group flex-nowrap">
                                         <span class="input-group-text"><i class="fa fa-lock" aria-hidden="true"></i></span>
-                                        <input type="password" class="form-control" placeholder="Password" aria-label="password" name="password" aria-describedby="addon-wrapping" id="textbox" required />
+                                        <input type="password" class="form-control" placeholder="パスワード" aria-label="password" name="password" aria-describedby="addon-wrapping" id="textbox" required />
                                     </div>
                                 </div>
                             </div>
@@ -82,7 +82,7 @@ echo $this->Html->css('form');
                                 </div>
 
                                 <div class="text-center">
-                                    <input type="submit" value="LogIn" class="submit">
+                                    <input type="submit" value="ログイン" class="btnsub btn-primary">
 
                                 </div>
 
@@ -95,15 +95,15 @@ echo $this->Html->css('form');
 
                         <div class="row">
 
-                            <div class="col-md-7">
+                            <div class="col-md-6">
                             </div>
 
-                            <div class="col-md-5">
-                                <p class="forgot"> <?= $this->Html->link("Forgot Password?", ['controller' => 'Users', 'action' => 'forgotpassword']); ?>
+                            <div class="col-md-6">
+                                <p class="forgot"> <?= $this->Html->link("パスワードをお忘れの方", ['controller' => 'Users', 'action' => 'forgotpassword']); ?>
                                 </p>
 
                             </div>
-                            <div class="col-sm-3"></div>
+                            <!-- <div class="col-sm-3"></div> -->
 
 
                         </div>

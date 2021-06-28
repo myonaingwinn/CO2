@@ -11,27 +11,28 @@ echo $this->Html->css('form');
             <div class="card">
 
                 <div class="card-body">
-                    <p class="title">Reset Password</p>
+                    <p class="title">パスワードのリセット</p>
                     <?= $this->Form->create() ?>
                     <div class="password">
 
 
-                        <p>New Password</p>
+                        <p>新しいパスワード</p>
                         <div class="input-group flex-nowrap">
 
                             <span class="input-group-text"> <i class="fa fa-lock" aria-hidden="true"></i></span>
-                            <input type="password" class="form-control" placeholder="New Password" id="password" aria-label="password" aria-describedby="addon-wrapping" required />
+                            <input type="password" class="form-control" placeholder="新しいパスワード" id="password" aria-label="password" aria-describedby="addon-wrapping" required />
+
                         </div>
                     </div>
 
                     <div class="password">
 
 
-                        <p>Confirm Password</p>
+                        <p>確認パスワード</p>
                         <div class="input-group flex-nowrap">
 
                             <span class="input-group-text"> <i class="fa fa-lock" aria-hidden="true"></i></span>
-                            <input type="password" class="form-control" placeholder="Confirm Password" id="confirmPassword" aria-label="password" aria-describedby="addon-wrapping" name="password" required />
+                            <input type="password" class="form-control" placeholder="確認パスワード" id="confirmPassword" aria-label="password" aria-describedby="addon-wrapping" name="password" required />
                         </div>
                     </div>
                     <div id="msg"></div>
@@ -42,7 +43,7 @@ echo $this->Html->css('form');
                             </div>
 
                             <div class="text-center">
-                                <input type="submit" value="Submit" class="submit" id="btnReset">
+                                <input type="submit" value="提出" class="btnsub btn-primary" id="btnReset">
                                 <?= $this->Form->end() ?>
 
                             </div>
@@ -66,12 +67,12 @@ echo $this->Html->css('form');
             if ($("#password").val() != $("#confirmPassword").val() || $("#confirmPassword").val().trim().length == 0) {
                 $("#password").css("border-color", "red");
                 $("#confirmPassword").css("border-color", "red");
-                $("#msg").html("Password do not match").css("color", "red");
+                $("#msg").html("パスワードが一致しません").css("color", "red");
 
             } else {
                 $("#password").css("border-color", "green");
                 $("#confirmPassword").css("border-color", "green");
-                $("#msg").html("Password matched").css("color", "green");
+                $("#msg").html("パスワードが一致しました").css("color", "green");
             }
         });
     });

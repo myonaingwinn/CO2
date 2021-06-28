@@ -21,6 +21,8 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 <html>
 
 <head>
+
+    <?= $this->Html->meta('csrfToken', $this->request->getAttribute('csrfToken')); ?>
     <?= $this->Html->charset() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
