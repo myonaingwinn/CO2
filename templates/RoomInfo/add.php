@@ -117,6 +117,7 @@
 
     #btnReg {
         margin-top: 1.5rem;
+        margin-bottom: .7rem;
     }
 
     .card-body {
@@ -126,10 +127,6 @@
 
     .card {
         margin-bottom: 2rem;
-    }
-
-    button {
-        margin-bottom: .7rem;
     }
 
     input[type=text][readonly] {
