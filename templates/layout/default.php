@@ -55,21 +55,84 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 </head>
 
 <body>
-    <!--<nav class="top-nav">
->>>>>>> 579b459d740e99c41c2a42ba9539e015cf07a3cc
-        <div class="top-nav-title">
-            <a href="<?= $this->Url->build('/') ?>"><span>Cake</span>PHP</a>
+    <header>
+        <div id="sidenav-1" class="sidenav sidenav-primary ps" role="navigation" data-hidden="false" data-accordion="true" style="width: 240px; height: 100vh; position: fixed; transition: all 0.3s linear 0s; transform: translateX(0%);">
+            <!-- <a class="ripple d-flex justify-content-center py-4" href="#!" data-ripple-color="primary">
+                <img id="MDB-logo" src="https://mdbootstrap.com/wp-content/uploads/2018/06/logo-mdb-jquery-small.png" alt="MDB Logo" draggable="false">
+            </a> -->
+
+            <div class="mt-4">
+                <div id="header-content" class="pl-3">
+                    <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(23).jpg" alt="avatar" class="rounded-circle img-fluid mb-3" style="max-width: 50px;">
+                    <h4>
+                        <span style="white-space: nowrap;">Ann Smith</span>
+                    </h4>
+                    <p>ann_s@mdbootstrap.com</p>
+                </div>
+                <hr class="mb-0">
+            </div>
+
+            <ul class="sidenav-menu">
+                <li class="sidenav-item">
+                    <a class="sidenav-link active ripple-surface" href="" tabindex="-1">
+                        <i class="fas fa-chart-area pr-3"></i><span>Webiste traffic</span></a>
+                </li>
+                <li class="sidenav-item">
+                    <a class="sidenav-link ripple-surface" data-toggle="collapse" href="#sidenav-collapse-1-0-0" role="button" tabindex="-1"><i class="fas fa-cogs pr-3"></i><span>Settings</span><i class="fas fa-angle-down rotate-icon"></i></a>
+                    <ul class="sidenav-collapse collapse" id="sidenav-collapse-1-0-0">
+                        <li class="sidenav-item">
+                            <a class="sidenav-link ripple-surface" tabindex="-1">Profile</a>
+                        </li>
+                        <li class="sidenav-item">
+                            <a class="sidenav-link ripple-surface" tabindex="-1">Account</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="sidenav-item">
+                    <a class="sidenav-link ripple-surface" data-toggle="collapse" href="#sidenav-collapse-1-0-1" role="button" tabindex="-1"><i class="fas fa-lock pr-3"></i><span>Password</span><i class="fas fa-angle-down rotate-icon"></i></a>
+                    <ul class="sidenav-collapse collapse" id="sidenav-collapse-1-0-1">
+                        <li class="sidenav-item">
+                            <a class="sidenav-link ripple-surface" tabindex="-1">Request password</a>
+                        </li>
+                        <li class="sidenav-item">
+                            <a class="sidenav-link ripple-surface" tabindex="-1">Reset password</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <!-- <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+            </div>
+            <div class="ps__rail-y" style="top: 0px; right: 0px;">
+                <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div>
+            </div> -->
         </div>
-        <div class="top-nav-links">
-            <a target="_blank" rel="noopener" href="https://book.cakephp.org/4/">Documentation</a>
-            <a target="_blank" rel="noopener" href="https://api.cakephp.org/">API</a>
-        </div>
-    </nav> -->
-    <!-- <nav class="navbar fixed-top navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Fixed top</a>
-        </div>
-    </nav> -->
+
+        <nav id="main-navbar" class="navbar navbar-light bg-light fixed-top shadow-4">
+            <div class="container-fluid">
+                <!-- Toggler -->
+                <button id="btnBars" data-toggle="sidenav" data-target="#sidenav-1" class="btn shadow-0 p-0 mr-3 d-block d-xxl-none ripple-surface" aria-controls="#sidenav-1" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-bars fa-lg"></i>
+                </button>
+
+                <!-- Search form -->
+                <!-- <form class="d-none d-md-flex input-group w-auto my-auto">
+                    <input autocomplete="off" type="search" class="form-control rounded" placeholder="Search (ctrl + &quot;/&quot; to focus)" style="min-width: 225px">
+                    <span class="input-group-text border-0"><i class="fas fa-search"></i></span>
+                </form> -->
+
+                <!-- Right links -->
+                <!-- <ul class="navbar-nav ml-auto d-flex flex-row">
+                    <li class="nav-item mr-3 mr-lg-0">
+                        <a class="nav-link" href="#">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </li>
+                </ul> -->
+            </div>
+        </nav>
+    </header>
+
     <main class="main">
         <div class="container">
             <?= $this->Flash->render() ?>
@@ -85,8 +148,18 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
         background: #f8faff;
     }
 
+    main {
+        margin-top: 5rem;
+    }
+
     .container {
         margin-top: 3rem;
+    }
+
+    #btnBars {
+        padding-top: 8px !important;
+        padding-left: 10px !important;
+        padding-bottom: 8px !important;
     }
 </style>
 
