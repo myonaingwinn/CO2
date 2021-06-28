@@ -54,9 +54,6 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     <?= $this->Html->script('./fusioncharts/themes/fusioncharts.theme.candy.js') ?>
 </head>
 
-<body style="background: #f8faff;">
-    <nav class="top-nav">
-
 <body>
     <!--<nav class="top-nav">
 >>>>>>> 579b459d740e99c41c2a42ba9539e015cf07a3cc
@@ -85,7 +82,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 <script type="text/javascript" src="/js/mdb.min.js"></script>
 <style>
     body {
-        background: #EFEFEF;
+        background: #f8faff;
     }
 
     .container {
