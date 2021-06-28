@@ -99,7 +99,7 @@
         } else {
             $('#pst_code1').val('');
             $('#pst_code2').val('');
-            e.preventDefault();
+            // e.preventDefault();
         }
     });
 </script>
