@@ -56,7 +56,43 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 
 <body>
     <header>
-        <div id="sidenav-1" class="sidenav sidenav-primary ps" role="navigation" data-hidden="false" data-accordion="true" style="width: 240px; height: 100vh; position: fixed; transition: all 0.3s linear 0s; transform: translateX(0%);">
+
+
+        <nav id="main-navbar" class="navbar navbar-light bg-light fixed-top shadow-4">
+            <div class="container-fluid">
+                <!-- Toggler -->
+                <?php if ($Auser) : ?>
+                    <button id="btnBars" data-toggle="sidenav" data-target="#sidenav-1" class="btn shadow-0 p-0 mr-3 d-block d-xxl-none ripple-surface" aria-controls="#sidenav-1" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-bars fa-lg"></i>
+                    </button>
+
+                    <script>
+                        $('#main-navbar').removeClass('my-navbar');
+                    </script>
+                <?php else : ?>
+                    <script>
+                        $('#main-navbar').addClass('my-navbar');
+                    </script>
+                <?php endif; ?>
+
+                <!-- Search form -->
+                <!-- <form class="d-none d-md-flex input-group w-auto my-auto">
+                    <input autocomplete="off" type="search" class="form-control rounded" placeholder="Search (ctrl + &quot;/&quot; to focus)" style="min-width: 225px">
+                    <span class="input-group-text border-0"><i class="fas fa-search"></i></span>
+                </form> -->
+
+                <!-- Right links -->
+                <!-- <ul class="navbar-nav ml-auto d-flex flex-row">
+                    <li class="nav-item mr-3 mr-lg-0">
+                        <a class="nav-link" href="#">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </li>
+                </ul> -->
+            </div>
+        </nav>
+
+        <div id="sidenav-1" class="sidenav sidenav-primary ps" role="navigation" data-hidden="false" data-accordion="true" style="width: 240px; height: 100vh; position: fixed; transition: all 0.3s linear 0s; transform: translateX(-100%);">
             <!-- <a class="ripple d-flex justify-content-center py-4" href="#!" data-ripple-color="primary">
                 <img id="MDB-logo" src="https://mdbootstrap.com/wp-content/uploads/2018/06/logo-mdb-jquery-small.png" alt="MDB Logo" draggable="false">
             </a> -->
@@ -107,30 +143,6 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
                 <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div>
             </div> -->
         </div>
-
-        <nav id="main-navbar" class="navbar navbar-light bg-light fixed-top shadow-4">
-            <div class="container-fluid">
-                <!-- Toggler -->
-                <button id="btnBars" data-toggle="sidenav" data-target="#sidenav-1" class="btn shadow-0 p-0 mr-3 d-block d-xxl-none ripple-surface" aria-controls="#sidenav-1" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-bars fa-lg"></i>
-                </button>
-
-                <!-- Search form -->
-                <!-- <form class="d-none d-md-flex input-group w-auto my-auto">
-                    <input autocomplete="off" type="search" class="form-control rounded" placeholder="Search (ctrl + &quot;/&quot; to focus)" style="min-width: 225px">
-                    <span class="input-group-text border-0"><i class="fas fa-search"></i></span>
-                </form> -->
-
-                <!-- Right links -->
-                <!-- <ul class="navbar-nav ml-auto d-flex flex-row">
-                    <li class="nav-item mr-3 mr-lg-0">
-                        <a class="nav-link" href="#">
-                            <i class="fab fa-github"></i>
-                        </a>
-                    </li>
-                </ul> -->
-            </div>
-        </nav>
     </header>
 
     <main class="main">
@@ -156,11 +168,21 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
         margin-top: 3rem;
     }
 
+    .my-navbar {
+        padding-bottom: 2.5rem;
+    }
+
     #btnBars {
         padding-top: 8px !important;
         padding-left: 10px !important;
         padding-bottom: 8px !important;
     }
 </style>
+
+<script>
+    $(function() {
+        $('div.sidenav-backdrop').remove();
+    });
+</script>
 
 </html>
