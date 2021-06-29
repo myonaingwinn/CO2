@@ -1,7 +1,5 @@
 <?php
 echo $this->Html->css('form');
-
-
 ?>
 
 <!DOCTYPE html>
@@ -24,16 +22,12 @@ echo $this->Html->css('form');
                         <p class="title"> パスワードをお忘れの方</p>
                         <?= $this->Form->create() ?>
                         <div class="email">
-
-
                             <p>メールアドレス</p>
                             <div class="input-group flex-nowrap">
-
                                 <span class="input-group-text"> <i class=" fa fas fa-envelope" aria-hidden="true"></i></span>
                                 <input type="email" class="form-control" placeholder="メールアドレス" aria-label="Email" aria-describedby="addon-wrapping" name="email" id="textbox" required />
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="col-md-2">
@@ -42,14 +36,10 @@ echo $this->Html->css('form');
                                 <div class="text-center">
                                     <input type="submit" value="送信" class="btnsub btn-primary">
                                     <?= $this->Form->end() ?>
-
                                 </div>
-
                                 <div class="col-md-2">
                                 </div>
-
                             </div>
-
                         </div>
                     </div>
                 </div>

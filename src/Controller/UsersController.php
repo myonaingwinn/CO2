@@ -10,8 +10,6 @@ use Cake\Auth\DefaultPasswordHasher;
 use Cake\Mailer\Mailer;
 use Cake\Event\EventInterface;
 
-
-
 /**
  * Users Controller
  *
@@ -20,30 +18,22 @@ use Cake\Event\EventInterface;
  */
 class UsersController extends AppController
 {
-
-
     public function admin()
     {
     }
 
-
     public function editor()
     {
     }
+
     public function login()
     {
-
         if ($this->request->is('post')) {
-
             $user = $this->Auth->identify();
             $email = $this->request->getData('email');
             $password = $this->request->getData('password');
 
-            // if ($email == NULL) {
-            //     $this->Flash->error(__('メールアドレスは入力必須項目です.'));
-            // } else if ($password == NULL) {
-            //     $this->Flash->error(__('パスワードは入力必須項目です.'));
-            // } else {
+
 
             if (!$user) {
 
@@ -66,9 +56,8 @@ class UsersController extends AppController
                 if ($user['role'] == 'A') {
                     return $this->redirect(['controller' => 'Users', 'action' => 'index']);
                 } else if ($user['role'] == 'U') {
-
-
                     $this->Auth->setUser($user);
+
 
                     return $this->redirect(['controller' => 'Users', 'action' => 'admin']);
                 }
@@ -84,7 +73,6 @@ class UsersController extends AppController
 
     public function forgotpassword()
     {
-
         if ($this->request->is('post')) {
 
             $email = $this->request->getData('email');
@@ -129,7 +117,6 @@ class UsersController extends AppController
 
             $user->password = $newpass;
 
-
             if ($userTable->save($user)) {
 
                 $this->Flash->success(__('パスワードが正常にリセットされました。新しいパスワードを使用してログインしてください。'));
@@ -138,6 +125,7 @@ class UsersController extends AppController
             }
         }
     }
+
     /**
      * Index method
      *
@@ -145,8 +133,8 @@ class UsersController extends AppController
      */
     public function index()
     {
-        $users = $this->paginate($this->Users);
-
+        $data = $this->Users->find('all', array('conditions' => array('Users.del_flg' => 'N')));
+        $users = $this->paginate($data);
         $this->set(compact('users'));
     }
 
@@ -213,20 +201,28 @@ class UsersController extends AppController
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function edit($id = null)
-    {
-        $user = $this->Users->get($id, [
-            'contain' => [],
+    { //change role
+        $this->request->allowMethod('get');
+        $roleData = $this->request->getQuery('role');
+        $id = $this->request->getQuery('userID');
+        $data = $this->Users->find('all', [
+            'conditions' => ([
+                ['Users.id' => $id],
+                ['Users.del_flg' => 'N']
+            ])
         ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
-            if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The user could not be saved. Please, try again.'));
+        $users = $data->toArray();
+        $users[0]->role = $roleData;
+        if ($this->Users->save($users[0])) {
+            $this->Flash->success(__('ユーザーが保存されました。'));
+            return $this->redirect(['action' => 'edit']);
+        } else {
+            $this->Flash->error(__('ユーザーを保存できませんでした。 もう一度やり直してください。'));
         }
-        $this->set(compact('user'));
+        $data = $this->Users->find('all', array('conditions' => array('Users.del_flg' => 'N')));
+        $users = $this->paginate($data);
+        $this->set(compact('users'));
+        // return $this->redirect(['action' => 'index']); 
     }
 
     /**
@@ -241,11 +237,32 @@ class UsersController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $user = $this->Users->get($id);
         if ($this->Users->delete($user)) {
-            $this->Flash->success(__('The user has been deleted.'));
+            $this->Flash->success(__('ユーザーが削除されました。'));
         } else {
-            $this->Flash->error(__('The user could not be deleted. Please, try again.'));
+            $this->Flash->error(__('ユーザーを削除できませんでした。 もう一度やり直してください。'));
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+    //Search
+    public function search()
+    {
+        $this->request->allowMethod('ajax');
+        $keyword = $this->request->getQuery('keyword');
+        $query = $this->Users->find('all', [
+            'conditions' => ([
+                'Or' => [
+                    ['Users.name LIKE' => '%' . $keyword . '%'],
+                    ['Users.email like' => '%' . $keyword . '%'],
+                    ['Users.role like' => '%' . $keyword . '%'],
+                    ['Users.last_login like' => '%' . $keyword . '%']
+                ],
+                'AND' => ['Users.del_flg' => 'N']
+            ]),
+            'order' => ['Users.name' => 'ASC']
+        ]);
+        $users = $this->paginate($query);
+        $this->set(compact('users'));
+        $this->set('_serialize', ['users']);
     }
 }

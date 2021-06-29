@@ -61,10 +61,18 @@ for ($i = 0; $i < 10; $i++) {
 					y: yValue
 				});
 				xValue++;
-				chart.render();
-				//	if (yValue > 5) {
-				//	getGraphImage();
-				//	}
+				chart.render(); <<
+				<< << < HEAD
+					//	if (yValue > 5) {
+					//	getGraphImage();
+					//	}
+					===
+					=== =
+					//if (yValue > 5) {
+					//getGraphImage();
+					//}
+					>>>
+					>>> > cd9e8cad9df3c0887fc164545522526e91eab7d0
 			};
 
 		}
@@ -81,7 +89,7 @@ for ($i = 0; $i < 10; $i++) {
 			html2canvas(document.querySelector('#chartContainer')).then(canvas => {
 				//console.log(canvas.toDataURL());  
 				dataURL = canvas.toDataURL();
-				console.log(dataURL);
+				//console.log(dataURL);
 				post_data(dataURL);
 			});
 		}

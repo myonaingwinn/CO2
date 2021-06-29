@@ -1,39 +1,46 @@
-<?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\User $user
- */
-?>
-<div class="row">
-    <aside class="column">
-        <div class="side-nav">
-            <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Form->postLink(
-                __('Delete'),
-                ['action' => 'delete', $user->id],
-                ['confirm' => __('Are you sure you want to delete # {0}?', $user->id), 'class' => 'side-nav-item']
-            ) ?>
-            <?= $this->Html->link(__('List Users'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
-        </div>
-    </aside>
-    <div class="column-responsive column-80">
-        <div class="users form content">
-            <?= $this->Form->create($user) ?>
-            <fieldset>
-                <legend><?= __('Edit User') ?></legend>
-                <?php
-                    echo $this->Form->control('name');
-                    echo $this->Form->control('email');
-                    echo $this->Form->control('password');
-                    echo $this->Form->control('role');
-                    echo $this->Form->control('last_login', ['empty' => true]);
-                    echo $this->Form->control('other');
-                    echo $this->Form->control('token');
-                    echo $this->Form->control('del_flg');
-                ?>
-            </fieldset>
-            <?= $this->Form->button(__('Submit')) ?>
-            <?= $this->Form->end() ?>
-        </div>
-    </div>
-</div>
+<table id="paginationNumbers" class="table" width="100%">
+            <thead>
+                <tr>
+                    <th><?= $this->Paginator->sort('順番') ?></th>
+                    <th><?= $this->Paginator->sort('名前') ?></th>
+                    <th><?= $this->Paginator->sort('メールアドレス') ?></th>
+                    <th><?= $this->Paginator->sort('最後ログインしたデート') ?></th>
+                    <th><?= $this->Paginator->sort('役割') ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php $page = $this->Paginator->counter(__('{{page}}'));
+                $no = 1;
+                if ($page > 2)
+                    $no = $page * 20 - 19;
+                else if ($page == 2)
+                    $no = $page * 10 + 1; ?>
+                <?php foreach ($users as $user) : ?>
+                    <tr>
+                        <td><?= $no++ ?></td>
+                        <td><?= h($user->name) ?></td>
+                        <td><?= h($user->email) ?></td>
+                        <td><?= h($user->last_login) ?></td>
+                        <td>
+                            <select name="role" id="role-<?= $user->id ?>">                           
+                                <?php
+                                $role = $user->role;
+                                if ($role == 'A') {
+                                    echo
+                                    '<option value="A" selected>管理者</option>                                   
+                                     <option value="U">ユーザー</option>';
+                                }
+                                
+                                if ($role == 'U') {
+                                    echo
+                                    '<option value="A" selected>管理者</option>
+                                    <option value="U" selected>ユーザー</option>';
+                                }
+                                ?>
+                            </select>
+                            <input type="hidden" id="origin-<?= $user->id ?>" value=<?= $role?>>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>

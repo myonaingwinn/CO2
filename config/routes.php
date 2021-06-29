@@ -53,6 +53,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
      * to use (in this case, templates/Pages/home.php)...
      */
     $builder->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
+    $builder->connect('/dashboard', ['controller' => 'Co2datadetails', 'action' => 'index']);
 
     /*
      * ...and connect the rest of 'Pages' controller's URLs.
@@ -66,6 +67,8 @@ $routes->scope('/', function (RouteBuilder $builder) {
     $builder->connect('/register', ['controller' => 'Users', 'action' => 'add']);
     $builder->connect('/forgotpassword', ['controller' => 'Users', 'action' => 'forgotpassword']);
     $builder->connect('/resetpassword', ['controller' => 'Users', 'action' => 'resetpassword']);
+    $builder->connect('/graph', ['controller' => 'Graphs', 'action' => 'index']);
+    $builder->connect('/device_reg', ['controller' => 'RoomInfo', 'action' => 'add']);
     /*
     /*
      * Connect catchall routes for all controllers.
