@@ -6,7 +6,7 @@
         <div class="col-6">
             <div class="card text-center">
                 <div class="card-body">
-                    <h4 class="card-title">デバイス登録</h4>
+                    <h4 id="title" class="card-title">デバイス登録</h4>
 
                     <select id="select" name="user_uid" class="select select-initialized" required>
                         <option value="" disabled selected>ユーザータイプを選択</option>
@@ -50,7 +50,7 @@
                         <label class="form-label" for="rm_no">建物・部屋番号</label>
                     </div>
 
-                    <button id="btnReg" type="submit" class="btn btn-primary">登録</button>
+                    <button id="btnReg" type="submit" class="btn btn-primary btn-lg">登録</button>
                 </div>
             </div>
         </div>
@@ -105,7 +105,7 @@
 </script>
 
 <style>
-    h4 {
+    #title {
         margin-top: .8rem;
         margin-bottom: 2rem !important;
     }

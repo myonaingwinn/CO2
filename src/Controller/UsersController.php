@@ -8,7 +8,6 @@ use Cake\Utility\Security;
 use Cake\I18n\Time;
 use Cake\Auth\DefaultPasswordHasher;
 use Cake\Mailer\Mailer;
-use Cake\Event\EventInterface;
 
 /**
  * Users Controller
@@ -18,28 +17,13 @@ use Cake\Event\EventInterface;
  */
 class UsersController extends AppController
 {
-    public function admin()
-    {
-    }
-
-    public function editor()
-    {
-    }
-
     public function login()
     {
         if ($this->request->is('post')) {
             $user = $this->Auth->identify();
-            $email = $this->request->getData('email');
-            $password = $this->request->getData('password');
-
-
-
             if (!$user) {
-
                 $this->Flash->error(__('ユーザー名かパスワードが間違っています.'));
             } else {
-
                 $last_login = date("Y-m-d H:i:s");
 
                 $id = $user['id'];
@@ -54,15 +38,13 @@ class UsersController extends AppController
                 $this->Users->save($users[0]);
 
                 if ($user['role'] == 'A') {
-                    return $this->redirect(['controller' => 'Users', 'action' => 'index']);
+                    $this->Auth->setUser($user);
+                    return $this->redirect('/dashboard');
                 } else if ($user['role'] == 'U') {
                     $this->Auth->setUser($user);
-
-
-                    return $this->redirect(['controller' => 'Users', 'action' => 'admin']);
+                    return $this->redirect('/dashboard');
                 }
-            } //user exist
-            // }
+            }
         }
     }
 

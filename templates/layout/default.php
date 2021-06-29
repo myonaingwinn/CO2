@@ -58,14 +58,12 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 
 <body>
     <header>
-
-
         <nav id="main-navbar" class="navbar navbar-light bg-light fixed-top shadow-4">
             <div class="container-fluid">
                 <!-- Toggler -->
                 <?php if ($Auser) : ?>
                     <button id="btnBars" data-toggle="sidenav" data-target="#sidenav-1" class="btn shadow-0 p-0 mr-3 d-block d-xxl-none ripple-surface" aria-controls="#sidenav-1" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-bars fa-lg"></i>
+                        <i class="fas fa-bars fa-2x"></i>
                     </button>
 
                     <script>
@@ -101,49 +99,82 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 
             <div class="mt-4">
                 <div id="header-content" class="pl-3">
-                    <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(23).jpg" alt="avatar" class="rounded-circle img-fluid mb-3" style="max-width: 50px;">
+                    <!-- <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(23).jpg" alt="avatar" class="rounded-circle img-fluid mb-3" style="max-width: 50px;"> -->
+                    <i class="fas fa-user-circle text-success fa-5x mb-3 rounded-circle shadow-2"></i>
                     <h4>
-                        <span style="white-space: nowrap;">Ann Smith</span>
+                        <span style="white-space: nowrap;"><?= $Auser['name'] ?></span>
                     </h4>
-                    <p>ann_s@mdbootstrap.com</p>
+                    <p><?= $Auser['email'] ?></p>
                 </div>
                 <hr class="mb-0">
             </div>
 
-            <ul class="sidenav-menu">
-                <li class="sidenav-item">
-                    <a class="sidenav-link active ripple-surface" href="" tabindex="-1">
-                        <i class="fas fa-chart-area pr-3"></i><span>Webiste traffic</span></a>
-                </li>
-                <li class="sidenav-item">
-                    <a class="sidenav-link ripple-surface" data-toggle="collapse" href="#sidenav-collapse-1-0-0" role="button" tabindex="-1"><i class="fas fa-cogs pr-3"></i><span>Settings</span><i class="fas fa-angle-down rotate-icon"></i></a>
-                    <ul class="sidenav-collapse collapse" id="sidenav-collapse-1-0-0">
-                        <li class="sidenav-item">
-                            <a class="sidenav-link ripple-surface" tabindex="-1">Profile</a>
-                        </li>
-                        <li class="sidenav-item">
-                            <a class="sidenav-link ripple-surface" tabindex="-1">Account</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="sidenav-item">
-                    <a class="sidenav-link ripple-surface" data-toggle="collapse" href="#sidenav-collapse-1-0-1" role="button" tabindex="-1"><i class="fas fa-lock pr-3"></i><span>Password</span><i class="fas fa-angle-down rotate-icon"></i></a>
-                    <ul class="sidenav-collapse collapse" id="sidenav-collapse-1-0-1">
-                        <li class="sidenav-item">
-                            <a class="sidenav-link ripple-surface" tabindex="-1">Request password</a>
-                        </li>
-                        <li class="sidenav-item">
-                            <a class="sidenav-link ripple-surface" tabindex="-1">Reset password</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-            <!-- <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
-                <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
-            </div>
-            <div class="ps__rail-y" style="top: 0px; right: 0px;">
-                <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div>
-            </div> -->
+            <!-- admin -->
+            <?php if ($Auser['role'] == 'A') : ?>
+                <ul class="sidenav-menu">
+                    <li class="sidenav-item">
+                        <a class="sidenav-link ripple-surface" href="dashboard" tabindex="-1">
+                            <i class="fas fa-chart-area fa-lg pr-2"></i><span>&nbsp;ダッシュボード</span></a>
+                    </li>
+                    <li class="sidenav-item">
+                        <a class="sidenav-link ripple-surface" data-toggle="collapse" href="#sidenav-collapse-1-0-0" role="button" tabindex="-1">
+                            <i class="fas fa-users-cog fa-lg pr-2"></i>
+                            <span>ユーザー</span></a>
+                        <ul class="sidenav-collapse collapse" id="sidenav-collapse-1-0-0">
+                            <li class="sidenav-item">
+                                <a class="sidenav-link ripple-surface" href="users" tabindex="-1">
+                                    <i class="fas fa-users pr-2"></i><span>ユーザー一覧</span></a>
+                            </li>
+                            <li class="sidenav-item">
+                                <a class="sidenav-link ripple-surface" href="register" tabindex="-1">
+                                    <i class="fas fa-user-plus pr-2"></i><span>ユーザー登録</span></a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="sidenav-item">
+                        <a class="sidenav-link ripple-surface" data-toggle="collapse" href="#sidenav-collapse-1-0-1" role="button" tabindex="-1">
+                            <i class="fas fa-tools fa-lg pr-2"></i>
+                            <span>&nbsp;デバイス</span></a>
+                        <ul class="sidenav-collapse collapse" id="sidenav-collapse-1-0-1">
+                            <li class="sidenav-item">
+                                <a class="sidenav-link ripple-surface" href="devices" tabindex="-1">
+                                    <i class="fas fa-list-ul pr-2"></i><span>デバイス一覧</span></a>
+                            </li>
+                            <li class="sidenav-item">
+                                <a class="sidenav-link ripple-surface" href="device_reg" tabindex="-1">
+                                    <i class="fas fa-plus-circle pr-2"></i><span>デバイス登録</span></a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="sidenav-item">
+                        <a class="sidenav-link ripple-surface" href="forgotpassword" tabindex="-1">
+                            <i class="fas fa-lock fa-lg pr-2"></i><span>&ensp;パスワードをお忘れの方</span></a>
+                    </li>
+                    <li class="sidenav-item">
+                        <a class="sidenav-link ripple-surface" href="logout" tabindex="-1">
+                            <i class="fas fa-sign-out-alt text-danger fa-lg pr-2"></i><span>&nbsp;ログアウト</span></a>
+                    </li>
+                </ul>
+            <?php endif; ?>
+
+            <!-- user -->
+            <?php if ($Auser['role'] == 'U') : ?>
+                <ul class="sidenav-menu">
+                    <li class="sidenav-item">
+                        <a class="sidenav-link ripple-surface" href="dashboard" tabindex="-1">
+                            <i class="fas fa-chart-area fa-lg pr-2"></i><span>ダッシュボード</span></a>
+                    </li>
+                    <li class="sidenav-item">
+                        <a class="sidenav-link ripple-surface" href="forgotpassword" tabindex="-1">
+                            <i class="fas fa-lock fa-lg pr-2"></i><span>&nbsp;パスワードをお忘れの方</span></a>
+                    </li>
+                    <li class="sidenav-item">
+                        <a class="sidenav-link ripple-surface" href="logout" tabindex="-1">
+                            <i class="fas fa-sign-out-alt text-danger fa-lg pr-2"></i><span>ログアウト</span></a>
+                    </li>
+                </ul>
+            <?php endif; ?>
         </div>
     </header>
 
@@ -175,9 +206,13 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     }
 
     #btnBars {
-        padding-top: 8px !important;
+        padding-top: 5px !important;
         padding-left: 10px !important;
-        padding-bottom: 8px !important;
+        padding-bottom: 5px !important;
+    }
+
+    .fa-2x {
+        font-size: 1.7em;
     }
 </style>
 
