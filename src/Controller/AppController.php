@@ -93,6 +93,7 @@ class AppController extends Controller
 
     public function beforeFilter(EventInterface $event)
     {
+
         if ($this->Auth->user()) {
             $this->set('Auser', $this->Auth->user());
         } else {

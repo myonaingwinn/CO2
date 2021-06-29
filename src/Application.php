@@ -77,12 +77,12 @@ class Application extends BaseApplication
      */
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
-        //SuLaPyaePhyoe modify
+
         $options = [
             // ...
         ];
         $csrf = new CsrfProtectionMiddleware($options);
-        //
+
         $middlewareQueue
             // Catch any exceptions in the lower layers,
             // and make an error page/response
@@ -109,8 +109,12 @@ class Application extends BaseApplication
             // Cross Site Request Forgery (CSRF) Protection Middleware
             // https://book.cakephp.org/4/en/controllers/middleware.html#cross-site-request-forgery-csrf-middleware
 
+            //    ->add(new CsrfProtectionMiddleware([
+
+
             // SuLaPyaePhyoe modify
             // ->add(new CsrfProtectionMiddleware([
+
             //     'httponly' => true,
             // ]));
             ->add($csrf);

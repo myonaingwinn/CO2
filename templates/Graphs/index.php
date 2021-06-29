@@ -62,11 +62,10 @@ for ($i = 0; $i < 10; $i++) {
 				});
 				xValue++;
 				chart.render();
-				//if (yValue > 5) {
-				//getGraphImage();
-				//}
+					//	if (yValue > 5) {
+					//	getGraphImage();
+					//	}
 			};
-
 		}
 	</script>
 </head>
