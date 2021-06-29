@@ -80,6 +80,8 @@ echo $this->Html->css('form');
     $('#btnReset').click(function(event) {
         if ($("#password").val() != $("#confirmPassword").val() || $("#confirmPassword").val().trim().length == 0) {
             event.preventDefault();
+            $("#password").css("border-color", "red");
+            $("#confirmPassword").css("border-color", "red");
         }
     });
 </script>
