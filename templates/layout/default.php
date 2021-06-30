@@ -44,8 +44,8 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 
     <!-- <?= $this->Html->css(['normalize.min', 'milligram.min', 'cake', 'mdb.min']) ?> -->
 
-    <?= $this->Html->css('mdb.min.css') ?>
-    <?= $this->Html->script('jquery-3.5.1.min.js') ?>
+    <?= $this->Html->css(['mdb.min.css', 'all.css',]) ?>
+    <?= $this->Html->script(['jquery-3.5.1.min.js']) ?>
 
     <!-- <?= $this->Html->script(['mdb.min', 'jquery-3.5.1.min']) ?> -->
 
