@@ -25,7 +25,7 @@ class Co2datadetailsTableTest extends TestCase
      */
     protected $fixtures = [
         'app.Co2datadetails',
-        'app.Co2Devices',
+        'app.RoomInfo',
     ];
 
     /**

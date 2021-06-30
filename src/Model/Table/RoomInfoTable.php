@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -39,11 +40,10 @@ class RoomInfoTable extends Table
 
         $this->setTable('room_info');
         $this->setDisplayField('id');
-        $this->setPrimaryKey(['device_id']);
+        $this->setPrimaryKey('device_id');
 
-        $this->belongsTo('Devices', [
-            'foreignKey' => 'device_id',
-            'joinType' => 'INNER',
+        $this->hasMany('Co2datadetails', [
+            'foreignKey' => 'co2_device_id'
         ]);
     }
 
@@ -55,10 +55,18 @@ class RoomInfoTable extends Table
      */
     public function validationDefault(Validator $validator): Validator
     {
-        $validator
+        /* $validator
             ->integer('id')
-            ->allowEmptyString('id', null, 'create')
-            ->add('id', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+            ->requirePresence('id', 'create')
+            ->notEmptyString('id')
+            ->add('id', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']); */
+
+        $validator
+            ->scalar('device_id')
+            ->maxLength('device_id', 255)
+            ->requirePresence('device_id', 'create')
+            ->notEmptyString('device_id')
+            ->add('device_id', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
             ->scalar('user_uid')
@@ -103,7 +111,7 @@ class RoomInfoTable extends Table
     public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add($rules->isUnique(['id']), ['errorField' => 'id']);
-        $rules->add($rules->existsIn(['device_id'], 'Devices'), ['errorField' => 'device_id']);
+        $rules->add($rules->isUnique(['device_id']), ['errorField' => 'device_id']);
 
         return $rules;
     }

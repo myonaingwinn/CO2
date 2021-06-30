@@ -25,7 +25,6 @@ class RoomInfoTableTest extends TestCase
      */
     protected $fixtures = [
         'app.RoomInfo',
-        'app.Co2datadetails',
     ];
 
     /**

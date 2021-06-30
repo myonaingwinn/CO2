@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -18,6 +19,7 @@ class RoomInfoController extends AppController
      */
     public function index()
     {
+        $this->loadModel('RoomInfo');
         $this->paginate = [
             'contain' => ['Co2datadetails'],
         ];
@@ -49,18 +51,21 @@ class RoomInfoController extends AppController
      */
     public function add()
     {
+        $this->loadModel('RoomInfo');
+        $this->loadModel('Users');
         $roomInfo = $this->RoomInfo->newEmptyEntity();
         if ($this->request->is('post')) {
             $roomInfo = $this->RoomInfo->patchEntity($roomInfo, $this->request->getData());
             if ($this->RoomInfo->save($roomInfo)) {
-                $this->Flash->success(__('The room info has been saved.'));
+                $this->Flash->success(__('デバイス情報が保存されました。'));
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The room info could not be saved. Please, try again.'));
+            $this->Flash->error(__('デバイス情報を保存できませんでした。 もう一度やり直してください。'));
         }
         $co2datadetails = $this->RoomInfo->Co2datadetails->find('list', ['limit' => 200]);
-        $this->set(compact('roomInfo', 'co2datadetails'));
+        $users = $this->Users->find('all')->where(['del_flg' => 'N', 'role' => 'U'])->toArray();
+        $this->set(compact('roomInfo', 'co2datadetails', 'users'));
     }
 
     /**

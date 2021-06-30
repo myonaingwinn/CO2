@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -75,6 +76,8 @@ class UsersTable extends Table
             ->email('email')
             ->requirePresence('email', 'create')
             ->notEmptyString('email');
+
+
 
         $validator
             ->scalar('password')
