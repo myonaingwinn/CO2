@@ -1,0 +1,13 @@
+[{
+    "name": "Time",
+    "type": "date",
+    "format": "%Y-%m-%d %H:%M:%S"
+},
+{
+    "name": "Type",
+    "type": "string"
+},
+{
+    "name": "Temperature",
+    "type": "number"
+}]

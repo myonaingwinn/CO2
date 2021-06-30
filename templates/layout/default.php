@@ -52,8 +52,8 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>
-    <?= $this->Html->script('./fusioncharts/fusioncharts.js') ?>
-    <?= $this->Html->script('./fusioncharts/themes/fusioncharts.theme.candy.js') ?>
+    <?= $this->Html->script('./fusioncharts/old_version/fusioncharts.js') ?>
+    <?= $this->Html->script('./fusioncharts/old_version/themes/fusioncharts.theme.candy.js') ?>
 </head>
 
 <body>
