@@ -50,25 +50,11 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>
-    <?= $this->Html->script('./fusioncharts/fusioncharts.js') ?>
-    <?= $this->Html->script('./fusioncharts/themes/fusioncharts.theme.candy.js') ?>
+    <?= $this->Html->script('./fusioncharts/old_version/fusioncharts.js') ?>
+    <?= $this->Html->script('./fusioncharts/old_version/themes/fusioncharts.theme.candy.js') ?>
 </head>
 
 <body>
-    <!--<nav class="top-nav">
-        <div class="top-nav-title">
-            <a href="<?= $this->Url->build('/') ?>"><span>Cake</span>PHP</a>
-        </div>
-        <div class="top-nav-links">
-            <a target="_blank" rel="noopener" href="https://book.cakephp.org/4/">Documentation</a>
-            <a target="_blank" rel="noopener" href="https://api.cakephp.org/">API</a>
-        </div>
-    </nav> -->
-    <!-- <nav class="navbar fixed-top navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Fixed top</a>
-        </div>
-    </nav> -->
     <main class="main">
         <div class="container">
             <?= $this->Flash->render() ?>
