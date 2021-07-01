@@ -272,8 +272,7 @@ for ($i; $i <= count($num_devices); $i++) {
             index = 2;
         else if (col == 2 && card == 1)
             index = 3;
-
-        $('#' + id).append($('<div class="card"><div class="card-body"><h5 class="card-title">' + titles[index] + '</h5><div id="' + id + '-graph"></div><button type="button" class="btn realtime-btn btn-primary btn-sm" id="viewDetails">View Details</button></div></div>'));
+        $('#' + id).append($('<div class="card"><div class="card-body"><h5 class="card-title">' + titles[index] + '</h5><div id="' + id + '-graph"></div><a href="co2datadetails/detail/' + id + '-graph-' + devices.length + '" class="btn realtime-btn btn-primary btn-sm" id="update-data">Detail View</a></div></div>'));
     }
 
     function showhidemulti(id) {

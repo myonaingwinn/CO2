@@ -99,6 +99,6 @@ class AppController extends Controller
             $this->set('Auser', null);
         }
 
-        $this->Auth->allow(['login', 'index', 'forgotpassword', 'resetpassword', 'logout', 'admin', 'add', 'editor', 'notify', 'search', 'edit', 'csv', 'view']);
+        $this->Auth->allow(['login', 'index', 'forgotpassword', 'resetpassword', 'logout', 'admin', 'add', 'editor', 'notify', 'search', 'edit', 'csv', 'view', 'detail', 'onetimedata']);
     }
 }
