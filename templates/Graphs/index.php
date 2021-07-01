@@ -61,18 +61,15 @@ for ($i = 0; $i < 10; $i++) {
 					y: yValue
 				});
 				xValue++;
-				chart.render(); <<
-				<< << < HEAD
-					//	if (yValue > 5) {
-					//	getGraphImage();
-					//	}
-					===
-					=== =
-					//if (yValue > 5) {
-					//getGraphImage();
-					//}
-					>>>
-					>>> > cd9e8cad9df3c0887fc164545522526e91eab7d0
+				chart.render();
+				//	if (yValue > 5) {
+				//	getGraphImage();
+				//	}
+
+				//if (yValue > 5) {
+				//getGraphImage();
+				//}
+
 			};
 
 		}

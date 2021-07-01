@@ -2,19 +2,13 @@
      background-color: #f8faff;
  }
  
- .fa {
-     color: #333;
- }
- 
- .btnsub {
-     margin-top: 20px;
-     width: 111px;
-     height: 47px;
-     font-size: 16px;
- }
- 
  p {
      font-size: 18px;
+     color: #333;
+     margin-top: 5px;
+ }
+ 
+ h6 {
      color: #333;
      margin-top: 5px;
  }
@@ -30,7 +24,6 @@
  .title {
      color: #333;
      text-align: center;
-     font-weight: Quicksand;
      font-size: 30px;
      margin-bottom: 0px;
      margin-top: -15px;
@@ -60,20 +53,18 @@
      font-size: 21px;
  }
  
- .btn {
+ .gp {
      padding-top: 10px;
      background-color: #7F8283;
      color: white;
-     width: 150px;
-     height: 47px;
+     width: 104px;
+     height: 38px;
      position: relative;
-     font-size: 20px;
+     font-size: 14px;
  }
  
- #textbox,
- #password,
- #confirmPassword {
-     height: 48px;
+ .sub {
+     margin-top: 18px;
  }
  
  .fa {
