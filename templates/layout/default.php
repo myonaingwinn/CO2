@@ -21,6 +21,8 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 <html>
 
 <head>
+
+    <?= $this->Html->meta('csrfToken', $this->request->getAttribute('csrfToken')); ?>
     <?= $this->Html->charset() ?>
     <!-- SLPP Modify -->
     <?= $this->Html->meta('csrfToken', $this->request->getAttribute('csrfToken')); ?>
@@ -42,8 +44,8 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 
     <!-- <?= $this->Html->css(['normalize.min', 'milligram.min', 'cake', 'mdb.min']) ?> -->
 
-    <?= $this->Html->css('mdb.min.css') ?>
-    <?= $this->Html->script('jquery-3.5.1.min.js') ?>
+    <?= $this->Html->css(['mdb.min.css', 'all.css',]) ?>
+    <?= $this->Html->script(['jquery-3.5.1.min.js']) ?>
 
     <!-- <?= $this->Html->script(['mdb.min', 'jquery-3.5.1.min']) ?> -->
 
@@ -55,6 +57,127 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 </head>
 
 <body>
+    <header>
+        <nav id="main-navbar" class="navbar navbar-light bg-light fixed-top shadow-4">
+            <div class="container-fluid">
+                <!-- Toggler -->
+                <?php if ($Auser) : ?>
+                    <button id="btnBars" data-toggle="sidenav" data-target="#sidenav-1" class="btn shadow-0 p-0 mr-3 d-block d-xxl-none ripple-surface" aria-controls="#sidenav-1" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-bars fa-2x"></i>
+                    </button>
+
+                    <script>
+                        $('#main-navbar').removeClass('my-navbar');
+                    </script>
+                <?php else : ?>
+                    <script>
+                        $('#main-navbar').addClass('my-navbar');
+                    </script>
+                <?php endif; ?>
+
+                <!-- Search form -->
+                <!-- <form class="d-none d-md-flex input-group w-auto my-auto">
+                    <input autocomplete="off" type="search" class="form-control rounded" placeholder="Search (ctrl + &quot;/&quot; to focus)" style="min-width: 225px">
+                    <span class="input-group-text border-0"><i class="fas fa-search"></i></span>
+                </form> -->
+
+                <!-- Right links -->
+                <!-- <ul class="navbar-nav ml-auto d-flex flex-row">
+                    <li class="nav-item mr-3 mr-lg-0">
+                        <a class="nav-link" href="#">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </li>
+                </ul> -->
+            </div>
+        </nav>
+
+        <div id="sidenav-1" class="sidenav sidenav-primary ps" role="navigation" data-hidden="false" data-accordion="true" style="width: 240px; height: 100vh; position: fixed; transition: all 0.3s linear 0s; transform: translateX(-100%);">
+            <!-- <a class="ripple d-flex justify-content-center py-4" href="#!" data-ripple-color="primary">
+                <img id="MDB-logo" src="https://mdbootstrap.com/wp-content/uploads/2018/06/logo-mdb-jquery-small.png" alt="MDB Logo" draggable="false">
+            </a> -->
+
+            <div class="mt-4">
+                <div id="header-content" class="pl-3">
+                    <!-- <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(23).jpg" alt="avatar" class="rounded-circle img-fluid mb-3" style="max-width: 50px;"> -->
+                    <i class="fas fa-user-circle text-success fa-5x mb-3 rounded-circle shadow-2"></i>
+                    <h4>
+                        <span style="white-space: nowrap;"><?= $Auser['name'] ?></span>
+                    </h4>
+                    <p><?= $Auser['email'] ?></p>
+                </div>
+                <hr class="mb-0">
+            </div>
+
+            <!-- admin -->
+            <?php if ($Auser['role'] == 'A') : ?>
+                <ul class="sidenav-menu">
+                    <li class="sidenav-item">
+                        <a class="sidenav-link ripple-surface" href="dashboard" tabindex="-1">
+                            <i class="fas fa-chart-area fa-lg pr-2"></i><span>&nbsp;ダッシュボード</span></a>
+                    </li>
+                    <li class="sidenav-item">
+                        <a class="sidenav-link ripple-surface" data-toggle="collapse" href="#sidenav-collapse-1-0-0" role="button" tabindex="-1">
+                            <i class="fas fa-users-cog fa-lg pr-2"></i>
+                            <span>ユーザー</span></a>
+                        <ul class="sidenav-collapse collapse" id="sidenav-collapse-1-0-0">
+                            <li class="sidenav-item">
+                                <a class="sidenav-link ripple-surface" href="users" tabindex="-1">
+                                    <i class="fas fa-users pr-2"></i><span>ユーザー一覧</span></a>
+                            </li>
+                            <li class="sidenav-item">
+                                <a class="sidenav-link ripple-surface" href="register" tabindex="-1">
+                                    <i class="fas fa-user-plus pr-2"></i><span>ユーザー登録</span></a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="sidenav-item">
+                        <a class="sidenav-link ripple-surface" data-toggle="collapse" href="#sidenav-collapse-1-0-1" role="button" tabindex="-1">
+                            <i class="fas fa-tools fa-lg pr-2"></i>
+                            <span>&nbsp;デバイス</span></a>
+                        <ul class="sidenav-collapse collapse" id="sidenav-collapse-1-0-1">
+                            <li class="sidenav-item">
+                                <a class="sidenav-link ripple-surface" href="devices" tabindex="-1">
+                                    <i class="fas fa-list-ul pr-2"></i><span>デバイス一覧</span></a>
+                            </li>
+                            <li class="sidenav-item">
+                                <a class="sidenav-link ripple-surface" href="device_reg" tabindex="-1">
+                                    <i class="fas fa-plus-circle pr-2"></i><span>デバイス登録</span></a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="sidenav-item">
+                        <a class="sidenav-link ripple-surface" href="forgotpassword" tabindex="-1">
+                            <i class="fas fa-lock fa-lg pr-2"></i><span>&ensp;パスワードをお忘れの方</span></a>
+                    </li>
+                    <li class="sidenav-item">
+                        <a class="sidenav-link ripple-surface" href="logout" tabindex="-1">
+                            <i class="fas fa-sign-out-alt text-danger fa-lg pr-2"></i><span>&nbsp;ログアウト</span></a>
+                    </li>
+                </ul>
+            <?php endif; ?>
+
+            <!-- user -->
+            <?php if ($Auser['role'] == 'U') : ?>
+                <ul class="sidenav-menu">
+                    <li class="sidenav-item">
+                        <a class="sidenav-link ripple-surface" href="dashboard" tabindex="-1">
+                            <i class="fas fa-chart-area fa-lg pr-2"></i><span>ダッシュボード</span></a>
+                    </li>
+                    <li class="sidenav-item">
+                        <a class="sidenav-link ripple-surface" href="forgotpassword" tabindex="-1">
+                            <i class="fas fa-lock fa-lg pr-2"></i><span>&nbsp;パスワードをお忘れの方</span></a>
+                    </li>
+                    <li class="sidenav-item">
+                        <a class="sidenav-link ripple-surface" href="logout" tabindex="-1">
+                            <i class="fas fa-sign-out-alt text-danger fa-lg pr-2"></i><span>ログアウト</span></a>
+                    </li>
+                </ul>
+            <?php endif; ?>
+        </div>
+    </header>
+
     <main class="main">
         <div class="container">
             <?= $this->Flash->render() ?>
@@ -64,6 +187,39 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     <footer>
     </footer>
 </body>
-<script type="text/javascript" src="js/mdb.min.js"></script>
+<script type="text/javascript" src="/js/mdb.min.js"></script>
+<style>
+    body {
+        background: #f8faff;
+    }
+
+    main {
+        margin-top: 5rem;
+    }
+
+    .container {
+        margin-top: 3rem;
+    }
+
+    .my-navbar {
+        padding-bottom: 2.5rem;
+    }
+
+    #btnBars {
+        padding-top: 5px !important;
+        padding-left: 10px !important;
+        padding-bottom: 5px !important;
+    }
+
+    .fa-2x {
+        font-size: 1.7em;
+    }
+</style>
+
+<script>
+    $(function() {
+        $('div.sidenav-backdrop').remove();
+    });
+</script>
 
 </html>

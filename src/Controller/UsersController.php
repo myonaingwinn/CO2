@@ -8,7 +8,6 @@ use Cake\Utility\Security;
 use Cake\I18n\Time;
 use Cake\Auth\DefaultPasswordHasher;
 use Cake\Mailer\Mailer;
-use Cake\Event\EventInterface;
 
 /**
  * Users Controller
@@ -18,23 +17,13 @@ use Cake\Event\EventInterface;
  */
 class UsersController extends AppController
 {
-    public function admin()
-    {
-    }
-
-    public function editor()
-    {
-    }
-  
     public function login()
     {
         if ($this->request->is('post')) {
             $user = $this->Auth->identify();
-
             if (!$user) {
-                $this->Flash->error(__('Username or password is incorrect'));
+                $this->Flash->error(__('ユーザー名かパスワードが間違っています.'));
             } else {
-
                 $last_login = date("Y-m-d H:i:s");
 
                 $id = $user['id'];
@@ -49,13 +38,11 @@ class UsersController extends AppController
                 $this->Users->save($users[0]);
 
                 if ($user['role'] == 'A') {
-                    return $this->redirect(['controller' => 'Users', 'action' => 'admin']);
+                    $this->Auth->setUser($user);
+                    return $this->redirect('/dashboard');
                 } else if ($user['role'] == 'U') {
                     $this->Auth->setUser($user);
-                    return $this->redirect(['controller' => 'Users', 'action' => 'index']);
-                } else if ($user['role'] == 'E') {
-                    // $this->Auth->setUser($user);
-                    return $this->redirect(['controller' => 'Users', 'action' => 'editor']);
+                    return $this->redirect('/dashboard');
                 }
             }
         }
@@ -74,15 +61,16 @@ class UsersController extends AppController
             $token = Security::hash(Security::randomBytes(25));
 
             $userTable =  $this->loadModel('Users');;
-            if ($email == NULL) {
-                $this->Flash->success(__('Please insert your email address'));
-            }
+            // if ($email == NULL) {
+            //     $this->Flash->error(__('メールアドレスは入力必須項目です.'));
+            // } 
+            // else 
             if ($user = $userTable->find('all')->where(['email' => $email])->first()) {
 
                 $user->token = $token;
                 if ($userTable->save($user)) {
 
-                    $this->Flash->success('Reset password link has been sent to your email (' . $email . '), please check your email');
+                    $this->Flash->success('パスワードのリセットリンクがメールに送信されました。 (' . $email . ')メールを確認してください。');
 
                     $mailer = new Mailer('default');
                     $mailer->setTransport('mailForget');
@@ -90,11 +78,11 @@ class UsersController extends AppController
                         ->setTo($email)
                         ->setEmailFormat('html')
                         ->setSubject('Forgot Password Request')
-                        ->deliver('Hello<br/>Please click link below to reset your password<br/><br/><a href="http://localhost:8765/users/resetpassword/' . $token . '">Reset Password</a>');
+                        ->deliver('<br/>こんにちは
+パスワードをリセットするには、<br/>以下のリンクをクリックしてください。<br/><br/><a href="http://localhost:8765/users/resetpassword/' . $token . '">パスワードのリセット</a>');
                 }
-            }
-            if ($total = $userTable->find('all')->where(['email' => $email])->count() == 0) {
-                $this->Flash->success(__('Email is not registered in system'));
+            } else if ($userTable->find('all')->where(['email' => $email])->count() == 0) {
+                $this->Flash->error(__('メールアドレスが存在しません。'));
             }
         }
     }
@@ -113,13 +101,13 @@ class UsersController extends AppController
 
             if ($userTable->save($user)) {
 
-                $this->Flash->success(__('Password successfully reset. Please login using your new password'));
+                $this->Flash->success(__('パスワードが正常にリセットされました。新しいパスワードを使用してログインしてください。'));
                 // return $this->redirect(['action' => 'login']);
                 return $this->redirect($this->Auth->logout());
             }
         }
     }
-  
+
     /**
      * Index method
      *
@@ -159,9 +147,10 @@ class UsersController extends AppController
         if ($this->request->is('post')) {
             $email = $this->request->getData('email');
 
+
             $user_c = $this->Users->find()->where(['email' => $email])->count();
             if ($user_c >= 1) {
-                $this->Flash->success(__('The Email name is existed.'));
+                $this->Flash->success(__('メール名が存在します。'));
             } else {
                 $user = $this->Users->patchEntity($user, $this->request->getData());
 
@@ -174,8 +163,9 @@ class UsersController extends AppController
 
                 $user->del_flg = 'N';
 
+
                 if ($this->Users->save($user)) {
-                    $this->Flash->success(__('The user has been saved.'));
+                    $this->Flash->success(__('ユーザーが保存されました。'));
 
                     return $this->redirect(['action' => 'index']);
                 }
@@ -193,8 +183,7 @@ class UsersController extends AppController
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function edit($id = null)
-    {
-        //change role
+    { //change role
         $this->request->allowMethod('get');
         $roleData = $this->request->getQuery('role');
         $id = $this->request->getQuery('userID');
@@ -207,14 +196,15 @@ class UsersController extends AppController
         $users = $data->toArray();
         $users[0]->role = $roleData;
         if ($this->Users->save($users[0])) {
-            $this->Flash->success(__('The user has been saved.'));
+            $this->Flash->success(__('ユーザーが保存されました。'));
             return $this->redirect(['action' => 'edit']);
         } else {
-            $this->Flash->error(__('The user could not be saved. Please, try again.'));
+            $this->Flash->error(__('ユーザーを保存できませんでした。 もう一度やり直してください。'));
         }
         $data = $this->Users->find('all', array('conditions' => array('Users.del_flg' => 'N')));
         $users = $this->paginate($data);
         $this->set(compact('users'));
+        // return $this->redirect(['action' => 'index']); 
     }
 
     /**
@@ -229,20 +219,18 @@ class UsersController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $user = $this->Users->get($id);
         if ($this->Users->delete($user)) {
-            $this->Flash->success(__('The user has been deleted.'));
+            $this->Flash->success(__('ユーザーが削除されました。'));
         } else {
-            $this->Flash->error(__('The user could not be deleted. Please, try again.'));
+            $this->Flash->error(__('ユーザーを削除できませんでした。 もう一度やり直してください。'));
         }
 
         return $this->redirect(['action' => 'index']);
     }
-
+    //Search
     public function search()
     {
         $this->request->allowMethod('ajax');
-
         $keyword = $this->request->getQuery('keyword');
-
         $query = $this->Users->find('all', [
             'conditions' => ([
                 'Or' => [
@@ -254,10 +242,8 @@ class UsersController extends AppController
                 'AND' => ['Users.del_flg' => 'N']
             ]),
             'order' => ['Users.name' => 'ASC']
-
         ]);
         $users = $this->paginate($query);
-
         $this->set(compact('users'));
         $this->set('_serialize', ['users']);
     }

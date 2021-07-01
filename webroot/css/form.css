@@ -1,45 +1,22 @@
  body {
-     background-color: #EBE0E0;
+     background-color: #f8faff;
  }
  
  .fa {
      color: #333;
  }
  
- .btn {
-     font-size: 20px;
-     width: 100px;
-     right: 15px;
-     bottom: -13px;
-     position: relative;
-     margin-top: 10px;
- }
- /* .show {
-     margin-top: 17px;
-     font-size: 12px;
-     color: #333;
- } */
- 
- .submit {
-     margin-top: 27px;
-     background-color: #ffffff;
-     color: #03A9F4;
-     width: 140px;
-     height: 45px;
-     font-weight: bold;
-     font-size: 20px;
-     border: 2px solid #1fbdd3;
-     border-radius: 25px;
- }
- 
- .submit:hover {
-     color: #ffffff;
-     background-color: #03A9F4;
+ .btnsub {
+     margin-top: 20px;
+     width: 111px;
+     height: 47px;
+     font-size: 16px;
  }
  
  p {
      font-size: 18px;
      color: #333;
+     margin-top: 5px;
  }
  
  .roledrop {
@@ -70,42 +47,27 @@
  }
  
  .login {
-     margin-top: 100px;
- }
- 
- .btn {
-     width: 130px;
-     height: 50px;
-     font-size: auto;
+     margin-top: 116px;
  }
  
  .btn-group {
-     margin-top: -30px;
-     flex: none;
-     background-color: #ffffff;
-     width: 0px;
-     height: 60px;
-     margin-left: 2px;
+     margin-top: 30px;
  }
  
  .role {
-     margin-top: 33px;
+     margin-top: 36px;
      margin-left: 46px;
- }
- 
- .role-type {
-     margin-top: 33px;
-     margin-left: 14px;
- }
- 
- .btn-check {
-     height: min-content;
-     width: 112px;
+     font-size: 21px;
  }
  
  .btn {
+     padding-top: 10px;
      background-color: #7F8283;
      color: white;
+     width: 150px;
+     height: 47px;
+     position: relative;
+     font-size: 20px;
  }
  
  #textbox,
