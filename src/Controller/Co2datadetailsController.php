@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace App\Controller;
+use Cake\Log\Log;
 
 /**
  * Co2datadetails Controller
@@ -194,5 +195,80 @@ class Co2datadetailsController extends AppController
         
         // sent array data to template
         $this->set(compact('temp', 'hum', 'co2', 'noise', 'dv1', 'dv2', 'dv3'));
+    }
+
+    public function detail($id = null)
+    {
+        // id value split to customize query
+        list($row, $row_num, $col, $col_num_one, $col_num_two, $graph, $dev_num) = explode("-", $id);
+
+        // declare for query variable
+        $query_var_one = "dvTest";
+        $query_var_two = "";
+        $query_arr = [];
+        
+        // variable assign 
+        for ($i=0; $i<$dev_num; $i++) {
+            if ($row_num == $i) $query_var_one = $query_var_one.($i+1);
+            if ($col_num_one == 1) {
+                if ($col_num_two == 0) $query_var_two = "temperature"; else $query_var_two = "humidity";
+            } else {
+                if ($col_num_two == 0) $query_var_two = "co2"; else $query_var_two = "noise";
+            }
+        }
+
+        // assign variables query
+        $query = $this->Co2datadetails->find()
+            ->select(['co2_device_id', $query_var_two, 'time_measured'])
+            ->where(['co2_device_id' => $query_var_one])
+            ->order(['time_measured' => 'ASC'])
+            ->limit(86400)
+            ->toArray();
+
+        // reassign query array format for json format
+        foreach ($query as $row_query) {
+            
+            // time measured standard schema
+            $dateArr = (array) $row_query["time_measured"];
+            $dateStr = implode("", $dateArr);
+            $date = explode(".", $dateStr);
+
+            // array push for schema format
+            array_push($query_arr, array($date[0],$row_query[$query_var_two],$row_query["co2_device_id"]));
+        }
+
+        $json_query = json_encode($query_arr);
+        $device_name = $query_var_one;
+        $sensor = $query_var_two;
+
+        $this->set(compact('json_query', 'device_name', 'sensor'));
+
+    }
+
+    public function onetimedata()
+    {
+        $this->request->allowMethod('get');
+        
+        $data = 0;
+
+        $type = $_GET['type'];
+        $device = $_GET['device'];
+
+        // assign variables query
+        $query = $this->Co2datadetails->find()
+            ->select(['type'  => $type, 'time_measured'])
+            ->where(['co2_device_id' => $device])
+            ->order(['time_measured' => 'DESC'])
+            ->first();
+        
+        $time = json_encode($query->time_measured);
+        list($timedate, $timezone) = explode("+", $time);
+        list($date, $clock) = explode("T", $timedate);
+        $timeresult = $date.' '.$clock;
+        $data = $query->type;
+        
+        echo $data.$timeresult;
+        return $this->response;
+        // DATE_FORMAT(TS, '%d-%m-%y %h:%i:%s');
     }
 }
