@@ -36,85 +36,101 @@
     #fhr {
         margin-bottom: 1.5rem !important;
     }
-    
+
     h4 {
         display: inline-block;
+        margin-bottom: .2rem !important;
     }
 
     button {
-        margin-left:1rem;
+        margin-left: 1rem;
     }
 
     #select-device {
         width: 12.6rem;
     }
+
+    [id^="container-"] {
+        margin-top: 1.5rem;
+    }
 </style>
 
 <?php
-    include("fusioncharts.php");
+include("fusioncharts.php");
 
-    // foreach loop variable declare
-    $graph_arr = [];
-    $i = $y = $num_name = $chart_id = 1;
-    $x = $z = $num = 0;
+// foreach loop variable declare
+$graph_arr = [];
+$i = $y = $num_name = $chart_id = 1;
+$x = $z = $num = 0;
 
-    for ($i; $i <=count($num_devices); $i++) {
+for ($i; $i <= count($num_devices); $i++) {
 
-        // retrieve array data from controller
-        ${"temp$i"} = ${"hum$i"} = ${"co2$i"} = ${"noise$i"} = [];
-        ${"temp$i"} = $tempalldata[$i-1];
-        ${"hum$i"} = $humalldata[$i-1];
-        ${"co2$i"} = $co2alldata[$i-1];
-        ${"noise$i"} = $noisealldata[$i-1];
-        $graph_arr = [${"temp$i"}, ${"hum$i"}, ${"co2$i"},${"noise$i"}];
-    
-        foreach($graph_arr as $graph)
-        {
-            // graph id declare
-            $graph_id = 'row-'.$x.'-col-'.$y.'-'.$z.'-graph';
-            
-            // encode json
-            ${"json$num_name"} = json_encode($graph);
+    // retrieve array data from controller
+    ${"temp$i"} = ${"hum$i"} = ${"co2$i"} = ${"noise$i"} = [];
+    ${"temp$i"} = $tempalldata[$i - 1];
+    ${"hum$i"} = $humalldata[$i - 1];
+    ${"co2$i"} = $co2alldata[$i - 1];
+    ${"noise$i"} = $noisealldata[$i - 1];
+    $graph_arr = [${"temp$i"}, ${"hum$i"}, ${"co2$i"}, ${"noise$i"}];
 
-            // schema for fusionchart
-            ${"schema$num_name"} = file_get_contents('webroot\json\schema'.$num_name.'.json');
+    foreach ($graph_arr as $graph) {
+        // graph id declare
+        $graph_id = 'row-' . $x . '-col-' . $y . '-' . $z . '-graph';
 
-            // fusionTable for schema and json data
-            ${"FusionTable$num_name"} = new FusionTable(${"schema$num_name"}, ${"json$num_name"});
+        // encode json
+        ${"json$num_name"} = json_encode($graph);
 
-            // time series graph
-            ${"timeSeries$num_name"} = new TimeSeries(${"FusionTable$num_name"});
+        // schema for fusionchart
+        ${"schema$num_name"} = file_get_contents('webroot\json\schema' . $num_name . '.json');
 
-            // attribute in graph
-            ${"timeSeries$num_name"}->AddAttribute('navigator', '{"enabled":0}');
-            ${"timeSeries$num_name"}->AddAttribute('legend', '{"enabled":"0"}');
-            ${"timeSeries$num_name"}->AddAttribute('yaxis', '{"plot":{"value":"","type":"smooth-area"}}');
-            // chart object
-            ${"Chart$chart_id"} = new FusionCharts(
-                "timeseries",
-                "MyFirstChart$chart_id",
-                "100%",
-                "250",
-                $graph_id,
-                "json",
-                ${"timeSeries$num_name"}
-            );
+        // fusionTable for schema and json data
+        ${"FusionTable$num_name"} = new FusionTable(${"schema$num_name"}, ${"json$num_name"});
 
-            // Render the chart
-            ${"Chart$chart_id"}->render();
-            if ($num == 3) $num = 0; else $num++;
-            if ($num_name == 4) $num_name = 1; else $num_name++;
-            $chart_id++;
+        // time series graph
+        ${"timeSeries$num_name"} = new TimeSeries(${"FusionTable$num_name"});
 
-            // graph id variables
-            if ($z == 1) {$z = 0; $y++;} 
-            else {$z++;}
-        }
+        // attribute in graph
+        ${"timeSeries$num_name"}->AddAttribute('navigator', '{"enabled":0}');
+        ${"timeSeries$num_name"}->AddAttribute('legend', '{"enabled":"0"}');
+        ${"timeSeries$num_name"}->AddAttribute('yaxis', '{"plot":{"value":"","type":"smooth-area"}}');
+        // chart object
+        ${"Chart$chart_id"} = new FusionCharts(
+            "timeseries",
+            "MyFirstChart$chart_id",
+            "100%",
+            "250",
+            $graph_id,
+            "json",
+            ${"timeSeries$num_name"}
+        );
+
+        // Render the chart
+        ${"Chart$chart_id"}->render();
+        if ($num == 3) $num = 0;
+        else $num++;
+        if ($num_name == 4) $num_name = 1;
+        else $num_name++;
+        $chart_id++;
+
         // graph id variables
-        $x++;
-        $y = 1;
-        $graph_arr = [];   
+        if ($z == 1) {
+            $z = 0;
+            $y++;
+        } else {
+            $z++;
+        }
     }
+    // graph id variables
+    $x++;
+    $y = 1;
+    $graph_arr = [];
+    $graph_arr = [];
+    $graph_arr = [];
+    $graph_arr = [];
+    $graph_arr = [];
+    $graph_arr = [];
+    $graph_arr = [];
+}
 ?>
 
 <!-- Screen Title -->
@@ -168,16 +184,22 @@
             <div class="col-3">
                 <select id="select-device" name="select-device">
                     <!-- Device Number loop -->
-                    <?php 
-                        $dev_num = 0;
-                        if (count($num_devices)!=0){
-                            echo "<option value='dvTest%' selected>All</option>";                        
-                            for ($dev_num; $dev_num <count($num_devices); $dev_num++) {
-                                echo "<option value='".$num_devices[$dev_num][0]."'>".$num_devices[$dev_num][0]."</option>";
-                            }
-                        } else {
-                            echo "<option value='' selected>No Device</option>";
+                    <?php
+                    $dev_num = 0;
+                    if (count($num_devices) != 0) {
+                        echo "<option value='dvTest%' selected>All</option>";
+                        echo "<option value='dvTest%' selected>All</option>";
+                        echo "<option value='dvTest%' selected>All</option>";
+                        echo "<option value='dvTest%' selected>All</option>";
+                        echo "<option value='dvTest%' selected>All</option>";
+                        echo "<option value='dvTest%' selected>All</option>";
+                        echo "<option value='dvTest%' selected>All</option>";
+                        for ($dev_num; $dev_num < count($num_devices); $dev_num++) {
+                            echo "<option value='" . $num_devices[$dev_num][0] . "'>" . $num_devices[$dev_num][0] . "</option>";
                         }
+                    } else {
+                        echo "<option value='' selected>No Device</option>";
+                    }
                     ?>
                 </select>
             </div>
@@ -196,7 +218,6 @@
 <div id="devicesList"></div>
 
 <script>
-
     var titles = ['Temperature', 'Humidity', 'CO2', 'Noise'];
     var devices = <?php echo json_encode($devices); ?>;
 
@@ -228,7 +249,7 @@
         $('#devicesList').append($('<h4>' + device.device + '</h4>'));
         $('#devicesList').append($('<button type="button" class="btn btn-success" id = "eg-' + index + '" onclick="showhidemulti(' + index + ')">' + 'Show Graph' + '</button>'));
         $('#devicesList').append($('<div id="container-' + index + '" class="container-fluid" style="display:none"></div>'));
-        
+
         // add row
         for (i = 1; i <= 2; i++) {
             $('#container-' + index).append($('<div id="row-' + index + '-' + i + '" class="row"></div>'));
@@ -240,7 +261,7 @@
             }
         }
         $('#container-' + index).after('<hr class="my-4">');
-        
+
     });
 
     // card details
@@ -252,14 +273,14 @@
         else if (col == 2 && card == 1)
             index = 3;
 
-        $('#' + id).append($('<div class="card"><div class="card-body"><h5 class="card-title">' + titles[index] + '</h5><div id="' + id + '-graph"></div><button type="button" class="btn realtime-btn btn-primary btn-sm" id="update-data">Update Data</button></div></div>'));
+        $('#' + id).append($('<div class="card"><div class="card-body"><h5 class="card-title">' + titles[index] + '</h5><div id="' + id + '-graph"></div><button type="button" class="btn realtime-btn btn-primary btn-sm" id="viewDetails">View Details</button></div></div>'));
     }
 
     function showhidemulti(id) {
-        var container = document.getElementById("container-"+id);
-        var nextcontainer = document.getElementById("nextcontainer-"+id);
-        var csvcontainer = document.getElementById("csvcontainer-"+id);
-        var btntext = document.getElementById("eg-"+id);
+        var container = document.getElementById("container-" + id);
+        var nextcontainer = document.getElementById("nextcontainer-" + id);
+        var csvcontainer = document.getElementById("csvcontainer-" + id);
+        var btntext = document.getElementById("eg-" + id);
 
         if (container.style.display === "none") {
             container.style.display = "block";
