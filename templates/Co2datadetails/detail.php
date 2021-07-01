@@ -6,6 +6,9 @@
   text-transform:capitalize;
 }
 </style>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
 <div class="row">
   <div class="col-4">
@@ -32,7 +35,7 @@ var schema = [{
   type: 'date',
   format: '%Y-%m-%d %H:%M:%S'
 }, {
-  name: 'Temperature',
+  name: '温度',
   type: 'number'
 }, {
   name: 'Device',
@@ -94,17 +97,13 @@ var realtimeChart = new FusionCharts({
   },
   
 });
-var pathname = window.location.pathname;
-var finalPathname = pathname.split('/')[3];
-var resultPathname = finalPathname.slice(0, finalPathname.length - 2)
-console.log(resultPathname);
 
-var lastTimeStr = json_data[json_data.length - 1][0];
+// var lastTimeStr = json_data[json_data.length - 1][0];
 
 realtimeChart.addEventListener("rendered", function (_ref) {
   var realtimeChart = _ref.sender;
 
-  lastTimeStr = getNextRandomDate(lastTimeStr);
+  // lastTimeStr = getNextRandomDate(lastTimeStr);
   // console.log("new lastTimeStr:", lastTimeStr);
   // var newDate = new Date(lastTimeStr);
   // console.log("newDate without format:", newDate);
@@ -120,9 +119,26 @@ realtimeChart.addEventListener("rendered", function (_ref) {
         var final_result_date = sensorData(sensor, device_name).split('"')[1];
         var final_result_data = sensorData(sensor, device_name).split('"')[0];
         realtimeChart.feedData([[final_result_date, final_result_data, device_name]]);
+
+        var flag = 0;
+        switch (sensor) {
+          case 'temperature':
+            flag = final_result_data>60 ? 1 : 0;
+            break;
+          case 'humidity':
+            flag = final_result_data>50 ? 1 : 0;
+            break;
+          case 'co2':
+            flag = final_result_data>2000 ? 1 : 0;
+            break;
+          case 'noise':
+            flag = final_result_data>50 ? 1 : 0;
+            break;
+        }
+        if (flag == 1) getGraphImage();
     }
     
-  }, 1000);
+  }, 5000);
 });
 
 realtimeChart.addEventListener("disposed", function(eventObj){
@@ -131,4 +147,36 @@ realtimeChart.addEventListener("disposed", function(eventObj){
 })
 
 realtimeChart.render();
+</script>
+
+<script type="text/javascript">
+		var dataURL = {};
+    // var pathname = window.location.pathname;
+    // var finalPathname = pathname.split('/')[3];
+    // var resultPathname = finalPathname.slice(0, finalPathname.length - 2)
+    // console.log(resultPathname);
+
+		function getGraphImage() {
+			html2canvas(document.querySelector('#chart-container')).then(canvas => {
+				//console.log(canvas.toDataURL());  
+				dataURL = canvas.toDataURL();
+				//console.log(dataURL);
+				post_data(dataURL);
+			});
+		}
+
+		function post_data(imageURL) {
+			//console.log(imageURL);  
+			$.ajax({
+				url: "<?= $this->Url->build(['controller' => 'Co2datadetails', 'action' => 'notify']) ?>",
+				type: "POST",
+				data: {
+					image: imageURL
+				},
+				dataType: "html",
+				headers: {
+					'X-CSRF-Token': $('meta[name="csrfToken"]').attr('content')
+				}
+			});
+		}
 </script>
