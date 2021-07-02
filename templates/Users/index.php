@@ -4,6 +4,7 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\User[]|\Cake\Collection\CollectionInterface $users
  */
+
 use PHP_CodeSniffer\Reports\Diff;
 ?>
 <style>
@@ -35,8 +36,9 @@ use PHP_CodeSniffer\Reports\Diff;
         border-radius: 3px;
 
     }
-    .body{
-        margin-top:30px;       
+
+    .body {
+        margin-top: 30px;
     }
 </style>
 <div class="users index content body">
@@ -50,11 +52,11 @@ use PHP_CodeSniffer\Reports\Diff;
         <table id="paginationNumbers" class="table" width="100%">
             <thead>
                 <tr>
-                    <th><?= $this->Paginator->sort('順番') ?></th>
+                    <th><?= __('順番') ?></th>
                     <th><?= $this->Paginator->sort('名前') ?></th>
                     <th><?= $this->Paginator->sort('メールアドレス') ?></th>
                     <th><?= $this->Paginator->sort('最後ログインしたデート') ?></th>
-                    <th><?= $this->Paginator->sort('役割') ?></th>
+                    <th><?= __('役割') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -71,15 +73,15 @@ use PHP_CodeSniffer\Reports\Diff;
                         <td><?= h($user->email) ?></td>
                         <td><?= h($user->last_login) ?></td>
                         <td>
-                            <select name="role" id="role-<?= $user->id ?>">                           
+                            <select name="role" id="role-<?= $user->id ?>">
                                 <?php
                                 $role = $user->role;
                                 if ($role == 'A') {
                                     echo
-                                    '<option value="A" selected>管理者</option>                                   
+                                    '<option value="A" selected>管理者</option>
                                      <option value="U">ユーザー</option>';
                                 }
-                                
+
                                 if ($role == 'U') {
                                     echo
                                     '<option value="A" selected>管理者</option>
@@ -87,7 +89,7 @@ use PHP_CodeSniffer\Reports\Diff;
                                 }
                                 ?>
                             </select>
-                            <input type="hidden" id="origin-<?= $user->id ?>" value=<?= $role?>>
+                            <input type="hidden" id="origin-<?= $user->id ?>" value=<?= $role ?>>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -102,22 +104,22 @@ use PHP_CodeSniffer\Reports\Diff;
             <?= $this->Paginator->next(__('次へ') . ' >') ?>
             <?= $this->Paginator->last(__('最終') . ' >>') ?>
         </ul>
-              <p><?= $this->Paginator->counter(__('ページ {{page}}/{{pages}}、合計{{count}}つのうち{{current}}つのレコードを表示。')) ?></p>
+        <p><?= $this->Paginator->counter(__('ページ {{page}}/{{pages}}、合計{{count}}つのうち{{current}}つのレコードを表示。')) ?></p>
     </div>
 </div>
 
 <script>
     $('select').change(function() {
-        var data = this.value;        
-        var user_id = this.id.split('-');   
-        var id="origin-"+user_id[1];        
-        var origin_role=document.getElementById(id).value;          
+        var data = this.value;
+        var user_id = this.id.split('-');
+        var id = "origin-" + user_id[1];
+        var origin_role = document.getElementById(id).value;
         if (!confirm("役割を変更してもよろしいですか?")) {
             //cancel
-            document.getElementById(this.id).value=origin_role;             
-            return false;                              
-        }  
-            $.ajax({          
+            document.getElementById(this.id).value = origin_role;
+            return false;
+        }
+        $.ajax({
             method: 'get',
             data: {
                 role: data,
@@ -125,7 +127,7 @@ use PHP_CodeSniffer\Reports\Diff;
             },
             url: "<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'edit']); ?>",
             success: function(response) {
-                          $('.table-responsive').html(response);
+                $('.table-responsive').html(response);
             }
         });
     });
@@ -139,6 +141,7 @@ use PHP_CodeSniffer\Reports\Diff;
                 searchUsers(searchkey);
             }
         });
+
         function searchUsers(keyword) {
             var data = keyword;
             $.ajax({
