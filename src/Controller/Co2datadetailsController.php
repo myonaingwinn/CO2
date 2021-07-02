@@ -151,11 +151,13 @@ class Co2datadetailsController extends AppController
 
     public function view()
     {
+        $currentDateTime = date('Y-m-d H:m:s');
+
         // graph data query
         $query = $this->Co2datadetails->find()
             ->select(['co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room' => 'r.room_no'])
             ->join(['r' => ['table' => 'Room_Info', 'type' => 'INNER', 'conditions' => 'r.device_id = Co2datadetails.co2_device_id']])
-            // ->where(['Co2datadetails.time_measured >=' => $currentDateTime])
+            ->where(['Co2datadetails.time_measured >=' => $currentDateTime])
             ->order(['time_measured' => 'ASC', 'co2_device_id' => 'ASC',])
             ->limit(30000)
             ->toArray();

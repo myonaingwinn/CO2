@@ -20,7 +20,6 @@ namespace App\Controller;
 
 use Cake\Controller\Controller;
 use Cake\Event\EventInterface;
-use Cake\Event\Event;
 
 /**
  * Application Controller
@@ -65,11 +64,12 @@ class AppController extends Controller
                     ]
                 ]
             ],
-
+            
             'loginRedirect' => [
-                'controller' => 'Users',
+                'controller' => 'Co2datadetails',
                 'action' => 'index'
             ],
+            
             'logoutRedirect' => [
                 'controller' => 'Users',
                 'action' => 'login'
@@ -80,10 +80,6 @@ class AppController extends Controller
 
         ]);
 
-        //$this->Auth->allow(['login', 'index', 'forgotpassword', 'resetpassword', 'add']);
-
-
-
         /*
          * Enable the following component for recommended CakePHP form protection settings.
          * see https://book.cakephp.org/4/en/controllers/components/form-protection.html
@@ -91,14 +87,29 @@ class AppController extends Controller
         //$this->loadComponent('FormProtection');
     }
 
+    public function isAuthorized($user)
+    {
+        if ($this->Auth->user('role') == 'A') {
+            return true;
+        }
+        return false;
+    }
+
     public function beforeFilter(EventInterface $event)
     {
         if ($this->Auth->user()) {
             $this->set('Auser', $this->Auth->user());
+
+            if ($this->Auth->user('role') == 'A') {
+                $this->Auth->allow(['index', 'logout', 'add', 'notify', 'search', 'edit', 'csv', 'view', 'detail', 'onetimedata']);
+            } else {
+                $this->Auth->allow(['index', 'logout', 'notify', 'csv', 'detail', 'onetimedata']);
+            }
         } else {
             $this->set('Auser', null);
         }
 
-        $this->Auth->allow(['login', 'index', 'forgotpassword', 'resetpassword', 'logout', 'admin', 'add', 'editor', 'notify', 'search', 'edit', 'csv', 'view', 'detail', 'onetimedata']);
+        $this->Auth->allow(['login', 'forgotpassword', 'resetpassword']);
+        $this->Auth->setConfig('authError', "おっとっと、このエリアにアクセスする権限がありません！");
     }
 }

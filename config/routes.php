@@ -55,10 +55,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
     $builder->connect('/dashboard', ['controller' => 'Co2datadetails', 'action' => 'index']);
     $builder->connect('/dashboard_plus', ['controller' => 'Co2datadetails', 'action' => 'view']);
 
-    /*
-     * ...and connect the rest of 'Pages' controller's URLs.
-     */
-    $builder->connect('/pages/*', 'Pages::display');
+    // $builder->connect('/pages/*', 'Pages::display');
 
     // $builder->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
 
