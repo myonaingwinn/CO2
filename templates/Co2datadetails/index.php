@@ -18,10 +18,6 @@
         font-size: medium;
     }
 
-    body {
-        background: #EFEFEF;
-    }
-
     section {
         background: white;
     }

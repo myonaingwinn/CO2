@@ -52,7 +52,6 @@ $routes->scope('/', function (RouteBuilder $builder) {
      * its action called 'display', and we pass a param to select the view file
      * to use (in this case, templates/Pages/home.php)...
      */
-    $builder->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
     $builder->connect('/dashboard', ['controller' => 'Co2datadetails', 'action' => 'index']);
     $builder->connect('/dashboard_plus', ['controller' => 'Co2datadetails', 'action' => 'view']);
 
@@ -63,7 +62,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
     // $builder->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
 
-    $builder->connect('/login', ['controller' => 'Users', 'action' => 'login']);
+    $builder->connect('/', ['controller' => 'Users', 'action' => 'login']);
     $builder->connect('/logout', ['controller' => 'Users', 'action' => 'logout']);
     $builder->connect('/register', ['controller' => 'Users', 'action' => 'add']);
     $builder->connect('/forgotpassword', ['controller' => 'Users', 'action' => 'forgotpassword']);
