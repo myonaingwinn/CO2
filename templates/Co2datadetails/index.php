@@ -115,12 +115,6 @@
                     $dev_num = 0;
                     if (count($num_devices) != 0) {
                         echo "<option value='dvTest%' selected>All</option>";
-                        echo "<option value='dvTest%' selected>All</option>";
-                        echo "<option value='dvTest%' selected>All</option>";
-                        echo "<option value='dvTest%' selected>All</option>";
-                        echo "<option value='dvTest%' selected>All</option>";
-                        echo "<option value='dvTest%' selected>All</option>";
-                        echo "<option value='dvTest%' selected>All</option>";
                         for ($dev_num; $dev_num < count($num_devices); $dev_num++) {
                             echo "<option value='" . $num_devices[$dev_num][0] . "'>" . $num_devices[$dev_num][0] . "</option>";
                         }
