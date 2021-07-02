@@ -1,10 +1,16 @@
 <style>
-#btnBack {
-  padding-right:20px;
-}
-.cap {
-  text-transform:capitalize;
-}
+  #btnBack {
+    padding-right: 20px;
+  }
+
+  .cap {
+    text-transform: capitalize;
+  }
+
+  .card {
+    margin-top: 1.5rem;
+    margin-bottom: 3rem;
+  }
 </style>
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -12,7 +18,7 @@
 
 <div class="row">
   <div class="col-4">
-    <h2 class="cap"><?= __($device_name)." : ". __($sensor) ?></h2>
+    <h2 class="cap"><?= __($device_name) . " : " . __($sensor) ?></h2>
   </div>
   <div class="col-7"></div>
   <div class="col-1">
@@ -23,9 +29,12 @@
 
 <?= $this->Form->hidden($sensor, ['value' => $sensor, 'id' => 'sensor']); ?>
 <?= $this->Form->hidden($device_name, ['value' => $device_name, 'id' => 'device_name']); ?>
-<br><br>
 
-<div id="chart-container"></div>
+<div class="card">
+  <div class="card-body">
+    <div id="chart-container"></div>
+  </div>
+</div>
 
 <script>
 'use strict';
@@ -65,16 +74,51 @@ var sensorData = function sensorData(type, device) {
       type:"GET",
       url:"<?= $this->Url->build(['controller' => 'Co2datadetails', 'action' => 'onetimedata']) ?>",
       data: {type:type,device:device},
+
       dataType: 'text',
-      success: function (data) {
+      success: function(data) {
         return (data);
       },
       error: function() {
         return "Not Working!!!";
       },
       async: false,
-      headers: {'X-CSRF-Token': $('meta[name="csrfToken"]').attr('content')}
+      headers: {
+        'X-CSRF-Token': $('meta[name="csrfToken"]').attr('content')
+      }
+    });
+    return dataAjax.responseText;
+  }
+
+
+  // Fusioncharts data store
+  var dataStore = new FusionCharts.DataStore().createDataTable(json_data, schema);
+  // time series chart instance
+  var realtimeChart = new FusionCharts({
+    type: 'timeseries',
+    renderAt: 'chart-container',
+    width: '100%',
+    height: '500',
+    dataSource: {
+      chart: {
+        theme: 'candy',
+        paletteColors: '#FFEB3B' //FFFF00'
+      },
+      data: dataStore,
+      yAxis: {
+        plottype: 'smooth-area'
+      },
+      series: 'Device',
+      navigator: {
+        enabled: 0
+      },
+      legend: {
+        enabled: 0
+      }
+    },
+
   });
+
   return dataAjax.responseText;
 }
 
@@ -141,10 +185,10 @@ realtimeChart.addEventListener("rendered", function (_ref) {
   }, 5000);
 });
 
-realtimeChart.addEventListener("disposed", function(eventObj){
+  realtimeChart.addEventListener("disposed", function(eventObj) {
     var chartRef = eventObj;
     clearInterval(chartRef.incrementor);
-})
+  })
 
 realtimeChart.render();
 </script>
