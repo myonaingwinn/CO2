@@ -63,7 +63,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
                 <!-- Toggler -->
                 <?php if ($Auser) : ?>
                     <button id="btnBars" data-toggle="sidenav" data-target="#sidenav-1" class="btn shadow-0 p-0 mr-3 d-block d-xxl-none ripple-surface" aria-controls="#sidenav-1" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-bars fa-2x"></i>
+                        <i class="fas fa-bars my-fa-2x"></i>
                     </button>
 
                     <script>
@@ -100,11 +100,21 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
             <div class="mt-4">
                 <div id="header-content" class="pl-3">
                     <!-- <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(23).jpg" alt="avatar" class="rounded-circle img-fluid mb-3" style="max-width: 50px;"> -->
-                    <i class="fas fa-user-circle text-success fa-5x mb-3 rounded-circle shadow-2"></i>
-                    <h4>
-                        <span style="white-space: nowrap;"><?= $Auser['name'] ?></span>
-                    </h4>
-                    <p><?= $Auser['email'] ?></p>
+                    <div class="row my-row">
+                        <div class="col text-truncate">
+                            <i class="fas fa-user-circle text-success fa-5x mb-3 rounded-circle shadow-2"></i>
+                        </div>
+                    </div>
+                    <div class="row my-row my-row2">
+                        <div class="col-12 text-wrap text-break">
+                            <h4><?= $Auser['name'] ?></h4>
+                        </div>
+                    </div>
+                    <div class="row my-row">
+                        <div class="col-12 text-wrap">
+                            <p class="my-p"><?= $Auser['email'] ?></p>
+                        </div>
+                    </div>
                 </div>
                 <hr class="mb-0">
             </div>
@@ -205,13 +215,24 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
         padding-bottom: 2.5rem;
     }
 
+    .my-row {
+        margin-top: 0rem;
+    }
+
+    .my-row2 {
+        margin-bottom: .3rem;
+    }
+
+    .my-p {
+        margin-bottom: 0rem;
+    }
+
     #btnBars {
         padding-top: 5px !important;
-        padding-left: 10px !important;
         padding-bottom: 5px !important;
     }
 
-    .fa-2x {
+    .my-fa-2x {
         font-size: 1.7em;
     }
 </style>
