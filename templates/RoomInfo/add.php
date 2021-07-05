@@ -9,7 +9,7 @@
                     <h4 id="title" class="card-title">デバイス登録</h4>
 
                     <select id="select" name="user_uid" class="select select-initialized" required>
-                        <option value="" disabled selected>ユーザータイプを選択</option>
+                        <option value="" disabled selected>ユーザーを選択</option>
                     </select>
 
                     <div class="form-outline mb-3">
