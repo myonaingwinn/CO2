@@ -21,7 +21,7 @@ class RoomInfoController extends AppController
     {
         $this->loadModel('RoomInfo');
         $this->paginate = [
-            'contain' => ['Co2datadetails','users'],
+            'contain' => ['Co2datadetails','Users'],
         ];
         $roomInfo = $this->paginate($this->RoomInfo);
 
