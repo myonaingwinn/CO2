@@ -21,7 +21,7 @@ class RoomInfoController extends AppController
     {
         $this->loadModel('RoomInfo');
         $this->paginate = [
-            'contain' => ['Co2datadetails'],
+            'contain' => ['Co2datadetails','users'],
         ];
         $roomInfo = $this->paginate($this->RoomInfo);
 
@@ -59,9 +59,9 @@ class RoomInfoController extends AppController
             if ($this->RoomInfo->save($roomInfo)) {
                 $this->Flash->success(__('デバイス情報が保存されました。'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect('dashboard');
             }
-            $this->Flash->error(__('デバイス情報を保存できませんでした。 もう一度やり直してください。'));
+            $this->Flash->error(__('デバイス名はすでに使用されています。 もう一度やり直してください。'));  //デバイス情報を保存できませんでした。
         }
         $co2datadetails = $this->RoomInfo->Co2datadetails->find('list', ['limit' => 200]);
         $users = $this->Users->find('all')->where(['del_flg' => 'N', 'role' => 'U'])->toArray();
