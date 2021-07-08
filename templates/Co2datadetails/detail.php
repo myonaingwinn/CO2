@@ -200,8 +200,6 @@ switch ($sensor) {
         ]);
 
         var flag = 0;
-        //var message_type = $("#sensor_info").val()；
-        //var line_send_Time = $("#line_send_Time").val();
         switch (sensor) {
           case 'temperature':
             flag = final_result_data > 60 ? 1 : 0;
@@ -218,20 +216,14 @@ switch ($sensor) {
         }
         if (flag == 1) {
           if (line_send_time == null) {
-
-            console.log('first time lime message will send. ');
-            console.log(line_send_time);
             getGraphImage(device_name, final_result_data, line_alert_type);
             line_send_time = new Date();
           } else {
             var cur_time = new Date();
             var dateDifferMillsec = Math.round(Math.abs(cur_time - line_send_time) / 1000);
 
-            console.log(dateDifferMillsec);
             if (dateDifferMillsec > 120) {
 
-              console.log("Becomes > 60 in ");
-              console.log(line_send_time);
               line_send_time = new Date();
               getGraphImage(device_name, final_result_data, line_alert_type);
             }
@@ -259,19 +251,15 @@ switch ($sensor) {
   // console.log(resultPathname);
 
   function getGraphImage(device_name, value, message_type) {
-    //window.scrollTo(0, 0);
     html2canvas(document.querySelector('#chart-container'), {
       scrollY: -window.scrollY
     }).then(canvas => {
-      //console.log(canvas.toDataURL());  
       dataURL = canvas.toDataURL();
-      //console.log(dataURL);
       post_data(dataURL, device_name, value, message_type);
     });
   }
 
   function post_data(imageURL, device_name, value, message_type) {
-    //console.log(imageURL);  
     $.ajax({
       url: "<?= $this->Url->build(['controller' => 'Co2datadetails', 'action' => 'notify']) ?>",
       type: "POST",
