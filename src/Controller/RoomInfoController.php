@@ -112,4 +112,36 @@ class RoomInfoController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+
+    public function search()
+    {
+        // $this->loadModel('RoomInfo');
+        $this->paginate = [
+            'contain' => ['Users'],
+        ];
+        $this->request->allowMethod('ajax');
+        $keyword = $this->request->getQuery('keyword');
+        $query = $this->RoomInfo
+            ->find()
+            ->join(
+                ['u' => [
+                    'table' => 'Users', 'type' => 'INNER',
+                    'conditions' => 'u.uid = RoomInfo.user_uid'
+                ]]
+            )
+            ->where(
+                ['OR' => [
+                    'RoomInfo.device_id LIKE' => '%' . $keyword . '%',
+                    'RoomInfo.postal_code like' => '%' . $keyword . '%',
+                    'RoomInfo.prefecture like' => '%' . $keyword . '%',
+                    'RoomInfo.address like' => '%' . $keyword . '%',
+                    'RoomInfo.room_no like' => '%' . $keyword . '%',
+                    'u.name like' => '%' . $keyword . '%'
+                ]]
+            )
+            ->orderAsc('RoomInfo.device_id');
+        $roomInfo = $this->paginate($query);
+        $this->set(compact('roomInfo'));
+        $this->set('_serialize', ['roomInfo']);
+    }
 }

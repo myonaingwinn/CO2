@@ -7,9 +7,16 @@ $this->assign('title', 'デバイス一覧');
 ?>
 <div class="index content">
     <!-- <?= $this->Html->link(__('デバイス登録'), ['action' => 'add'], ['class' => 'button float-right']) ?> -->
-    <h3 class="text-center mb-2"><?= __('デバイス一覧') ?></h3>
-    <div class="row mb-2">
-        <div class="col text-right">
+    <h3 class="text-center mb-4"><?= __('デバイス一覧') ?></h3>
+    <div class="row mb-3">
+        <div class="col-3 text-left">
+            <div class="form-outline">
+                <input type="text" id="search" class="form-control" maxlength="50" />
+                <label class="form-label" for="search">検索</label>
+            </div>
+        </div>
+        <div class="col-3"></div>
+        <div class="col-6 text-right">
             <a href="device_reg" class="btn btn-primary">デバイス登録</a>
         </div>
     </div>
@@ -77,3 +84,30 @@ $this->assign('title', 'デバイス一覧');
         <p><?= $this->Paginator->counter(__('ページ {{page}}/{{pages}}、合計{{count}}つのうち{{current}}つのレコードを表示。')) ?></p>
     </div>
 </div>
+
+<script>
+    $('document').ready(function() {
+        $('#search').keyup(function() {
+            if (!$(this).val() || $(this).val().trim() == '') {
+                location.reload();
+            } else {
+                var searchkey = $(this).val();
+                searchUsers(searchkey);
+            }
+        });
+
+        function searchUsers(keyword) {
+            var data = keyword;
+            $.ajax({
+                method: 'get',
+                url: "<?php echo $this->Url->build(['controller' => 'RoomInfo', 'action' => 'Search']); ?>",
+                data: {
+                    keyword: data
+                },
+                success: function(response) {
+                    $('.table-responsive').html(response);
+                }
+            });
+        };
+    });
+</script>
