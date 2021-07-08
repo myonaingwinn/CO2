@@ -15,7 +15,7 @@
  * @var \App\View\AppView $this
  */
 
-$cakeDescription = 'CO2';
+$cakeDescription = 'CO2 ';
 ?>
 <!DOCTYPE html>
 <html>
@@ -32,7 +32,8 @@ $cakeDescription = 'CO2';
         <?= $cakeDescription ?>:
         <?= $this->fetch('title') ?>
     </title>
-    <?= $this->Html->meta('icon') ?>
+    <!-- <?= $this->Html->meta('icon') ?> -->
+    <?= $this->Html->meta('Logo', 'img/gic.logo.png', ['type' => 'icon']); ?>
 
     <!-- Font Awesome -->
     <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" /> -->
