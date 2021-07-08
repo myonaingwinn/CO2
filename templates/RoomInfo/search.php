@@ -8,7 +8,7 @@
             <th><?= __('都道府県') ?></th>
             <th><?= __('住所') ?></th>
             <th><?= __('建物・部屋番号') ?></th>
-            <!-- <th class="actions"><?= __('活動') ?></th> -->
+            <th class="actions"><?= __('活動') ?></th>
         </tr>
     </thead>
     <tbody>
@@ -29,19 +29,11 @@
                 <td><?= h($roomInfo->prefecture) ?></td>
                 <td><?= h($roomInfo->address) ?></td>
                 <td><?= h($roomInfo->room_no) ?></td>
-                <!-- <td class="actions">
-                            <?= $this->Html->link(__('View'), ['action' => 'view', $roomInfo->device_id]) ?>
-                            <?= $this->Html->link(__('<i class="fas fa-edit"></i>'), ['action' => 'edit', $roomInfo->device_id]) ?>
-                            <a href="/room-info/delete/<?= $roomInfo->device_id ?>" data-confirm-message="Are you sure you want to delete # devicename100?" onclick="if (confirm(this.dataset.confirmMessage)) { document.post_60e3e756f2189012298213.submit(); } event.returnValue = false; return false;"><i class="fas fa-trash text-danger"></i></a>
-
-                            <a href="/room-info/edit/<?= $roomInfo->device_id ?>"><i class="fas fa-edit"></i></a>
-
-                            <?php
-                            $icon = '<script>$("<i class=\'fas fa-trash\'></i>")</script>';
-                            ?>
-
-                            <?= $this->Form->postLink(h('<i class="fas fa-edit"></i>'), ['action' => 'delete', $roomInfo->device_id], ['confirm' => __('Are you sure you want to delete # {0}?', $roomInfo->device_id)], ['escape' => false]) ?>
-                        </td> -->
+                <td class="actions">
+                    <a href="/room-info/edit/<?= $roomInfo->device_id ?>"><i class="fas fa-edit"></i></a>
+                    &ensp;
+                    <?= $this->Form->postLink('<i class="fa fa-trash text-danger"></i>', ['action' => 'delete', $roomInfo->device_id], ['escape' => false, 'confirm' => __('{0} を消去してもよろしいですか?', $roomInfo->device_id)]) ?>
+                </td>
             </tr>
         <?php endforeach; ?>
     </tbody>
