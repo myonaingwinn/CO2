@@ -141,7 +141,7 @@
 
     // add new table column
     devices.forEach(device => {
-        var columnData = ['部屋 ' + device.room, device.temperature + ' °C', device.humidity + ' %', device.co2 + ' ppm', device.noise + ''];
+        var columnData = ['部屋 ' + device.room, device.temperature + ' °C', device.humidity + ' %', device.co2 + ' ppm', device.noise + ' dB'];
         var table = $('table');
         insertTableColumn(table, columnData, table.find('tr > td:last').index() + 1);
     });
