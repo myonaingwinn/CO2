@@ -61,6 +61,7 @@ use PHP_CodeSniffer\Reports\Diff;
             </thead>
             <tbody>
                 <?php $page = $this->Paginator->counter(__('{{page}}'));
+                $pages = $this->Paginator->counter(__('{{pages}}'));
                 $no = 1;
                 if ($page > 2)
                     $no = $page * 20 - 19;
@@ -97,13 +98,18 @@ use PHP_CodeSniffer\Reports\Diff;
         </table>
     </div>
     <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('最初　')) ?>
-            <?= $this->Paginator->prev('< ' . __('戻る　')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('次へ') . ' >') ?>
-            <?= $this->Paginator->last(__('最終') . ' >>') ?>
-        </ul>
+
+        <?php
+        if ($pages > 1) { ?>
+            <ul class="pagination">
+                <?= $this->Paginator->first('<< ' . __('最初')) ?>&nbsp;
+                <?= $this->Paginator->prev('< ' . __('戻る')) ?>&nbsp;
+                <?= $this->Paginator->numbers() ?>&nbsp;
+                <?= $this->Paginator->next(__('次へ') . ' >') ?>&nbsp;
+                <?= $this->Paginator->last(__('最終') . ' >>') ?>&nbsp;
+            </ul>
+        <?php  }
+        ?>
         <p><?= $this->Paginator->counter(__('ページ {{page}}/{{pages}}、合計{{count}}つのうち{{current}}つのレコードを表示。')) ?></p>
     </div>
 </div>
