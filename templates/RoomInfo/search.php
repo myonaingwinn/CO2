@@ -2,12 +2,12 @@
     <thead>
         <tr>
             <th><?= __('順番') ?></th>
-            <th><?= $this->Paginator->sort('device_id', 'デバイス') ?></th>
-            <th><?= $this->Paginator->sort('user', 'ユーザー') ?></th>
-            <th><?= $this->Paginator->sort('postal_code', '郵便番号') ?></th>
-            <th><?= $this->Paginator->sort('prefecture', '都道府県') ?></th>
-            <th><?= $this->Paginator->sort('address', '住所') ?></th>
-            <th><?= $this->Paginator->sort('room_no', '建物・部屋番号') ?></th>
+            <th><?= __('デバイス') ?></th>
+            <th><?= __('ユーザー') ?></th>
+            <th><?= __('郵便番号') ?></th>
+            <th><?= __('都道府県') ?></th>
+            <th><?= __('住所') ?></th>
+            <th><?= __('建物・部屋番号') ?></th>
             <!-- <th class="actions"><?= __('活動') ?></th> -->
         </tr>
     </thead>
