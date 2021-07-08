@@ -15,7 +15,7 @@
  * @var \App\View\AppView $this
  */
 
-$cakeDescription = 'CakePHP: the rapid development php framework';
+$cakeDescription = 'CO2';
 ?>
 <!DOCTYPE html>
 <html>
@@ -147,10 +147,10 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
                             <i class="fas fa-tools fa-lg pr-2"></i>
                             <span>&nbsp;デバイス</span></a>
                         <ul class="sidenav-collapse collapse" id="sidenav-collapse-1-0-1">
-                            <!-- <li class="sidenav-item">
+                            <li class="sidenav-item">
                                 <a class="sidenav-link ripple-surface" href="devices" tabindex="-1">
                                     <i class="fas fa-list-ul pr-2"></i><span>デバイス一覧</span></a>
-                            </li> -->
+                            </li>
                             <li class="sidenav-item">
                                 <a class="sidenav-link ripple-surface" href="device_reg" tabindex="-1">
                                     <i class="fas fa-plus-circle pr-2"></i><span>デバイス登録</span></a>

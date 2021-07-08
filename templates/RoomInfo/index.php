@@ -1,54 +1,79 @@
 <?php
+$this->assign('title', 'デバイス一覧');
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\RoomInfo[]|\Cake\Collection\CollectionInterface $roomInfo
  */
 ?>
-<div class="roomInfo index content">
-    <?= $this->Html->link(__('New Room Info'), ['action' => 'add'], ['class' => 'button float-right']) ?>
-    <h3><?= __('Room Info') ?></h3>
+<div class="index content">
+    <!-- <?= $this->Html->link(__('新しいデバイス'), ['action' => 'add'], ['class' => 'button float-right']) ?> -->
+    <h3 class="text-center mb-2"><?= __('デバイス一覧') ?></h3>
+    <div class="row mb-2">
+        <div class="col text-right">
+            <a href="device_reg" class="btn btn-primary">新しいデバイス</a>
+        </div>
+    </div>
     <div class="table-responsive">
-        <table class="table table-bordered">
+        <table class="table">
             <thead>
                 <tr>
-                    <th><?= $this->Paginator->sort('id') ?></th>
-                    <th><?= $this->Paginator->sort('device_id') ?></th>
-                    <th><?= $this->Paginator->sort('user_uid') ?></th>
-                    <th><?= $this->Paginator->sort('postal_code') ?></th>
-                    <th><?= $this->Paginator->sort('prefecture') ?></th>
-                    <th><?= $this->Paginator->sort('address') ?></th>
-                    <th><?= $this->Paginator->sort('room_no') ?></th>
-                    <th class="actions"><?= __('Actions') ?></th>
+                    <th><?= __('順番') ?></th>
+                    <th><?= $this->Paginator->sort('device_id', 'デバイス') ?></th>
+                    <th><?= $this->Paginator->sort('user', 'ユーザー') ?></th>
+                    <th><?= $this->Paginator->sort('postal_code', '郵便番号') ?></th>
+                    <th><?= $this->Paginator->sort('prefecture', '都道府県') ?></th>
+                    <th><?= $this->Paginator->sort('address', '住所') ?></th>
+                    <th><?= $this->Paginator->sort('room_no', '建物・部屋番号') ?></th>
+                    <!-- <th class="actions"><?= __('活動') ?></th> -->
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($roomInfo as $roomInfo): ?>
-                <tr>
-                    <td><?= $this->Number->format($roomInfo->id) ?></td>
-                    <td><?= h($roomInfo->device_id) ?></td>
-                    <td><?= h($roomInfo->user_uid) ?></td>
-                    <td><?= h($roomInfo->postal_code) ?></td>
-                    <td><?= h($roomInfo->prefecture) ?></td>
-                    <td><?= h($roomInfo->address) ?></td>
-                    <td><?= h($roomInfo->room_no) ?></td>
-                    <td class="actions">
-                        <?= $this->Html->link(__('View'), ['action' => 'view', $roomInfo->device_id]) ?>
-                        <?= $this->Html->link(__('Edit'), ['action' => 'edit', $roomInfo->device_id]) ?>
-                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $roomInfo->device_id], ['confirm' => __('Are you sure you want to delete # {0}?', $roomInfo->device_id)]) ?>
-                    </td>
-                </tr>
+                <?php $page = $this->Paginator->counter(__('{{page}}'));
+                $pages = $this->Paginator->counter(__('{{pages}}'));
+                $no = 1;
+                if ($page > 2)
+                    $no = $page * 20 - 19;
+                else if ($page == 2)
+                    $no = $page * 10 + 1; ?>
+
+                <?php foreach ($roomInfo as $roomInfo) : ?>
+                    <tr>
+                        <td><?= $no++ ?></td>
+                        <td><?= h($roomInfo->device_id) ?></td>
+                        <td><?= h($roomInfo->user->name) ?></td>
+                        <td><?= h($roomInfo->postal_code) ?></td>
+                        <td><?= h($roomInfo->prefecture) ?></td>
+                        <td><?= h($roomInfo->address) ?></td>
+                        <td><?= h($roomInfo->room_no) ?></td>
+                        <!-- <td class="actions">
+                            <?= $this->Html->link(__('View'), ['action' => 'view', $roomInfo->device_id]) ?>
+                            <?= $this->Html->link(__('<i class="fas fa-edit"></i>'), ['action' => 'edit', $roomInfo->device_id]) ?>
+                            <a href="/room-info/delete/<?= $roomInfo->device_id ?>" data-confirm-message="Are you sure you want to delete # devicename100?" onclick="if (confirm(this.dataset.confirmMessage)) { document.post_60e3e756f2189012298213.submit(); } event.returnValue = false; return false;"><i class="fas fa-trash text-danger"></i></a>
+
+                            <a href="/room-info/edit/<?= $roomInfo->device_id ?>"><i class="fas fa-edit"></i></a>
+
+                            <?php
+                            $icon = '<script>$("<i class=\'fas fa-trash\'></i>")</script>';
+                            ?>
+
+                            <?= $this->Form->postLink(h('<i class="fas fa-edit"></i>'), ['action' => 'delete', $roomInfo->device_id], ['confirm' => __('Are you sure you want to delete # {0}?', $roomInfo->device_id)], ['escape' => false]) ?>
+                        </td> -->
+                    </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
     </div>
     <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('first')) ?>
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-            <?= $this->Paginator->last(__('last') . ' >>') ?>
-        </ul>
-        <p><?= $this->Paginator->counter(__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')) ?></p>
+        <?php
+        if ($pages > 1) : ?>
+            <ul class="pagination">
+                <?= $this->Paginator->first('<< ' . __('first')) ?>
+                <?= $this->Paginator->prev('< ' . __('previous')) ?>
+                <?= $this->Paginator->numbers() ?>
+                <?= $this->Paginator->next(__('next') . ' >') ?>
+                <?= $this->Paginator->last(__('last') . ' >>') ?>
+            </ul>
+        <?php endif ?>
+        <p><?= $this->Paginator->counter(__('ページ {{page}}/{{pages}}、合計{{count}}つのうち{{current}}つのレコードを表示。')) ?></p>
     </div>
 </div>
