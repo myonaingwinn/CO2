@@ -12,12 +12,13 @@
     margin-bottom: 3rem;
   }
 </style>
-<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
 <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
 <?php
 $sensor_info = "";
+$line_send_Time = "";
+
 switch ($sensor) {
   case "temperature":
     $sensor_info = "温度";
@@ -49,6 +50,7 @@ switch ($sensor) {
 <?= $this->Form->hidden($device_name, ['value' => $device_name, 'id' => 'device_name']); ?>
 
 <?= $this->Form->hidden($sensor_info, ['value' => $sensor_info, 'id' => 'sensor_info']); ?>
+<?= $this->Form->hidden($line_send_Time, ['value' => $line_send_Time, 'id' => 'line_send_Time']); ?>
 
 <div class="card">
   <div class="card-body">
@@ -75,6 +77,8 @@ switch ($sensor) {
   var json_data = <?php echo $json_query; ?>;
   var sensor = $("#sensor").val();
   var device_name = $("#device_name").val();
+  var line_send_time = $("#line_send_time").val();
+  var line_alert_type = $("#sensor_info").val();
 
   // update date & reload after 1000 mili seconds
   var getNextRandomDate = function getNextRandomDate(d) {
@@ -196,6 +200,8 @@ switch ($sensor) {
         ]);
 
         var flag = 0;
+        //var message_type = $("#sensor_info").val()；
+        //var line_send_Time = $("#line_send_Time").val();
         switch (sensor) {
           case 'temperature':
             flag = final_result_data > 60 ? 1 : 0;
@@ -210,7 +216,28 @@ switch ($sensor) {
             flag = final_result_data > 50 ? 1 : 0;
             break;
         }
-        if (flag == 1) getGraphImage();
+        if (flag == 1) {
+          if (line_send_time == null) {
+
+            console.log('first time lime message will send. ');
+            console.log(line_send_time);
+            getGraphImage(device_name, final_result_data, line_alert_type);
+            line_send_time = new Date();
+          } else {
+            var cur_time = new Date();
+            var dateDifferMillsec = Math.round(Math.abs(cur_time - line_send_time) / 1000);
+
+            console.log(dateDifferMillsec);
+            if (dateDifferMillsec > 120) {
+
+              console.log("Becomes > 60 in ");
+              console.log(line_send_time);
+              line_send_time = new Date();
+              getGraphImage(device_name, final_result_data, line_alert_type);
+            }
+          }
+
+        }
       }
 
     }, 5000);
@@ -231,22 +258,28 @@ switch ($sensor) {
   // var resultPathname = finalPathname.slice(0, finalPathname.length - 2)
   // console.log(resultPathname);
 
-  function getGraphImage() {
-    html2canvas(document.querySelector('#chart-container')).then(canvas => {
+  function getGraphImage(device_name, value, message_type) {
+    //window.scrollTo(0, 0);
+    html2canvas(document.querySelector('#chart-container'), {
+      scrollY: -window.scrollY
+    }).then(canvas => {
       //console.log(canvas.toDataURL());  
       dataURL = canvas.toDataURL();
       //console.log(dataURL);
-      post_data(dataURL);
+      post_data(dataURL, device_name, value, message_type);
     });
   }
 
-  function post_data(imageURL) {
+  function post_data(imageURL, device_name, value, message_type) {
     //console.log(imageURL);  
     $.ajax({
       url: "<?= $this->Url->build(['controller' => 'Co2datadetails', 'action' => 'notify']) ?>",
       type: "POST",
       data: {
-        image: imageURL
+        image: imageURL,
+        dev_name: device_name,
+        dev_value: value,
+        msg_type: message_type
       },
       dataType: "html",
       headers: {
