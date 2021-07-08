@@ -1,11 +1,9 @@
 <?php
-
+    $this->assign('title', 'ユーザー一覧');
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\User[]|\Cake\Collection\CollectionInterface $users
  */
-
-use PHP_CodeSniffer\Reports\Diff;
 ?>
 <style>
     .capitalize {

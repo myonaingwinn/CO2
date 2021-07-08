@@ -159,7 +159,7 @@ $cakeDescription = 'CO2';
                     </li>
                     <li class="sidenav-item">
                         <a class="sidenav-link ripple-surface" href="forgotpassword" tabindex="-1">
-                            <i class="fas fa-lock fa-lg pr-2"></i><span>&ensp;パスワードをお忘れの方</span></a>
+                            <i class="fas fa-lock fa-lg pr-2"></i><span>&ensp;パスワードを再設定する</span></a>
                     </li>
                     <li class="sidenav-item">
                         <a class="sidenav-link ripple-surface" href="logout" tabindex="-1">
@@ -177,7 +177,7 @@ $cakeDescription = 'CO2';
                     </li>
                     <li class="sidenav-item">
                         <a class="sidenav-link ripple-surface" href="forgotpassword" tabindex="-1">
-                            <i class="fas fa-lock fa-lg pr-2"></i><span>&nbsp;パスワードをお忘れの方</span></a>
+                            <i class="fas fa-lock fa-lg pr-2"></i><span>&nbsp;パスワードを再設定する</span></a>
                     </li>
                     <li class="sidenav-item">
                         <a class="sidenav-link ripple-surface" href="logout" tabindex="-1">

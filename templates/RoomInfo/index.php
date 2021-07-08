@@ -6,11 +6,11 @@ $this->assign('title', 'デバイス一覧');
  */
 ?>
 <div class="index content">
-    <!-- <?= $this->Html->link(__('新しいデバイス'), ['action' => 'add'], ['class' => 'button float-right']) ?> -->
+    <!-- <?= $this->Html->link(__('デバイス登録'), ['action' => 'add'], ['class' => 'button float-right']) ?> -->
     <h3 class="text-center mb-2"><?= __('デバイス一覧') ?></h3>
     <div class="row mb-2">
         <div class="col text-right">
-            <a href="device_reg" class="btn btn-primary">新しいデバイス</a>
+            <a href="device_reg" class="btn btn-primary">デバイス登録</a>
         </div>
     </div>
     <div class="table-responsive">

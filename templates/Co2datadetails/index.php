@@ -210,6 +210,8 @@
 </script>
 
 <?php
+$this->assign('title', 'デッシュボード');
+
 include("fusioncharts.php");
 
 // foreach loop variable declare
