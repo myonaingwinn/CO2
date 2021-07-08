@@ -1,5 +1,5 @@
 <?php
-    $this->assign('title', 'ユーザー一覧');
+$this->assign('title', 'ユーザー一覧');
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\User[]|\Cake\Collection\CollectionInterface $users
@@ -10,23 +10,23 @@
         text-transform: capitalize;
     }
 
-    #search {
+    /*     #search {
         width: 300px;
         height: 40px;
         border-radius: 5px;
         margin-top: 30px;
-    }
+    } */
 
-    .btn-user {
+    /*     .btn-user {
         width: 120px;
         height: 40px;
         border-radius: 3px;
         margin-left: 60%;
-    }
+    } */
 
-    .searchArea {
+    /*     .searchArea {
         margin-bottom: 20px;
-    }
+    } */
 
     select {
         width: 80px;
@@ -40,11 +40,19 @@
     }
 </style>
 <div class="users index content body">
-    <h3 style="text-align: center;"><?= __('ユーザー一覧') ?></h3>
+    <h3 class="text-center mb-4"><?= __('ユーザー一覧') ?></h3>
     <!-- search area -->
-    <div class="searchArea">
-        <?= $this->Form->text('search', ['id' => 'search', 'size' => '100', 'maxlength' => '100', 'placeholder' => '検索...']) ?>
-        <?= $this->Html->link(__('ユーザー登録'), ['action' => 'add'], ['class' => 'btn btn-primary btn-user']) ?>
+    <div class="row mb-3">
+        <div class="col-3 text-left">
+            <div class="form-outline">
+                <input type="text" id="search" class="form-control" maxlength="50" />
+                <label class="form-label" for="search">検索</label>
+            </div>
+        </div>
+        <div class="col-3"></div>
+        <div class="col-6 text-right">
+            <a href="register" class="btn btn-primary">ユーザー登録</a>
+        </div>
     </div>
     <div class="table-responsive">
         <table id="paginationNumbers" class="table" width="100%">

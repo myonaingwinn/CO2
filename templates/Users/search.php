@@ -2,9 +2,9 @@
     <thead>
         <tr>
             <th><?= __('順番') ?></th>
-            <th><?= $this->Paginator->sort('名前') ?></th>
-            <th><?= $this->Paginator->sort('メールアドレス') ?></th>
-            <th><?= $this->Paginator->sort('最後ログインしたデート') ?></th>
+            <th><?= __('名前') ?></th>
+            <th><?= __('メールアドレス') ?></th>
+            <th><?= __('最後ログインしたデート') ?></th>
             <th><?= __('役割') ?></th>
         </tr>
     </thead>
