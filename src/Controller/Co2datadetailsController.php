@@ -337,8 +337,9 @@ class Co2datadetailsController extends AppController
             $msg_type = $_POST['msg_type'];
             $dev_name = $_POST['dev_name'];
             $dev_value = $_POST['dev_value'];
+            $unit = $_POST['unit'];
             //$message = '<span style="color:red">' . $msg_type . '</span>' . ' 警告メッセージ';    //text max 1,000 charecter
-            $message = "\n" . $dev_name . "の" . $msg_type . '.警告メッセージ' . "\n" . $msg_type . "Value: " . $dev_value;
+            $message = "\n" . $dev_name . "の" . $msg_type . '.警告メッセージ' . "\n" . $msg_type . "値: " . $dev_value . $unit;
             $image_thumbnail_url = 'https://dummyimage.com/1024x1024/f598f5/fff.jpg';  // max size 240x240px JPEG
             $image_fullsize_url = 'https://dummyimage.com/1024x1024/844334/fff.jpg'; //max size 1024x1024px JPEG
 
