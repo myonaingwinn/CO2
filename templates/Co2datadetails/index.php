@@ -1,25 +1,15 @@
 <style>
-    #thNow {
-        vertical-align: middle;
-    }
-
-    thead {
-        border-top: white !important;
-    }
-
-    th {
-        border: none;
-        font-weight: 500 !important;
-        font-size: medium;
-    }
-
-    .std {
-        font-weight: 500 !important;
-        font-size: medium;
-    }
-
     section {
         background: white;
+    }
+
+    .table {
+        margin-bottom: 0rem;
+    }
+
+    .table th {
+        font-weight: 500;
+        font-size: 1rem;
     }
 
     .row {
@@ -58,27 +48,18 @@
 
 <!-- Table -->
 <div class="container-fluid">
-    <section class="border p-3 text-center mb-1 shadow-4">
-        <table class="table table-bordered">
+    <section class="p-3 text-center shadow-4">
+        <table id="tbl" class="table table-bordered">
             <thead>
                 <tr>
-                    <th scope="col" colspan="2"></th>
+                    <th scope="col">デバイス・部屋</th>
+                    <th scope="col">温度</th>
+                    <th scope="col">湿度</th>
+                    <th scope="col">CO2</th>
+                    <th scope="col">雑音</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td id="thNow" scope="row" class="std" rowspan="4">現在</td>
-                    <td class="std">温度</td>
-                </tr>
-                <tr>
-                    <td class="std" scope="row">湿度</td>
-                </tr>
-                <tr>
-                    <td class="std" scope="row">CO2</td>
-                </tr>
-                <tr>
-                    <td class="std" scope="row">雑音</td>
-                </tr>
             </tbody>
         </table>
     </section>
@@ -138,29 +119,64 @@
     var titles = ['温度', '湿度', 'CO2', '雑音'];
     var devices = <?php echo json_encode($devices); ?>;
 
-
-    // add new table column
+    // add new row to table
     devices.forEach(device => {
-        var columnData = ['部屋 ' + device.room, device.temperature + ' °C', device.humidity + ' %', device.co2 + ' ppm', device.noise + ' dB'];
+        var rowData = [
+            device.device + '・' + '部屋 ' + device.room,
+            device.temperature + ' °C',
+            device.humidity + ' %',
+            device.co2 + ' ppm', device.noise + ' dB'
+        ];
         var table = $('table');
-        insertTableColumn(table, columnData, table.find('tr > td:last').index() + 1);
+        insertTableRow(table, rowData, 0);
     });
 
-    function insertTableColumn(table, columnData, index) {
-        var newColumn = [],
-            colsCount = table.find('tr > td:last').index();
-
-        table.find("tr").each(function(rowIndex) {
-            var cell = $("<t" + (rowIndex == 0 ? "h" : "d") + "/>").text(columnData[rowIndex]);
-            newColumn.push(
-                index > colsCount ?
-                cell.appendTo(this) :
-                cell.insertBefore($(this).children().eq(index))
-            );
+    function insertTableRow(table, rowData, index) {
+        table.find('tbody').eq(index).append($('<tr/>'));
+        var newRow = $('tbody > tr:last');
+        $(rowData).each(function(colIndex) {
+            newRow.append($('<td/>').text(this));
         });
 
-        return newColumn;
+        return newRow;
     }
+
+    // dynamic data
+    var d1 = "";
+    setInterval(function() {
+        d1 = function() {
+            var tmp = null;
+            $.ajax({
+                url: "<?= $this->Url->build(['controller' => 'Co2datadetails', 'action' => 'getData']) ?>",
+                type: "GET",
+                data: {},
+                dataType: "html",
+                async: false,
+                success: function(devices_json_data) {
+                    tmp = devices_json_data;
+                },
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrfToken"]').attr('content')
+                }
+            });
+
+            return tmp;
+        }();
+        console.log(d1);
+        devices = JSON.parse(d1);
+        var table = document.getElementById('tbl');
+
+        // add new table column
+        var i = 1;
+        devices.forEach(device => {
+            table.rows[i].cells[1].innerHTML = device.temperature + ' °C';
+            table.rows[i].cells[2].innerHTML = device.humidity + ' %';
+            table.rows[i].cells[3].innerHTML = device.co2 + ' ppm';
+            table.rows[i].cells[4].innerHTML = device.noise + ' dB';
+            i++;
+        });
+
+    }, 2000);
 
     // generate device list with graphs
     $.each(devices, function(index, device) {

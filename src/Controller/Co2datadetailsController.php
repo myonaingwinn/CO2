@@ -19,7 +19,17 @@ class Co2datadetailsController extends AppController
      *
      * @return \Cake\Http\Response|null|void Renders view
      */
-    public function index()
+
+    public function getData()
+    {
+        $connection = ConnectionManager::get('default');
+
+        $data = $connection->execute("SELECT c.co2_device_id AS device, c.temperature, c.humidity, c.co2, c.noise, r.room_no AS room FROM Co2datadetails c JOIN Room_Info r ON c.co2_device_id = r.device_id, (SELECT cc.id, cc.co2_device_id, MAX(cc.time_measured) AS maxDate FROM Co2datadetails cc GROUP BY cc.co2_device_id) my WHERE c.co2_device_id=my.co2_device_id AND c.time_measured=my.maxDate AND c.time_measured >= CURDATE();")->fetchAll('assoc');
+        echo json_encode($data);
+        return $this->response;
+    }
+    
+     public function index()
     {
         // Table data   
         $connection = ConnectionManager::get('default');
