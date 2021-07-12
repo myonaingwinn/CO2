@@ -42,9 +42,13 @@ class UsersTable extends Table
 
         $this->setTable('users');
         $this->setDisplayField('name');
-        $this->setPrimaryKey(['id', 'uid']);
+        $this->setPrimaryKey('uid');
 
         $this->addBehavior('Timestamp');
+
+        $this->hasMany('RoomInfo', [
+            'foreignKey' => 'uid'
+        ]);
     }
 
     /**

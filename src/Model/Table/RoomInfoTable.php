@@ -45,6 +45,10 @@ class RoomInfoTable extends Table
         $this->hasMany('Co2datadetails', [
             'foreignKey' => 'co2_device_id'
         ]);
+
+        $this->belongsTo('Users', [
+            'foreignKey' => 'user_uid',
+        ]);
     }
 
     /**

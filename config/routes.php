@@ -52,23 +52,23 @@ $routes->scope('/', function (RouteBuilder $builder) {
      * its action called 'display', and we pass a param to select the view file
      * to use (in this case, templates/Pages/home.php)...
      */
-    $builder->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
     $builder->connect('/dashboard', ['controller' => 'Co2datadetails', 'action' => 'index']);
+    $builder->connect('/dashboard_plus', ['controller' => 'Co2datadetails', 'action' => 'view']);
 
-    /*
-     * ...and connect the rest of 'Pages' controller's URLs.
-     */
-    $builder->connect('/pages/*', 'Pages::display');
+    // $builder->connect('/pages/*', 'Pages::display');
 
     // $builder->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
 
-    $builder->connect('/login', ['controller' => 'Users', 'action' => 'login']);
+    $builder->connect('/', ['controller' => 'Users', 'action' => 'login']);
     $builder->connect('/logout', ['controller' => 'Users', 'action' => 'logout']);
     $builder->connect('/register', ['controller' => 'Users', 'action' => 'add']);
     $builder->connect('/forgotpassword', ['controller' => 'Users', 'action' => 'forgotpassword']);
     $builder->connect('/resetpassword', ['controller' => 'Users', 'action' => 'resetpassword']);
     $builder->connect('/graph', ['controller' => 'Graphs', 'action' => 'index']);
-    $builder->connect('/device_reg', ['controller' => 'RoomInfo', 'action' => 'add']);
+    $builder->connect('/device_reg', ['controller' =>
+    'RoomInfo', 'action' => 'add']);
+    $builder->connect('/devices', ['controller' => 'RoomInfo', 'action' => 'index']);
+    $builder->connect('/userEdit', ['controller' => 'Users', 'action' => 'edit']);
     /*
     /*
      * Connect catchall routes for all controllers.
@@ -93,10 +93,10 @@ $routes->scope('/', function (RouteBuilder $builder) {
  * ```
  * $routes->scope('/api', function (RouteBuilder $builder) {
  *     // No $builder->applyMiddleware() here.
- *     
+ *
  *     // Parse specified extensions from URLs
  *     // $builder->setExtensions(['json', 'xml']);
- *     
+ *
  *     // Connect API actions here.
  * });
  * ```
