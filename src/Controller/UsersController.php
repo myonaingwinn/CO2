@@ -9,6 +9,8 @@ use Cake\I18n\Time;
 use Cake\Auth\DefaultPasswordHasher;
 use Cake\Mailer\Mailer;
 
+use function React\Promise\all;
+
 /**
  * Users Controller
  *
@@ -63,8 +65,8 @@ class UsersController extends AppController
             $userTable =  $this->loadModel('Users');;
             // if ($email == NULL) {
             //     $this->Flash->error(__('メールアドレスは入力必須項目です.'));
-            // } 
-            // else 
+            // }
+            // else
             if ($user = $userTable->find('all')->where(['email' => $email])->first()) {
 
                 $user->token = $token;
@@ -182,7 +184,7 @@ class UsersController extends AppController
      * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function edit($id = null)
+    public function changeRole($id = null)
     { //change role
         $this->request->allowMethod('get');
         $roleData = $this->request->getQuery('role');
@@ -204,7 +206,28 @@ class UsersController extends AppController
         $data = $this->Users->find('all', array('conditions' => array('Users.del_flg' => 'N')));
         $users = $this->paginate($data);
         $this->set(compact('users'));
-        // return $this->redirect(['action' => 'index']); 
+        // return $this->redirect(['action' => 'index']);
+    }
+
+    //edit
+
+    public function edit($id = null)
+    {
+        $data = $this->Users->find('all', array('conditions' => [
+            'and' => ['Users.del_flg' => 'N'],
+            ['Users.id' => $id]
+        ]));
+        $users = $data->toArray();
+        $user = $users[0];
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $user = $this->Users->patchEntity($user, $this->request->getData());
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__('ユーザーが保存されました。'));
+                return $this->redirect('/users');
+            }
+            $this->Flash->error(__('ユーザーを保存できませんでした。 もう一度やり直してください。'));
+        }
+        $this->set(compact('user'));
     }
 
     /**
