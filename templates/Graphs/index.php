@@ -62,20 +62,9 @@ for ($i = 0; $i < 10; $i++) {
 				});
 				xValue++;
 				chart.render();
-<<<<<<< HEAD
-				//	if (yValue > 5) {
-				//	getGraphImage();
-				//	}
-
-				//if (yValue > 5) {
-				//getGraphImage();
-				//}
-
-=======
 					//	if (yValue > 5) {
 					//	getGraphImage();
 					//	}
->>>>>>> 9a54c9129d329d2a5af0840f066f4a99cd55a987
 			};
 		}
 	</script>
