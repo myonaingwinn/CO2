@@ -2,12 +2,14 @@
 $this->assign('title', 'ログイン');
 ?>
 
+
 <style>
     img {
         margin-top: 0.7rem;
         width: 128px;
     }
 </style>
+
 
     <div class="container">
         <div class="row">

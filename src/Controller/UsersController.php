@@ -93,6 +93,7 @@ class UsersController extends AppController
     {
         if ($this->request->is('post')) {
             $hasher = new DefaultPasswordHasher();
+            $pass = $this->request->getData('PasswordType');
             //   $newpass = $hasher->hash($this->request->getData('password'));
             $newpass = $this->request->getData('password');
             $userTable = $this->loadModel('Users');
@@ -100,12 +101,16 @@ class UsersController extends AppController
             $user = $userTable->find('all')->where(['token' => $token])->first();
 
             $user->password = $newpass;
+            if ($pass == 'S') {
+                if ($userTable->save($user)) {
 
-            if ($userTable->save($user)) {
 
-                $this->Flash->success(__('パスワードが正常にリセットされました。新しいパスワードを使用してログインしてください。'));
-                // return $this->redirect(['action' => 'login']);
-                return $this->redirect($this->Auth->logout());
+                    $this->Flash->success(__('パスワードが正常にリセットされました。新しいパスワードを使用してログインしてください。'));
+                    // return $this->redirect(['action' => 'login']);
+                    return $this->redirect($this->Auth->logout());
+                }
+            } else if ($pass == 'W') {
+                $this->Flash->error(__('パスワードが弱い'));
             }
         }
     }
@@ -175,9 +180,6 @@ class UsersController extends AppController
                 } else if ($pass == 'W') {
                     $this->Flash->error(__('パスワードが弱い'));
                 }
-                //  else {
-                //     $this->Flash->error(__('Password Good'));
-                // }
             }
         }
         $this->set(compact('user'));

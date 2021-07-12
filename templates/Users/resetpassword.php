@@ -65,7 +65,7 @@
                                         <li class=""><span class="eight-character"><i class="fas fa-file" aria-hidden="true"></i></span>&nbsp;少なくとも8文字</li>
                                     </ul>
                                 </div>
-
+                                <input type="hidden" id="PasswordType" name="PasswordType">
 
                             </div>
                             <div class="col-sm-1"></div>
@@ -165,7 +165,7 @@
                     $('#result').removeClass()
                     $('#password-strength').addClass('progress-bar-danger');
                     p_w = 'W';
-                    $('#result').addClass('text-danger').text('Very Weak');
+                    $('#result').addClass('text-danger').text('Weak');
 
                     $('#password-strength').css('width', '10%');
                 }
