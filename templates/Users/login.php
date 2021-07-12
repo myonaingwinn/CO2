@@ -7,7 +7,6 @@
         img {
             margin-top: 0.7rem;
             width: 128px;
-
         }
     </style>
 
