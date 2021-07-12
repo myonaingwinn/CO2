@@ -67,11 +67,11 @@ $this->assign('title', 'デバイス一覧');
         <?php
         if ($pages > 1) : ?>
             <ul class="pagination">
-                <?= $this->Paginator->first('<< ' . __('first')) ?>
-                <?= $this->Paginator->prev('< ' . __('previous')) ?>
-                <?= $this->Paginator->numbers() ?>
-                <?= $this->Paginator->next(__('next') . ' >') ?>
-                <?= $this->Paginator->last(__('last') . ' >>') ?>
+                <?= $this->Paginator->first('<< ' . __('最初')) ?>&ensp;
+                <?= $this->Paginator->prev('< ' . __('戻る')) ?>&ensp;
+                <?= $this->Paginator->numbers() ?>&ensp;
+                <?= $this->Paginator->next(__('次へ') . ' >') ?>&ensp;
+                <?= $this->Paginator->last(__('最終') . ' >>') ?>&ensp;
             </ul>
         <?php endif ?>
         <p><?= $this->Paginator->counter(__('ページ {{page}}/{{pages}}、合計{{count}}つのうち{{current}}つのレコードを表示。')) ?></p>
