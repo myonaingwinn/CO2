@@ -49,7 +49,7 @@
 <!-- Table -->
 <div class="container-fluid">
     <section class="p-3 text-center shadow-4">
-        <table id="tbl" class="table table-bordered">
+        <table id="tbl" class="table table-bordered table-striped">
             <thead>
                 <tr>
                     <th scope="col">デバイス・部屋</th>
@@ -142,9 +142,9 @@
     }
 
     // dynamic data
-    var d1 = "";
+    var data = "";
     setInterval(function() {
-        d1 = function() {
+        data = function() {
             var tmp = null;
             $.ajax({
                 url: "<?= $this->Url->build(['controller' => 'Co2datadetails', 'action' => 'getData']) ?>",
@@ -162,8 +162,8 @@
 
             return tmp;
         }();
-        console.log(d1);
-        devices = JSON.parse(d1);
+        // console.log(data);
+        devices = JSON.parse(data);
         var table = document.getElementById('tbl');
 
         // add new table column
