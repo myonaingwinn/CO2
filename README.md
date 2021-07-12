@@ -1,6 +1,6 @@
 ## Installation
 
-Download [applocal.php, vendor.zip](https://1drv.ms/u/s!Ahi0f9ywcoi7gXbiHYNOsHnnxJIN?e=49nFw9).
+Download [database.sql , applocal.php, vendor.zip](https://1drv.ms/u/s!Ahi0f9ywcoi7gXbiHYNOsHnnxJIN?e=49nFw9).
 
 
 ## Run

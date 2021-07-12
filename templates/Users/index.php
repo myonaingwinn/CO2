@@ -1,32 +1,13 @@
 <?php
-
+$this->assign('title', 'ユーザー一覧');
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\User[]|\Cake\Collection\CollectionInterface $users
  */
-use PHP_CodeSniffer\Reports\Diff;
 ?>
 <style>
     .capitalize {
         text-transform: capitalize;
-    }
-
-    #search {
-        width: 300px;
-        height: 40px;
-        border-radius: 5px;
-        margin-top: 30px;
-    }
-
-    .btn-user {
-        width: 120px;
-        height: 40px;
-        border-radius: 3px;
-        margin-left: 60%;
-    }
-
-    .searchArea {
-        margin-bottom: 20px;
     }
 
     select {
@@ -35,30 +16,41 @@ use PHP_CodeSniffer\Reports\Diff;
         border-radius: 3px;
 
     }
-    .body{
-        margin-top:30px;       
+
+    .body {
+        margin-top: 30px;
     }
 </style>
 <div class="users index content body">
-    <h3 style="text-align: center;"><?= __('ユーザー一覧') ?></h3>
+    <h3 class="text-center mb-4"><?= __('ユーザー一覧') ?></h3>
     <!-- search area -->
-    <div class="searchArea">
-        <?= $this->Form->text('search', ['id' => 'search', 'size' => '100', 'maxlength' => '100', 'placeholder' => '検索...']) ?>
-        <?= $this->Html->link(__('ユーザー登録'), ['action' => 'add'], ['class' => 'btn btn-primary btn-user']) ?>
+    <div class="row mb-3">
+        <div class="col-3 text-left">
+            <div class="form-outline">
+                <input type="text" id="search" class="form-control" maxlength="50" />
+                <label class="form-label" for="search">検索</label>
+            </div>
+        </div>
+        <div class="col-3"></div>
+        <div class="col-6 text-right">
+            <a href="register" class="btn btn-primary">ユーザー登録</a>
+        </div>
     </div>
     <div class="table-responsive">
         <table id="paginationNumbers" class="table" width="100%">
             <thead>
                 <tr>
-                    <th><?= $this->Paginator->sort('順番') ?></th>
+                    <th><?= __('順番') ?></th>
                     <th><?= $this->Paginator->sort('名前') ?></th>
                     <th><?= $this->Paginator->sort('メールアドレス') ?></th>
                     <th><?= $this->Paginator->sort('最後ログインしたデート') ?></th>
-                    <th><?= $this->Paginator->sort('役割') ?></th>
+                    <th><?= __('役割') ?></th>
+                    <th><?= __('処理') ?></th>
                 </tr>
             </thead>
             <tbody>
                 <?php $page = $this->Paginator->counter(__('{{page}}'));
+                $pages = $this->Paginator->counter(__('{{pages}}'));
                 $no = 1;
                 if ($page > 2)
                     $no = $page * 20 - 19;
@@ -71,23 +63,27 @@ use PHP_CodeSniffer\Reports\Diff;
                         <td><?= h($user->email) ?></td>
                         <td><?= h($user->last_login) ?></td>
                         <td>
-                            <select name="role" id="role-<?= $user->id ?>">                           
-                                <?php
-                                $role = $user->role;
-                                if ($role == 'A') {
-                                    echo
-                                    '<option value="A" selected>管理者</option>                                   
-                                     <option value="U">ユーザー</option>';
-                                }
-                                
-                                if ($role == 'U') {
-                                    echo
-                                    '<option value="A" selected>管理者</option>
-                                    <option value="U" selected>ユーザー</option>';
-                                }
-                                ?>
-                            </select>
-                            <input type="hidden" id="origin-<?= $user->id ?>" value=<?= $role?>>
+                            <!-- <select name="role" id="role-<?= $user->id ?>"> -->
+                            <?php
+                            $role = $user->role;
+                            if ($role == 'A') {
+                                echo '管理者';
+                            }
+
+                            if ($role == 'U') {
+                                echo 'ユーザー';
+                            }
+                            ?>
+                            <!-- </select> -->
+                            <input type="hidden" id="origin-<?= $user->id ?>" value=<?= $role ?>>
+                        </td>
+                        <td>
+                            <?= $this->Html->link(
+                                '<span class="fa fa-edit"></span><span class="sr-only">' . __('Edit') . '</span>',
+                                ['action' => 'edit', $user->id],
+                                ['escape' => false, 'title' => __('Edit')]
+                            ) ?>
+                            <!-- <a href="userEdit"><span><i class="fas fa-edit"></i></span></a> -->
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -95,37 +91,42 @@ use PHP_CodeSniffer\Reports\Diff;
         </table>
     </div>
     <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('最初　')) ?>
-            <?= $this->Paginator->prev('< ' . __('戻る　')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('次へ') . ' >') ?>
-            <?= $this->Paginator->last(__('最終') . ' >>') ?>
-        </ul>
-              <p><?= $this->Paginator->counter(__('ページ {{page}}/{{pages}}、合計{{count}}つのうち{{current}}つのレコードを表示。')) ?></p>
+
+        <?php
+        if ($pages > 1) { ?>
+            <ul class="pagination">
+                <?= $this->Paginator->first('<< ' . __('最初')) ?>&nbsp;
+                <?= $this->Paginator->prev('< ' . __('戻る')) ?>&nbsp;
+                <?= $this->Paginator->numbers() ?>&nbsp;
+                <?= $this->Paginator->next(__('次へ') . ' >') ?>&nbsp;
+                <?= $this->Paginator->last(__('最終') . ' >>') ?>&nbsp;
+            </ul>
+        <?php  }
+        ?>
+        <p><?= $this->Paginator->counter(__('ページ {{page}}/{{pages}}、合計{{count}}つのうち{{current}}つのレコードを表示。')) ?></p>
     </div>
 </div>
 
 <script>
     $('select').change(function() {
-        var data = this.value;        
-        var user_id = this.id.split('-');   
-        var id="origin-"+user_id[1];        
-        var origin_role=document.getElementById(id).value;          
+        var data = this.value;
+        var user_id = this.id.split('-');
+        var id = "origin-" + user_id[1];
+        var origin_role = document.getElementById(id).value;
         if (!confirm("役割を変更してもよろしいですか?")) {
             //cancel
-            document.getElementById(this.id).value=origin_role;             
-            return false;                              
-        }  
-            $.ajax({          
+            document.getElementById(this.id).value = origin_role;
+            return false;
+        }
+        $.ajax({
             method: 'get',
             data: {
                 role: data,
                 userID: user_id[1]
             },
-            url: "<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'edit']); ?>",
+            url: "<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'changeRole']); ?>",
             success: function(response) {
-                          $('.table-responsive').html(response);
+                $('.table-responsive').html(response);
             }
         });
     });
@@ -139,6 +140,7 @@ use PHP_CodeSniffer\Reports\Diff;
                 searchUsers(searchkey);
             }
         });
+
         function searchUsers(keyword) {
             var data = keyword;
             $.ajax({

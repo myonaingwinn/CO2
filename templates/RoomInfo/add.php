@@ -1,3 +1,7 @@
+<?php
+    $this->assign('title', 'デバイス登録');
+
+?>
 <?= $this->Form->create($roomInfo) ?>
 <input type="hidden" id="hd_pst_code" name="postal_code">
 <div class="container">
@@ -6,14 +10,14 @@
         <div class="col-6">
             <div class="card text-center">
                 <div class="card-body">
-                    <h4 class="card-title">デバイス登録</h4>
+                    <h4 id="title" class="card-title">デバイス登録</h4>
 
                     <select id="select" name="user_uid" class="select select-initialized" required>
-                        <option value="" disabled selected>ユーザータイプを選択</option>
+                        <option value="" disabled selected>ユーザーを選択</option>
                     </select>
 
                     <div class="form-outline mb-3">
-                        <input type="text" name="device_id" id="dev_no" class="form-control form-control-lg" required />
+                        <input type="text" name="device_id" id="dev_no" class="form-control form-control-lg" pattern="dvTest+[0-9]" title="Include dvTest" required />
                         <label class="form-label" for="dev_no">デバイス番号</label>
                     </div>
 
@@ -50,7 +54,7 @@
                         <label class="form-label" for="rm_no">建物・部屋番号</label>
                     </div>
 
-                    <button id="btnReg" type="submit" class="btn btn-primary">登録</button>
+                    <button id="btnReg" type="submit" class="btn btn-primary btn-lg">登録</button>
                 </div>
             </div>
         </div>
@@ -105,7 +109,7 @@
 </script>
 
 <style>
-    h4 {
+    #title {
         margin-top: .8rem;
         margin-bottom: 2rem !important;
     }

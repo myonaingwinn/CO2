@@ -1,17 +1,14 @@
-<!DOCTYPE html>
-<html>
+<?php
+$this->assign('title', 'パスワードを再設定する');
+?>
 
-<head>
-    <title>パスワードをお忘れの方</title>
     <style>
         img {
             margin-top: 0.7rem;
             width: 128px;
         }
     </style>
-</head>
 
-<body>
     <div class="container">
         <div class="row">
             <div class="col-sm-3"></div>
@@ -33,22 +30,20 @@
                                 <div class="form-outline mb-4">
                                     <input type="email" name="email" id="email" class="form-control form-control-lg" required />
                                     <label class="form-label" for="email">メールアドレス
-
-                                    </label>
-                                </div>
+                                </label>
                             </div>
-                            <div class="col-sm-1"></div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="col-md-2">
-                                </div>
-                                <div class="text-center mb-2">
-                                    <input type="submit" value="送信" class="btn btn-lg btn-primary">
-                                    <?= $this->Form->end() ?>
-                                </div>
-                                <div class="col-md-2">
-                                </div>
+                        <div class="col-sm-1"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-2">
+                            </div>
+                            <div class="text-center mb-2">
+                                <input type="submit" value="送信" class="btn btn-lg btn-primary">
+                                <?= $this->Form->end() ?>
+                            </div>
+                            <div class="col-md-2">
                             </div>
                         </div>
                     </div>
@@ -56,8 +51,4 @@
             </div>
         </div>
     </div>
-
-
-</body>
-
-</html>
+</div>
