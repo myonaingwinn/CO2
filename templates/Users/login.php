@@ -4,12 +4,10 @@
 <head>
     <title>ログイン</title>
     <style>
-        #title {
-            margin-bottom: 1.5rem;
-        }
-
         img {
             margin-top: 0.7rem;
+            width: 128px;
+
         }
     </style>
 
@@ -22,15 +20,15 @@
             <div class="col-sm-6">
                 <div class="card">
                     <div class="row">
-                        <div class="col-sm-3"></div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4 text-center">
                             <img src="/img/gic.png" class="img-fluid">
                         </div>
-                        <div class="col-sm-3"></div>
+                        <div class="col-sm-4"></div>
                     </div>
 
                     <div class="card-body">
-                        <h4 class="card-title text-center" id="title">Welcome To GIC</h4>
+                        <h4 class="card-title text-center mb-3" id="title">GICへようこそ</h4>
                         <?= $this->Flash->render() ?>
                         <?= $this->Form->create() ?>
                         <div class="row">
