@@ -148,7 +148,7 @@ class UsersController extends AppController
         $user = $this->Users->newEmptyEntity();
         if ($this->request->is('post')) {
             $email = $this->request->getData('email');
-
+            $pass = $this->request->getData('PasswordType');
 
             $user_c = $this->Users->find()->where(['email' => $email])->count();
             if ($user_c >= 1) {
@@ -165,13 +165,19 @@ class UsersController extends AppController
 
                 $user->del_flg = 'N';
 
+                if ($pass == 'S') {
+                    if ($this->Users->save($user)) {
+                        $this->Flash->success(__('ユーザーが保存されました。'));
 
-                if ($this->Users->save($user)) {
-                    $this->Flash->success(__('ユーザーが保存されました。'));
-
-                    return $this->redirect(['action' => 'index']);
+                        return $this->redirect(['action' => 'index']);
+                    }
+                    $this->Flash->error(__('The user could not be saved. Please, try again.'));
+                } else if ($pass == 'W') {
+                    $this->Flash->error(__('パスワードが弱い'));
                 }
-                $this->Flash->error(__('The user could not be saved. Please, try again.'));
+                //  else {
+                //     $this->Flash->error(__('Password Good'));
+                // }
             }
         }
         $this->set(compact('user'));
