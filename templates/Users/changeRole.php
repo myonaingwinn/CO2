@@ -2,15 +2,16 @@
     <thead>
         <tr>
             <th><?= __('順番') ?></th>
-            <th><?= __('名前') ?></th>
-            <th><?= __('メールアドレス') ?></th>
-            <th><?= __('最後ログインしたデート') ?></th>
+            <th><?= $this->Paginator->sort('名前') ?></th>
+            <th><?= $this->Paginator->sort('メールアドレス') ?></th>
+            <th><?= $this->Paginator->sort('最後ログインしたデート') ?></th>
             <th><?= __('役割') ?></th>
             <th><?= __('処理') ?></th>
         </tr>
     </thead>
     <tbody>
         <?php $page = $this->Paginator->counter(__('{{page}}'));
+        $pages = $this->Paginator->counter(__('{{pages}}'));
         $no = 1;
         if ($page > 2)
             $no = $page * 20 - 19;
@@ -23,18 +24,22 @@
                 <td><?= h($user->email) ?></td>
                 <td><?= h($user->last_login) ?></td>
                 <td>
-                    <!-- <select name="role" id="role-<?= $user->id ?>"> -->
-                    <?php
-                    $role = $user->role;
-                    if ($role == 'A') {
-                        echo '管理者';
-                    }
+                    <select name="role" id="role-<?= $user->id ?>">
+                        <?php
+                        $role = $user->role;
+                        if ($role == 'A') {
+                            echo
+                            '<option value="A" selected>管理者</option>
+                                     <option value="U">ユーザー</option>';
+                        }
 
-                    if ($role == 'U') {
-                        echo 'ユーザー';
-                    }
-                    ?>
-                    <!-- </select> -->
+                        if ($role == 'U') {
+                            echo
+                            '<option value="A" selected>管理者</option>
+                                    <option value="U" selected>ユーザー</option>';
+                        }
+                        ?>
+                    </select>
                     <input type="hidden" id="origin-<?= $user->id ?>" value=<?= $role ?>>
                 </td>
                 <td>
@@ -43,6 +48,7 @@
                         ['action' => 'edit', $user->id],
                         ['escape' => false, 'title' => __('Edit')]
                     ) ?>
+                    <!-- <a href="userEdit"><span><i class="fas fa-edit"></i></span></a> -->
                 </td>
             </tr>
         <?php endforeach; ?>

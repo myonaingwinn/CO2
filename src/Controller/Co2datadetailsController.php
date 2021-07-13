@@ -19,7 +19,17 @@ class Co2datadetailsController extends AppController
      *
      * @return \Cake\Http\Response|null|void Renders view
      */
-    public function index()
+
+    public function getData()
+    {
+        $connection = ConnectionManager::get('default');
+
+        $data = $connection->execute("SELECT c.co2_device_id AS device, c.temperature, c.humidity, c.co2, c.noise, r.room_no AS room FROM Co2datadetails c JOIN Room_Info r ON c.co2_device_id = r.device_id, (SELECT cc.id, cc.co2_device_id, MAX(cc.time_measured) AS maxDate FROM Co2datadetails cc GROUP BY cc.co2_device_id) my WHERE c.co2_device_id=my.co2_device_id AND c.time_measured=my.maxDate AND c.time_measured >= CURDATE();")->fetchAll('assoc');
+        echo json_encode($data);
+        return $this->response;
+    }
+    
+     public function index()
     {
         // Table data   
         $connection = ConnectionManager::get('default');
@@ -120,7 +130,6 @@ class Co2datadetailsController extends AppController
 
         // sent array data to template
         $this->set(compact('startdate', 'enddate'));
-
     }
 
     public function csv()
@@ -207,14 +216,16 @@ class Co2datadetailsController extends AppController
         $query_var_one = "dvTest";
         $query_var_two = "";
         $query_arr = [];
-        
+
         // variable assign 
-        for ($i=0; $i<$dev_num; $i++) {
-            if ($row_num == $i) $query_var_one = $query_var_one.($i+1);
+        for ($i = 0; $i < $dev_num; $i++) {
+            if ($row_num == $i) $query_var_one = $query_var_one . ($i + 1);
             if ($col_num_one == 1) {
-                if ($col_num_two == 0) $query_var_two = "temperature"; else $query_var_two = "humidity";
+                if ($col_num_two == 0) $query_var_two = "temperature";
+                else $query_var_two = "humidity";
             } else {
-                if ($col_num_two == 0) $query_var_two = "co2"; else $query_var_two = "noise";
+                if ($col_num_two == 0) $query_var_two = "co2";
+                else $query_var_two = "noise";
             }
         }
 
@@ -228,14 +239,14 @@ class Co2datadetailsController extends AppController
 
         // reassign query array format for json format
         foreach ($query as $row_query) {
-            
+
             // time measured standard schema
             $dateArr = (array) $row_query["time_measured"];
             $dateStr = implode("", $dateArr);
             $date = explode(".", $dateStr);
 
             // array push for schema format
-            array_push($query_arr, array($date[0],$row_query[$query_var_two],$row_query["co2_device_id"]));
+            array_push($query_arr, array($date[0], $row_query[$query_var_two], $row_query["co2_device_id"]));
         }
 
         $json_query = json_encode($query_arr);
@@ -243,13 +254,12 @@ class Co2datadetailsController extends AppController
         $sensor = $query_var_two;
 
         $this->set(compact('json_query', 'device_name', 'sensor'));
-
     }
 
     public function onetimedata()
     {
         $this->request->allowMethod('get');
-        
+
         $data = 0;
 
         $type = $_GET['type'];
@@ -261,14 +271,14 @@ class Co2datadetailsController extends AppController
             ->where(['co2_device_id' => $device])
             ->order(['time_measured' => 'DESC'])
             ->first();
-        
+
         $time = json_encode($query->time_measured);
         list($timedate, $timezone) = explode("+", $time);
         list($date, $clock) = explode("T", $timedate);
-        $timeresult = $date.' '.$clock;
+        $timeresult = $date . ' ' . $clock;
         $data = $query->type;
-        
-        echo $data.$timeresult;
+
+        echo $data . $timeresult;
         return $this->response;
         // DATE_FORMAT(TS, '%d-%m-%y %h:%i:%s');
     }
@@ -304,6 +314,7 @@ class Co2datadetailsController extends AppController
             $imgContents = file_get_contents(WWW_ROOT . '/graph/graphImg.json');
 
             $str_length = strlen($imgContents);
+            //37
             $sparrow = substr($imgContents, 37, $str_length - 40);
             $decoder = base64_decode($sparrow);
             $img = imagecreatefromstring($decoder);
@@ -322,9 +333,13 @@ class Co2datadetailsController extends AppController
             //----------Line Message Notify
             $line_api = 'https://notify-api.line.me/api/notify';
             // $access_token = "k4rGxe8pDwINs1POVZQo1nniV7hGn9ibu4SiIoLSh9R"; // For My Personal Account
-            $access_token = "pzV5k7fagBKn3agMGDmamUdUPkLPwStRsKqXVrP5yBG"; //For LineTest Group
-
-            $message = '警告メッセージ';    //text max 1,000 charecter
+            $access_token = "d1meIucMBFiBCCV5xu455RSDYG1pSZT9p9cHovRB3fz"; //For LineTest Group
+            $msg_type = $_POST['msg_type'];
+            $dev_name = $_POST['dev_name'];
+            $dev_value = $_POST['dev_value'];
+            $unit = $_POST['unit'];
+            //$message = '<span style="color:red">' . $msg_type . '</span>' . ' 警告メッセージ';    //text max 1,000 charecter
+            $message = "\n" . $dev_name . "の" . $msg_type . '.警告メッセージ' . "\n" . $msg_type . "値: " . $dev_value . $unit;
             $image_thumbnail_url = 'https://dummyimage.com/1024x1024/f598f5/fff.jpg';  // max size 240x240px JPEG
             $image_fullsize_url = 'https://dummyimage.com/1024x1024/844334/fff.jpg'; //max size 1024x1024px JPEG
 

@@ -15,7 +15,7 @@
  * @var \App\View\AppView $this
  */
 
-$cakeDescription = 'CakePHP: the rapid development php framework';
+$cakeDescription = 'CO2 ';
 ?>
 <!DOCTYPE html>
 <html>
@@ -32,7 +32,8 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
         <?= $cakeDescription ?>:
         <?= $this->fetch('title') ?>
     </title>
-    <?= $this->Html->meta('icon') ?>
+    <!-- <?= $this->Html->meta('icon') ?> -->
+    <?= $this->Html->meta('Logo', 'img/gic.logo.png', ['type' => 'icon']); ?>
 
     <!-- Font Awesome -->
     <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" /> -->
@@ -147,10 +148,10 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
                             <i class="fas fa-tools fa-lg pr-2"></i>
                             <span>&nbsp;デバイス</span></a>
                         <ul class="sidenav-collapse collapse" id="sidenav-collapse-1-0-1">
-                            <!-- <li class="sidenav-item">
+                            <li class="sidenav-item">
                                 <a class="sidenav-link ripple-surface" href="devices" tabindex="-1">
                                     <i class="fas fa-list-ul pr-2"></i><span>デバイス一覧</span></a>
-                            </li> -->
+                            </li>
                             <li class="sidenav-item">
                                 <a class="sidenav-link ripple-surface" href="device_reg" tabindex="-1">
                                     <i class="fas fa-plus-circle pr-2"></i><span>デバイス登録</span></a>
@@ -159,7 +160,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
                     </li>
                     <li class="sidenav-item">
                         <a class="sidenav-link ripple-surface" href="forgotpassword" tabindex="-1">
-                            <i class="fas fa-lock fa-lg pr-2"></i><span>&ensp;パスワードをお忘れの方</span></a>
+                            <i class="fas fa-lock fa-lg pr-2"></i><span>&ensp;パスワードを再設定する</span></a>
                     </li>
                     <li class="sidenav-item">
                         <a class="sidenav-link ripple-surface" href="logout" tabindex="-1">
@@ -177,7 +178,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
                     </li>
                     <li class="sidenav-item">
                         <a class="sidenav-link ripple-surface" href="forgotpassword" tabindex="-1">
-                            <i class="fas fa-lock fa-lg pr-2"></i><span>&nbsp;パスワードをお忘れの方</span></a>
+                            <i class="fas fa-lock fa-lg pr-2"></i><span>&nbsp;パスワードを再設定する</span></a>
                     </li>
                     <li class="sidenav-item">
                         <a class="sidenav-link ripple-surface" href="logout" tabindex="-1">

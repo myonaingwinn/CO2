@@ -1,3 +1,7 @@
+<?php
+    $this->assign('title', 'デバイス登録');
+
+?>
 <?= $this->Form->create($roomInfo) ?>
 <input type="hidden" id="hd_pst_code" name="postal_code">
 <div class="container">
