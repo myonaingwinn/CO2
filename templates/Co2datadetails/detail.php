@@ -41,7 +41,7 @@ switch ($sensor) {
   <div class="col-7"></div>
   <div class="col-1">
     <!-- Back Button -->
-    <?= $this->Html->link(__('Back'), ['action' => 'index'], ['class' => 'btn btn-primary', 'id' => 'btnBack']) ?>
+    <?= $this->Html->link(__('戻る'), ['action' => 'index'], ['class' => 'btn btn-primary', 'id' => 'btnBack']) ?>
   </div>
 </div>
 
@@ -213,7 +213,7 @@ switch ($sensor) {
         if (flag == 1) getGraphImage();
       }
 
-    }, 5000);
+    }, 1000);
   });
 
   realtimeChart.addEventListener("disposed", function(eventObj) {
