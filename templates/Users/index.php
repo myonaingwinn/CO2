@@ -14,13 +14,13 @@ $this->assign('title', 'ユーザー一覧');
         width: 80px;
         height: 30px;
         border-radius: 3px;
-
     }
 
     .body {
         margin-top: 30px;
     }
 </style>
+
 <div class="users index content body">
     <h3 class="text-center mb-4"><?= __('ユーザー一覧') ?></h3>
     <!-- search area -->
@@ -41,9 +41,9 @@ $this->assign('title', 'ユーザー一覧');
             <thead>
                 <tr>
                     <th><?= __('順番') ?></th>
-                    <th><?= $this->Paginator->sort('名前') ?></th>
-                    <th><?= $this->Paginator->sort('メールアドレス') ?></th>
-                    <th><?= $this->Paginator->sort('最後ログインしたデート') ?></th>
+                    <th><?= $this->Paginator->sort('name','名前') ?></th>
+                    <th><?= $this->Paginator->sort('email', 'メールアドレス') ?></th>
+                    <th><?= $this->Paginator->sort('last_login', '最後ログインしたデート') ?></th>
                     <th><?= __('役割') ?></th>
                     <th><?= __('処理') ?></th>
                 </tr>
