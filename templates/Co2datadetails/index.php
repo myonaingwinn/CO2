@@ -41,6 +41,11 @@
     [id^="container-"] {
         margin-top: 1.5rem;
     }
+
+    ul.pagination {
+        margin-bottom: 0rem;
+        margin-top: 0rem;
+    }
 </style>
 
 <!-- Screen Title -->
@@ -62,6 +67,15 @@
             <tbody>
             </tbody>
         </table>
+
+        <!-- Pagination -->
+        <!-- <div class="row justify-content-end"> -->
+            <!-- <div class="col-3"></div> -->
+            <div class="d-flex justify-content-end mt-3">
+                <ul class="pagination">
+                </ul>
+            </div>
+        <!-- </div> -->
     </section>
 </div>
 <hr id="fhr" class="my-5">
@@ -116,20 +130,46 @@
 <div id="devicesList"></div>
 
 <script>
+    // pagination
+    var page_number = 1;
+    const page_size = 5;
+
     var titles = ['温度', '湿度', 'CO2', '雑音'];
     var devices = <?php echo json_encode($devices); ?>;
 
     // add new row to table
-    devices.forEach(device => {
-        var rowData = [
-            device.device + '・' + '部屋 ' + device.room,
-            device.temperature + ' °C',
-            device.humidity + ' %',
-            device.co2 + ' ppm', device.noise + ' dB'
-        ];
-        var table = $('table');
-        insertTableRow(table, rowData, 0);
-    });
+    if (devices) {
+        result = devices.length / page_size;
+        pages = Math.ceil(result);
+
+        $('ul').append($('<li class="page-item my"><a class="page-link" href="#" onclick="page(1)">最初</a></li>'));
+
+        for (let i = 1; i <= pages; i++) {
+            if (i == 1)
+                $('ul').append($('<li class="page-item my active"><a class="page-link" href="#" onclick="page(' + i + ')">' + i + '</a></li>'));
+            else
+                $('ul').append($('<li class="page-item my"><a class="page-link" href="#" onclick="page(' + i + ')">' + i + '</a></li>'));
+        }
+
+        $('ul').append($('<li class="page-item my"><a class="page-link" href="#" onclick="page(' + pages + ')">最終</a></li>'));
+
+        device_paginated = paginate(devices, page_size, page_number);
+        addRow(device_paginated);
+    }
+
+    // add rows to table
+    function addRow(device_paginated) {
+        device_paginated.forEach(device => {
+            var rowData = [
+                device.device + '・' + '部屋 ' + device.room,
+                device.temperature + ' °C',
+                device.humidity + ' %',
+                device.co2 + ' ppm', device.noise + ' dB'
+            ];
+            var table = $('table');
+            insertTableRow(table, rowData, 0);
+        });
+    }
 
     function insertTableRow(table, rowData, index) {
         table.find('tbody').eq(index).append($('<tr/>'));
@@ -166,15 +206,19 @@
         devices = JSON.parse(data);
         var table = document.getElementById('tbl');
 
-        // add new table column
+        // update table row
         var i = 1;
-        devices.forEach(device => {
-            table.rows[i].cells[1].innerHTML = device.temperature + ' °C';
-            table.rows[i].cells[2].innerHTML = device.humidity + ' %';
-            table.rows[i].cells[3].innerHTML = device.co2 + ' ppm';
-            table.rows[i].cells[4].innerHTML = device.noise + ' dB';
-            i++;
-        });
+        if (devices) {
+            device_paginated = paginate(devices, page_size, page_number);
+            // console.log(device_paginated);
+            device_paginated.forEach(device => {
+                table.rows[i].cells[1].innerHTML = device.temperature + ' °C';
+                table.rows[i].cells[2].innerHTML = device.humidity + ' %';
+                table.rows[i].cells[3].innerHTML = device.co2 + ' ppm';
+                table.rows[i].cells[4].innerHTML = device.noise + ' dB';
+                i++;
+            });
+        }
 
     }, 2000);
 
@@ -223,6 +267,31 @@
             btntext.innerText = "グラフを表示";
         }
     }
+
+    // paginate page
+    function paginate(array, page_size, page_number) {
+        return array.slice((page_number - 1) * page_size, page_number * page_size);
+    }
+
+    // go to page of page_number
+    function page(page_num) {
+        $('#tbl tbody > tr').remove();
+        page_number = page_num;
+        device_paginated = paginate(devices, page_size, page_number);
+        if (device_paginated)
+            addRow(device_paginated);
+    }
+
+    // add or remove 'active'
+    $('li.my').click(function() {
+        $('li.my').removeClass('active');
+        $(this).addClass('active');
+    });
+
+    // remove pagination from sideNav
+    $(function() {
+        $('ul.sidenav-menu li.page-item.my').remove();
+    });
 </script>
 
 <?php
