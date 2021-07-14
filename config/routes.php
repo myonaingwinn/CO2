@@ -62,11 +62,11 @@ $routes->scope('/', function (RouteBuilder $builder) {
     $builder->connect('/', ['controller' => 'Users', 'action' => 'login']);
     $builder->connect('/logout', ['controller' => 'Users', 'action' => 'logout']);
     $builder->connect('/register', ['controller' => 'Users', 'action' => 'add']);
+    $builder->connect('/csvdownloadslide', ['controller' => 'Co2datadetails', 'action' => 'csvdownload']);
     $builder->connect('/forgotpassword', ['controller' => 'Users', 'action' => 'forgotpassword']);
     $builder->connect('/resetpassword', ['controller' => 'Users', 'action' => 'resetpassword']);
     $builder->connect('/graph', ['controller' => 'Graphs', 'action' => 'index']);
-    $builder->connect('/device_reg', ['controller' =>
-    'RoomInfo', 'action' => 'add']);
+    $builder->connect('/device_reg', ['controller' =>'RoomInfo', 'action' => 'add']);
     $builder->connect('/devices', ['controller' => 'RoomInfo', 'action' => 'index']);
     $builder->connect('/device_edit/*', ['controller' => 'RoomInfo', 'action' => 'edit']);
     $builder->connect('/userEdit', ['controller' => 'Users', 'action' => 'edit']);
