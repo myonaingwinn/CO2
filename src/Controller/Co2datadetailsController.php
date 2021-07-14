@@ -28,8 +28,8 @@ class Co2datadetailsController extends AppController
         echo json_encode($data);
         return $this->response;
     }
-    
-     public function index()
+
+    public function index()
     {
         // Table data   
         $connection = ConnectionManager::get('default');
@@ -283,6 +283,7 @@ class Co2datadetailsController extends AppController
         // DATE_FORMAT(TS, '%d-%m-%y %h:%i:%s');
     }
 
+    //Line Message Function Notify()
     public function notify()
     {
 
@@ -309,24 +310,24 @@ class Co2datadetailsController extends AppController
             //----------End Create Json File
 
             //----------Convert Json to Image with Base64 Decoder
-
-
             $imgContents = file_get_contents(WWW_ROOT . '/graph/graphImg.json');
 
             $str_length = strlen($imgContents);
-            //37
-            $sparrow = substr($imgContents, 37, $str_length - 40);
-            $decoder = base64_decode($sparrow);
-            $img = imagecreatefromstring($decoder);
+            $img = "";
+            if ($str_length > 30) {
+                //37
+                $sparrow = substr($imgContents, 37, $str_length - 40);
+                $decoder = base64_decode($sparrow);
+                $img = imagecreatefromstring($decoder);
+                if (!$img) {
+                    die('base 64 value is not a valid image');
+                } else {
+                    header('Content-Type:image/jpeg');
 
-            if (!$img) {
-                die('base 64 value is not a valid image');
-            } else {
-                header('Content-Type:image/jpeg');
+                    imagejpeg($img, WWW_ROOT . '/graph/graphImage.jpeg');
 
-                imagejpeg($img, WWW_ROOT . '/graph/graphImage.jpeg');
-
-                imagedestroy($img);
+                    imagedestroy($img);
+                }
             }
             //----------End Convert Json to Image 
 
@@ -340,22 +341,29 @@ class Co2datadetailsController extends AppController
             $unit = $_POST['unit'];
             //$message = '<span style="color:red">' . $msg_type . '</span>' . ' 警告メッセージ';    //text max 1,000 charecter
             $message = "\n" . $dev_name . "の" . $msg_type . '.警告メッセージ' . "\n" . $msg_type . "値: " . $dev_value . $unit;
-            $image_thumbnail_url = 'https://dummyimage.com/1024x1024/f598f5/fff.jpg';  // max size 240x240px JPEG
-            $image_fullsize_url = 'https://dummyimage.com/1024x1024/844334/fff.jpg'; //max size 1024x1024px JPEG
+            if ($img != "") {
+                $image_thumbnail_url = 'https://dummyimage.com/1024x1024/f598f5/fff.jpg';  // max size 240x240px JPEG
+                $image_fullsize_url = 'https://dummyimage.com/1024x1024/844334/fff.jpg'; //max size 1024x1024px JPEG
 
-            $file_name_with_full_path = WWW_ROOT . '/graph/graphImage.jpeg';
+                $file_name_with_full_path = WWW_ROOT . '/graph/graphImage.jpeg';
 
-            $imageFile = curl_file_create($file_name_with_full_path);
-            $sticker_package_id = '';  // Package ID sticker
-            $sticker_id = '';    // ID sticker
-            $message_data = array(
-                'imageThumbnail' => $image_thumbnail_url,
-                'imageFullsize' => $image_fullsize_url,
-                'message' => $message,
-                'imageFile' => $imageFile,
-                'stickerPackageId' => $sticker_package_id,
-                'stickerId' => $sticker_id
-            );
+                $imageFile = curl_file_create($file_name_with_full_path);
+                $sticker_package_id = '';  // Package ID sticker
+                $sticker_id = '';    // ID sticker
+                $message_data = array(
+                    'imageThumbnail' => $image_thumbnail_url,
+                    'imageFullsize' => $image_fullsize_url,
+                    'message' => $message,
+                    'imageFile' => $imageFile,
+                    'stickerPackageId' => $sticker_package_id,
+                    'stickerId' => $sticker_id
+                );
+            } else {
+                $message_data = array(
+                    'message' => $message
+
+                );
+            }
 
             $headers = array('Method: POST', 'Content-type: multipart/form-data', 'Authorization: Bearer ' . $access_token);
             $ch = curl_init();
@@ -368,5 +376,5 @@ class Co2datadetailsController extends AppController
             //----------End Line Message Notify
 
         } //end of isset IF
-    }
+    } //end of Line message Function
 }

@@ -47,7 +47,9 @@
         margin-top: 0rem;
     }
 </style>
-
+<!-- Line: declaration for htmlcanvas lib -->
+<script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.min.js">
+</script>
 <!-- Screen Title -->
 <h2>デッシュボード</h2>
 
@@ -70,11 +72,11 @@
 
         <!-- Pagination -->
         <!-- <div class="row justify-content-end"> -->
-            <!-- <div class="col-3"></div> -->
-            <div class="d-flex justify-content-end mt-3">
-                <ul class="pagination">
-                </ul>
-            </div>
+        <!-- <div class="col-3"></div> -->
+        <div class="d-flex justify-content-end mt-3">
+            <ul class="pagination">
+            </ul>
+        </div>
         <!-- </div> -->
     </section>
 </div>
@@ -136,6 +138,13 @@
 
     var titles = ['温度', '湿度', 'CO2', '雑音'];
     var devices = <?php echo json_encode($devices); ?>;
+
+    // Line: Declaration for Notification Time
+    var line_send_time_temp = [];
+    var line_send_time_hum = [];
+    var line_send_time_co2 = [];
+    var line_send_time_noise = [];
+    //End of Line: Declaration for Notification Time
 
     // add new row to table
     if (devices) {
@@ -216,6 +225,26 @@
                 table.rows[i].cells[2].innerHTML = device.humidity + ' %';
                 table.rows[i].cells[3].innerHTML = device.co2 + ' ppm';
                 table.rows[i].cells[4].innerHTML = device.noise + ' dB';
+
+                //Line sendingNoti code for limit over, calling function checkTime 
+                // "i" is used to get div-id for each graph
+                if (device.temperature > 60) {
+                    var device_id = "row-" + (i - 1) + "-col-1-0";
+                    checkTime((i - 1), device_id, device.device, device.temperature, "°C", "temperature");
+                }
+                if (device.humidity > 50) {
+                    var device_id = "row-" + (i - 1) + "-col-1-1";
+                    checkTime((i - 1), device_id, device.device, device.humidity, " %", "humidity");
+                }
+                if (device.co2 > 2000) {
+                    var device_id = "row-" + (i - 1) + "-col-2-0";
+                    checkTime((i - 1), device_id, device.device, device.co2, "ppm", "CO2");
+                }
+                if (device.noise > 50) {
+                    var device_id = "row-" + (i - 1) + "-col-2-1";
+                    checkTime((i - 1), device_id, device.device, device.noise, "dB", "noise");
+                }
+                //End of LineNoti code for limit over, calling function checkTime 
                 i++;
             });
         }
@@ -292,6 +321,94 @@
     $(function() {
         $('ul.sidenav-menu li.page-item.my').remove();
     });
+
+    // Line Function script: check time and send message
+    function checkTime(time, device_id, device_name, data_value, unit, line_alert_type) {
+
+        switch (line_alert_type) {
+            case "temperature":
+                if (line_send_time_temp[time] === undefined) {
+                    getGraphImage(device_id, device_name, data_value, unit, "温度");
+                    line_send_time_temp[time] = new Date();
+                } else {
+                    var cur_time = new Date();
+                    var dateDifferMillsec = Math.round(Math.abs(cur_time - line_send_time_temp[time]) / 1000);
+                    if (dateDifferMillsec > 300) {
+                        getGraphImage(device_id, device_name, data_value, unit, "温度");
+                        line_send_time_temp[time] = new Date();
+                    }
+                }
+                break;
+            case "humidity":
+                if (line_send_time_hum[time] === undefined) {
+                    getGraphImage(device_id, device_name, data_value, unit, "湿度");
+                    line_send_time_hum[time] = new Date();
+                } else {
+                    var cur_time = new Date();
+                    var dateDifferMillsec = Math.round(Math.abs(cur_time - line_send_time_hum[time]) / 1000);
+                    if (dateDifferMillsec > 300) {
+                        getGraphImage(device_id, device_name, data_value, unit, "湿度");
+                        line_send_time_hum[time] = new Date();
+                    }
+                }
+                break;
+            case "CO2":
+                if (line_send_time_co2[time] === undefined) {
+                    getGraphImage(device_id, device_name, data_value, unit, "CO2");
+                    line_send_time_co2[time] = new Date();
+                } else {
+                    var cur_time = new Date();
+                    var dateDifferMillsec = Math.round(Math.abs(cur_time - line_send_time_co2[time]) / 1000);
+                    if (dateDifferMillsec > 300) {
+                        getGraphImage(device_id, device_name, data_value, unit, "CO2");
+                        line_send_time_co2[time] = new Date();
+                    }
+                }
+                break;
+            case "noise":
+                if (line_send_time_noise[time] === undefined) {
+                    getGraphImage(device_id, device_name, data_value, unit, "雑音");
+                    line_send_time_noise[time] = new Date();
+                } else {
+                    var cur_time = new Date();
+                    var dateDifferMillsec = Math.round(Math.abs(cur_time - line_send_time_noise[time]) / 1000);
+                    if (dateDifferMillsec > 300) {
+                        getGraphImage(device_id, device_name, data_value, unit, "雑音");
+                        line_send_time_noise[time] = new Date();
+                    }
+                }
+                break;
+        }
+    } // End of Line Function script: check time and send message
+
+    //Line function script: Take the shot of graph image
+    function getGraphImage(device_id, device_name, value, unit, message_type) {
+        html2canvas(document.querySelector('#' + device_id), {
+            scrollY: -window.scrollY
+        }).then(canvas => {
+            dataURL = canvas.toDataURL();
+            post_data(dataURL, device_name, value, unit, message_type);
+        });
+    } //End of Script Function
+
+    //Line function script: Send Line data to controller function notify
+    function post_data(imageURL, device_name, value, unit, message_type) {
+        $.ajax({
+            url: "<?= $this->Url->build(['controller' => 'Co2datadetails', 'action' => 'notify']) ?>",
+            type: "POST",
+            data: {
+                image: imageURL,
+                dev_name: device_name,
+                dev_value: value,
+                unit: unit,
+                msg_type: message_type
+            },
+            dataType: "html",
+            headers: {
+                'X-CSRF-Token': $('meta[name="csrfToken"]').attr('content')
+            }
+        });
+    } //End of Script Function
 </script>
 
 <?php
