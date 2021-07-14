@@ -124,7 +124,7 @@ $cakeDescription = 'CO2 ';
             <?php if ($Auser['role'] == 'A') : ?>
                 <ul class="sidenav-menu">
                     <li class="sidenav-item">
-                        <a class="sidenav-link ripple-surface" href="dashboard" tabindex="-1">
+                        <a class="sidenav-link ripple-surface" href="http://localhost:8765/dashboard" tabindex="-1">
                             <i class="fas fa-chart-area fa-lg pr-2"></i><span>&nbsp;ダッシュボード</span></a>
                     </li>
                     <li class="sidenav-item">
@@ -133,11 +133,11 @@ $cakeDescription = 'CO2 ';
                             <span>ユーザー</span></a>
                         <ul class="sidenav-collapse collapse" id="sidenav-collapse-1-0-0">
                             <li class="sidenav-item">
-                                <a class="sidenav-link ripple-surface" href="users" tabindex="-1">
+                                <a class="sidenav-link ripple-surface" href="http://localhost:8765/users" tabindex="-1">
                                     <i class="fas fa-users pr-2"></i><span>ユーザー一覧</span></a>
                             </li>
                             <li class="sidenav-item">
-                                <a class="sidenav-link ripple-surface" href="register" tabindex="-1">
+                                <a class="sidenav-link ripple-surface" href="http://localhost:8765/register" tabindex="-1">
                                     <i class="fas fa-user-plus pr-2"></i><span>ユーザー登録</span></a>
                             </li>
                         </ul>
@@ -149,26 +149,26 @@ $cakeDescription = 'CO2 ';
                             <span>&nbsp;デバイス</span></a>
                         <ul class="sidenav-collapse collapse" id="sidenav-collapse-1-0-1">
                             <li class="sidenav-item">
-                                <a class="sidenav-link ripple-surface" href="devices" tabindex="-1">
+                                <a class="sidenav-link ripple-surface" href="http://localhost:8765/devices" tabindex="-1">
                                     <i class="fas fa-list-ul pr-2"></i><span>デバイス一覧</span></a>
                             </li>
                             <li class="sidenav-item">
-                                <a class="sidenav-link ripple-surface" href="device_reg" tabindex="-1">
+                                <a class="sidenav-link ripple-surface" href="http://localhost:8765/device_reg" tabindex="-1">
                                     <i class="fas fa-plus-circle pr-2"></i><span>デバイス登録</span></a>
                             </li>
                         </ul>
                     </li>
                     <!-- CSV Download Slide -->
                     <li class="sidenav-item">
-                        <a class="sidenav-link ripple-surface" href="csvdownloadslide" tabindex="-1">
+                        <a class="sidenav-link ripple-surface" href="http://localhost:8765/csvdownloadslide" tabindex="-1">
                             <i class="fas fa-download fa-lg pr-2"></i><span>&ensp;CSVダウンロード</span></a>
                     </li>
                     <li class="sidenav-item">
-                        <a class="sidenav-link ripple-surface" href="forgotpassword" tabindex="-1">
+                        <a class="sidenav-link ripple-surface" href="http://localhost:8765/forgotpassword" tabindex="-1">
                             <i class="fas fa-lock fa-lg pr-2"></i><span>&ensp;パスワードを再設定する</span></a>
                     </li>
                     <li class="sidenav-item">
-                        <a class="sidenav-link ripple-surface" href="logout" tabindex="-1">
+                        <a class="sidenav-link ripple-surface" href="http://localhost:8765/logout" tabindex="-1">
                             <i class="fas fa-sign-out-alt text-danger fa-lg pr-2"></i><span>&nbsp;ログアウト</span></a>
                     </li>
                 </ul>
@@ -178,15 +178,20 @@ $cakeDescription = 'CO2 ';
             <?php if ($Auser['role'] == 'U') : ?>
                 <ul class="sidenav-menu">
                     <li class="sidenav-item">
-                        <a class="sidenav-link ripple-surface" href="dashboard" tabindex="-1">
+                        <a class="sidenav-link ripple-surface" href="http://localhost:8765/dashboard" tabindex="-1">
                             <i class="fas fa-chart-area fa-lg pr-2"></i><span>ダッシュボード</span></a>
                     </li>
+                    <!-- CSV Download Slide -->
                     <li class="sidenav-item">
-                        <a class="sidenav-link ripple-surface" href="forgotpassword" tabindex="-1">
+                        <a class="sidenav-link ripple-surface" href="http://localhost:8765/csvdownloadslide" tabindex="-1">
+                            <i class="fas fa-download fa-lg pr-2"></i><span>&ensp;CSVダウンロード</span></a>
+                    </li>
+                    <li class="sidenav-item">
+                        <a class="sidenav-link ripple-surface" href="http://localhost:8765/forgotpassword" tabindex="-1">
                             <i class="fas fa-lock fa-lg pr-2"></i><span>&nbsp;パスワードを再設定する</span></a>
                     </li>
                     <li class="sidenav-item">
-                        <a class="sidenav-link ripple-surface" href="logout" tabindex="-1">
+                        <a class="sidenav-link ripple-surface" href="http://localhost:8765/logout" tabindex="-1">
                             <i class="fas fa-sign-out-alt text-danger fa-lg pr-2"></i><span>ログアウト</span></a>
                     </li>
                 </ul>
