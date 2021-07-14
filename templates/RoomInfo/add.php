@@ -1,7 +1,12 @@
 <?php
-    $this->assign('title', 'デバイス登録');
+$this->assign('title', 'デバイス登録');
 
 ?>
+
+<div class="d-flex justify-content-end">
+    <?= $this->Html->link(__('デバイス一覧'), ['action' => 'index'], ['class' => 'btn btn-primary']) ?>
+</div>
+
 <?= $this->Form->create($roomInfo) ?>
 <input type="hidden" id="hd_pst_code" name="postal_code">
 <div class="container">
@@ -17,7 +22,7 @@
                     </select>
 
                     <div class="form-outline mb-3">
-                        <input type="text" name="device_id" id="dev_no" class="form-control form-control-lg" pattern="dvTest+[0-9]" title="Include dvTest" required />
+                        <input type="text" name="device_id" id="dev_no" class="form-control form-control-lg" required />
                         <label class="form-label" for="dev_no">デバイス番号</label>
                     </div>
 
@@ -109,6 +114,10 @@
 </script>
 
 <style>
+    div.d-flex.justify-content-end {
+        margin-bottom: -2rem;
+    }
+
     #title {
         margin-top: .8rem;
         margin-bottom: 2rem !important;
