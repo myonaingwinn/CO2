@@ -158,6 +158,11 @@ $cakeDescription = 'CO2 ';
                             </li>
                         </ul>
                     </li>
+                    <!-- CSV Download Slide -->
+                    <li class="sidenav-item">
+                        <a class="sidenav-link ripple-surface" href="csvdownloadslide" tabindex="-1">
+                            <i class="fas fa-download fa-lg pr-2"></i><span>&ensp;CSVダウンロード</span></a>
+                    </li>
                     <li class="sidenav-item">
                         <a class="sidenav-link ripple-surface" href="forgotpassword" tabindex="-1">
                             <i class="fas fa-lock fa-lg pr-2"></i><span>&ensp;パスワードを再設定する</span></a>

@@ -66,53 +66,6 @@
 </div>
 <hr id="fhr" class="my-5">
 
-<!-- CSV Custom Date Time Download -->
-<h2>CSV ダウンロード</h2>
-<div class="container-fluid">
-    <form action="co2datadetails/csv/" method="get">
-        <div class="row">
-            <div class="col-3"></div>
-            <div class="col-3 text-right">開始日時</div>
-            <div class="col-3"><input type="datetime-local" id="start-time" name="start-time" value="" min="<?php echo $startdate; ?>" max="<?php echo $enddate; ?>" required></div>
-            <div class="col-3"></div>
-        </div>
-        <div class="row">
-            <div class="col-3"></div>
-            <div class="col-3 text-right">終了日時</div>
-            <div class="col-3"><input type="datetime-local" id="end-time" name="end-time" value="" min="<?php echo $startdate; ?>" max="<?php echo $enddate; ?>" required></div>
-            <div class="col-3"></div>
-        </div>
-        <div class="row">
-            <div class="col-3"></div>
-            <div class="col-3 text-right">デバイスを選択</div>
-            <div class="col-3">
-                <select id="select-device" name="select-device">
-                    <!-- Device Number loop -->
-                    <?php
-                    $dev_num = 0;
-                    if (count($num_devices) != 0) {
-                        echo "<option value='dvTest%' selected>All</option>";
-                        for ($dev_num; $dev_num < count($num_devices); $dev_num++) {
-                            echo "<option value='" . $num_devices[$dev_num][0] . "'>" . $num_devices[$dev_num][0] . "</option>";
-                        }
-                    } else {
-                        echo "<option value='' selected>No Device</option>";
-                    }
-                    ?>
-                </select>
-            </div>
-            <div class="col-3"></div>
-        </div>
-        <div class="row">
-            <div class="col-3"></div>
-            <div class="col-3 text-right"><input class="btn btn-danger" type="reset" value="クリア"></div>
-            <div class="col-3"><input class="btn btn-primary" type="submit" value="ダウンロード"></div>
-            <div class="col-3"></div>
-        </div>
-    </form>
-</div>
-<hr id="fhr" class="my-5">
-
 <div id="devicesList"></div>
 
 <script>

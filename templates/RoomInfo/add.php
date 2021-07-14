@@ -17,7 +17,7 @@
                     </select>
 
                     <div class="form-outline mb-3">
-                        <input type="text" name="device_id" id="dev_no" class="form-control form-control-lg" pattern="dvTest+[0-9]" title="Include dvTest" required />
+                        <input type="text" name="device_id" id="dev_no" class="form-control form-control-lg" pattern="Sensor+[0-9]" title="Include Sensor" required />
                         <label class="form-label" for="dev_no">デバイス番号</label>
                     </div>
 
