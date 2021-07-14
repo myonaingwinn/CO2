@@ -1,7 +1,12 @@
 <?php
-    $this->assign('title', 'デバイス登録');
+$this->assign('title', 'デバイス登録');
 
 ?>
+
+<div class="d-flex justify-content-end">
+    <?= $this->Html->link(__('デバイス一覧'), ['action' => 'index'], ['class' => 'btn btn-primary']) ?>
+</div>
+
 <?= $this->Form->create($roomInfo) ?>
 <input type="hidden" id="hd_pst_code" name="postal_code">
 <div class="container">
@@ -109,6 +114,10 @@
 </script>
 
 <style>
+    div.d-flex.justify-content-end {
+        margin-bottom: -2rem;
+    }
+
     #title {
         margin-top: .8rem;
         margin-bottom: 2rem !important;

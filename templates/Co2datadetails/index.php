@@ -41,8 +41,15 @@
     [id^="container-"] {
         margin-top: 1.5rem;
     }
-</style>
 
+    ul.pagination {
+        margin-bottom: 0rem;
+        margin-top: 0rem;
+    }
+</style>
+<!-- Line: declaration for htmlcanvas lib -->
+<script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.min.js">
+</script>
 <!-- Screen Title -->
 <h2>デッシュボード</h2>
 
@@ -62,6 +69,15 @@
             <tbody>
             </tbody>
         </table>
+
+        <!-- Pagination -->
+        <!-- <div class="row justify-content-end"> -->
+        <!-- <div class="col-3"></div> -->
+        <div class="d-flex justify-content-end mt-3">
+            <ul class="pagination">
+            </ul>
+        </div>
+        <!-- </div> -->
     </section>
 </div>
 <hr id="fhr" class="my-5">
@@ -69,20 +85,53 @@
 <div id="devicesList"></div>
 
 <script>
+    // pagination
+    var page_number = 1;
+    const page_size = 5;
+
     var titles = ['温度', '湿度', 'CO2', '雑音'];
     var devices = <?php echo json_encode($devices); ?>;
 
+    // Line: Declaration for Notification Time
+    var line_send_time_temp = [];
+    var line_send_time_hum = [];
+    var line_send_time_co2 = [];
+    var line_send_time_noise = [];
+    //End of Line: Declaration for Notification Time
+
     // add new row to table
-    devices.forEach(device => {
-        var rowData = [
-            device.device + '・' + '部屋 ' + device.room,
-            device.temperature + ' °C',
-            device.humidity + ' %',
-            device.co2 + ' ppm', device.noise + ' dB'
-        ];
-        var table = $('table');
-        insertTableRow(table, rowData, 0);
-    });
+    if (devices) {
+        result = devices.length / page_size;
+        pages = Math.ceil(result);
+
+        $('ul').append($('<li class="page-item my"><a class="page-link" href="#" onclick="page(1)">最初</a></li>'));
+
+        for (let i = 1; i <= pages; i++) {
+            if (i == 1)
+                $('ul').append($('<li class="page-item my active"><a class="page-link" href="#" onclick="page(' + i + ')">' + i + '</a></li>'));
+            else
+                $('ul').append($('<li class="page-item my"><a class="page-link" href="#" onclick="page(' + i + ')">' + i + '</a></li>'));
+        }
+
+        $('ul').append($('<li class="page-item my"><a class="page-link" href="#" onclick="page(' + pages + ')">最終</a></li>'));
+
+        device_paginated = paginate(devices, page_size, page_number);
+        addRow(device_paginated);
+    }
+
+    // add rows to table
+    function addRow(device_paginated) {
+        device_paginated.forEach(device => {
+            var rowData = [
+                device.device + '・' + '部屋 ' + device.room,
+                device.temperature + ' °C',
+                device.humidity + ' %',
+                device.co2 + ' ppm', device.noise + ' dB'
+            ];
+            var table = $('table');
+            insertTableRow(table, rowData, 0);
+        });
+    }
 
     function insertTableRow(table, rowData, index) {
         table.find('tbody').eq(index).append($('<tr/>'));
@@ -119,17 +168,48 @@
         devices = JSON.parse(data);
         var table = document.getElementById('tbl');
 
-        // add new table column
+        // update table row
         var i = 1;
-        devices.forEach(device => {
-            table.rows[i].cells[1].innerHTML = device.temperature + ' °C';
-            table.rows[i].cells[2].innerHTML = device.humidity + ' %';
-            table.rows[i].cells[3].innerHTML = device.co2 + ' ppm';
-            table.rows[i].cells[4].innerHTML = device.noise + ' dB';
-            i++;
-        });
+        if (devices) {
+
+            line_data(devices);
+            device_paginated = paginate(devices, page_size, page_number);
+            // console.log(device_paginated);
+            device_paginated.forEach(device => {
+                table.rows[i].cells[1].innerHTML = device.temperature + ' °C';
+                table.rows[i].cells[2].innerHTML = device.humidity + ' %';
+                table.rows[i].cells[3].innerHTML = device.co2 + ' ppm';
+                table.rows[i].cells[4].innerHTML = device.noise + ' dB';
+                i++;
+            });
+        }
 
     }, 2000);
+
+    //Line sendingNoti code for limit over, calling function checkTime 
+    function line_data(devices) {
+        // "i" is used to get div-id for each graph
+        var i = 1;
+        devices.forEach(device => {
+            if (device.temperature > 60) {
+                var device_id = "row-" + (i - 1) + "-col-1-0";
+                checkTime((i - 1), device_id, device.device, device.temperature, "°C", "temperature");
+            }
+            if (device.humidity > 50) {
+                var device_id = "row-" + (i - 1) + "-col-1-1";
+                checkTime((i - 1), device_id, device.device, device.humidity, " %", "humidity");
+            }
+            if (device.co2 > 2000) {
+                var device_id = "row-" + (i - 1) + "-col-2-0";
+                checkTime((i - 1), device_id, device.device, device.co2, "ppm", "CO2");
+            }
+            if (device.noise > 50) {
+                var device_id = "row-" + (i - 1) + "-col-2-1";
+                checkTime((i - 1), device_id, device.device, device.noise, "dB", "noise");
+            }
+            i++;
+        });
+    } //End of LineNoti code for limit over, calling function checkTime
 
     // generate device list with graphs
     $.each(devices, function(index, device) {
@@ -176,6 +256,119 @@
             btntext.innerText = "グラフを表示";
         }
     }
+
+    // paginate page
+    function paginate(array, page_size, page_number) {
+        return array.slice((page_number - 1) * page_size, page_number * page_size);
+    }
+
+    // go to page of page_number
+    function page(page_num) {
+        $('#tbl tbody > tr').remove();
+        page_number = page_num;
+        device_paginated = paginate(devices, page_size, page_number);
+        if (device_paginated)
+            addRow(device_paginated);
+    }
+
+    // add or remove 'active'
+    $('li.my').click(function() {
+        $('li.my').removeClass('active');
+        $(this).addClass('active');
+    });
+
+    // remove pagination from sideNav
+    $(function() {
+        $('ul.sidenav-menu li.page-item.my').remove();
+    });
+
+    // Line Function script: check time and send message
+    function checkTime(time, device_id, device_name, data_value, unit, line_alert_type) {
+
+        switch (line_alert_type) {
+            case "temperature":
+                if (line_send_time_temp[time] === undefined) {
+                    getGraphImage(device_id, device_name, data_value, unit, "温度");
+                    line_send_time_temp[time] = new Date();
+                } else {
+                    var cur_time = new Date();
+                    var dateDifferMillsec = Math.round(Math.abs(cur_time - line_send_time_temp[time]) / 1000);
+                    if (dateDifferMillsec > 300) {
+                        getGraphImage(device_id, device_name, data_value, unit, "温度");
+                        line_send_time_temp[time] = new Date();
+                    }
+                }
+                break;
+            case "humidity":
+                if (line_send_time_hum[time] === undefined) {
+                    getGraphImage(device_id, device_name, data_value, unit, "湿度");
+                    line_send_time_hum[time] = new Date();
+                } else {
+                    var cur_time = new Date();
+                    var dateDifferMillsec = Math.round(Math.abs(cur_time - line_send_time_hum[time]) / 1000);
+                    if (dateDifferMillsec > 300) {
+                        getGraphImage(device_id, device_name, data_value, unit, "湿度");
+                        line_send_time_hum[time] = new Date();
+                    }
+                }
+                break;
+            case "CO2":
+                if (line_send_time_co2[time] === undefined) {
+                    getGraphImage(device_id, device_name, data_value, unit, "CO2");
+                    line_send_time_co2[time] = new Date();
+                } else {
+                    var cur_time = new Date();
+                    var dateDifferMillsec = Math.round(Math.abs(cur_time - line_send_time_co2[time]) / 1000);
+                    if (dateDifferMillsec > 300) {
+                        getGraphImage(device_id, device_name, data_value, unit, "CO2");
+                        line_send_time_co2[time] = new Date();
+                    }
+                }
+                break;
+            case "noise":
+                if (line_send_time_noise[time] === undefined) {
+                    getGraphImage(device_id, device_name, data_value, unit, "雑音");
+                    line_send_time_noise[time] = new Date();
+                } else {
+                    var cur_time = new Date();
+                    var dateDifferMillsec = Math.round(Math.abs(cur_time - line_send_time_noise[time]) / 1000);
+                    if (dateDifferMillsec > 300) {
+                        getGraphImage(device_id, device_name, data_value, unit, "雑音");
+                        line_send_time_noise[time] = new Date();
+                    }
+                }
+                break;
+        }
+    } // End of Line Function script: check time and send message
+
+    //Line function script: Take the shot of graph image
+    function getGraphImage(device_id, device_name, value, unit, message_type) {
+        html2canvas(document.querySelector('#' + device_id), {
+            scrollY: -window.scrollY
+        }).then(canvas => {
+            dataURL = canvas.toDataURL();
+            post_data(dataURL, device_name, value, unit, message_type);
+        });
+    } //End of Script Function
+
+    //Line function script: Send Line data to controller function notify
+    function post_data(imageURL, device_name, value, unit, message_type) {
+        $.ajax({
+            url: "<?= $this->Url->build(['controller' => 'Co2datadetails', 'action' => 'notify']) ?>",
+            type: "POST",
+            data: {
+                image: imageURL,
+                dev_name: device_name,
+                dev_value: value,
+                unit: unit,
+                msg_type: message_type
+            },
+            dataType: "html",
+            headers: {
+                'X-CSRF-Token': $('meta[name="csrfToken"]').attr('content')
+            }
+        });
+    } //End of Script Function
 </script>
 
 <?php
