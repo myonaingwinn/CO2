@@ -26,6 +26,7 @@ class RoomInfoController extends AppController
         $roomInfo = $this->paginate($this->RoomInfo->find('all')->where(['RoomInfo.del_flg' => 'N']));
 
         $this->set(compact('roomInfo'));
+        $this->set('_serialize', ['roomInfo']);
     }
 
     /**
@@ -77,20 +78,22 @@ class RoomInfoController extends AppController
      */
     public function edit($id = null)
     {
+        $this->loadModel('Users');
         $roomInfo = $this->RoomInfo->get($id, [
-            'contain' => [],
+            'contain' => ['Users'],
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $roomInfo = $this->RoomInfo->patchEntity($roomInfo, $this->request->getData());
             if ($this->RoomInfo->save($roomInfo)) {
-                $this->Flash->success(__('The room info has been saved.'));
+                $this->Flash->success(__('デバイス情報が更新されました。'));
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The room info could not be saved. Please, try again.'));
+            $this->Flash->error(__('デバイス情報が更新出来ませんでした。もう一度やり直してください。'));
         }
         $co2datadetails = $this->RoomInfo->Co2datadetails->find('list', ['limit' => 200]);
-        $this->set(compact('roomInfo', 'co2datadetails'));
+        $users = $this->Users->find('all')->where(['del_flg' => 'N', 'role' => 'U'])->toArray();
+        $this->set(compact('roomInfo', 'co2datadetails', 'users'));
     }
 
     /**
