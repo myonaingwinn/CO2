@@ -218,6 +218,8 @@
         // update table row
         var i = 1;
         if (devices) {
+
+            line_data(devices);
             device_paginated = paginate(devices, page_size, page_number);
             // console.log(device_paginated);
             device_paginated.forEach(device => {
@@ -225,31 +227,36 @@
                 table.rows[i].cells[2].innerHTML = device.humidity + ' %';
                 table.rows[i].cells[3].innerHTML = device.co2 + ' ppm';
                 table.rows[i].cells[4].innerHTML = device.noise + ' dB';
-
-                //Line sendingNoti code for limit over, calling function checkTime 
-                // "i" is used to get div-id for each graph
-                if (device.temperature > 60) {
-                    var device_id = "row-" + (i - 1) + "-col-1-0";
-                    checkTime((i - 1), device_id, device.device, device.temperature, "°C", "temperature");
-                }
-                if (device.humidity > 50) {
-                    var device_id = "row-" + (i - 1) + "-col-1-1";
-                    checkTime((i - 1), device_id, device.device, device.humidity, " %", "humidity");
-                }
-                if (device.co2 > 2000) {
-                    var device_id = "row-" + (i - 1) + "-col-2-0";
-                    checkTime((i - 1), device_id, device.device, device.co2, "ppm", "CO2");
-                }
-                if (device.noise > 50) {
-                    var device_id = "row-" + (i - 1) + "-col-2-1";
-                    checkTime((i - 1), device_id, device.device, device.noise, "dB", "noise");
-                }
-                //End of LineNoti code for limit over, calling function checkTime 
                 i++;
             });
         }
 
     }, 2000);
+
+    //Line sendingNoti code for limit over, calling function checkTime 
+    function line_data(devices) {
+        // "i" is used to get div-id for each graph
+        var i = 1;
+        devices.forEach(device => {
+            if (device.temperature > 60) {
+                var device_id = "row-" + (i - 1) + "-col-1-0";
+                checkTime((i - 1), device_id, device.device, device.temperature, "°C", "temperature");
+            }
+            if (device.humidity > 50) {
+                var device_id = "row-" + (i - 1) + "-col-1-1";
+                checkTime((i - 1), device_id, device.device, device.humidity, " %", "humidity");
+            }
+            if (device.co2 > 2000) {
+                var device_id = "row-" + (i - 1) + "-col-2-0";
+                checkTime((i - 1), device_id, device.device, device.co2, "ppm", "CO2");
+            }
+            if (device.noise > 50) {
+                var device_id = "row-" + (i - 1) + "-col-2-1";
+                checkTime((i - 1), device_id, device.device, device.noise, "dB", "noise");
+            }
+            i++;
+        });
+    } //End of LineNoti code for limit over, calling function checkTime
 
     // generate device list with graphs
     $.each(devices, function(index, device) {
