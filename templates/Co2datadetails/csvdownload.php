@@ -188,6 +188,7 @@
     }?>
 
     $("#select-device-history").change(function() {
+        $("#date-history").empty();
         for (var index = 0; index < history_data_list.length; index++) {
             history_data_string = history_data_list[index].toString();
             // console.log(history_data_string);
@@ -195,16 +196,14 @@
             // console.log(histroy_data_string_split[0] + " and " + histroy_data_string_split[1]);
 
             var select_device = this.value;
-            // console.log(select_device);
+
             if (select_device == histroy_data_string_split[0]) {
-                $("#date-history").append(`
-                    <option value = '${histroy_data_string_split[1]}'>${histroy_data_string_split[1]}</option>
-                `);
-            } else {
-                $("#date-history").remove(`
-                    <option value = '${histroy_data_string_split[1]}'>${histroy_data_string_split[1]}</option>
-                `);
-            };
+                $("#date-history").append($("<option/>", {
+                    "value": histroy_data_string_split[1],
+                    "text": histroy_data_string_split[1]
+                }));
+            }
+            
         }
     });  
 </script>
