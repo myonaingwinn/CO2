@@ -68,6 +68,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
     $builder->connect('/graph', ['controller' => 'Graphs', 'action' => 'index']);
     $builder->connect('/device_reg', ['controller' =>'RoomInfo', 'action' => 'add']);
     $builder->connect('/devices', ['controller' => 'RoomInfo', 'action' => 'index']);
+    $builder->connect('/device_edit/*', ['controller' => 'RoomInfo', 'action' => 'edit']);
     $builder->connect('/userEdit', ['controller' => 'Users', 'action' => 'edit']);
     /*
     /*

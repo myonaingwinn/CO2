@@ -48,6 +48,9 @@ class UsersController extends AppController
                 }
             }
         }
+
+        if ($this->Auth->user('id'))
+            return $this->redirect('/dashboard');
     }
 
     public function logout()
