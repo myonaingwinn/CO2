@@ -15,12 +15,12 @@
                     <div class="col-5 text-center">デバイスを選択</div>
                     <div class="col-4">
                         <!-- Option Select Dropdown -->
-                        <select class="form-control" name="select-device" id="select-device">
+                        <select class="form-control" name="select-device-today" id="select-device-today">
                             <!-- Device Number loop -->
                             <?php
                             $dev_num = 0;
                             if (count($device_number) != 0) {
-                                echo "<option value='dvTest%' selected>全て</option>";
+                                echo "<option value='Sensor%' selected>全て</option>";
                                 for ($dev_num; $dev_num < count($device_number); $dev_num++) {
                                     echo "<option value='" . $device_number[$dev_num]->co2_device_id . "'>" . $device_number[$dev_num]->co2_device_id . "</option>";
                                 }
@@ -75,12 +75,12 @@
                     <div class="col-5 text-center">デバイスを選択</div>
                     <div class="col-4">
                         <!-- Option Select Dropdown -->
-                        <select class="form-control" name="select-device" id="select-device">
+                        <select class="form-control" name="select-device-report" id="select-device-report">
                             <!-- Device Number loop -->
                             <?php
                             $dev_num = 0;
                             if (count($device_number_all) != 0) {
-                                echo "<option value='dvTest%' selected>全て</option>";
+                                echo "<option value='Sensor%' selected>全て</option>";
                                 for ($dev_num; $dev_num < count($device_number_all); $dev_num++) {
                                     echo "<option value='" . $device_number_all[$dev_num]->co2_device_id . "'>" . $device_number_all[$dev_num]->co2_device_id . "</option>";
                                 }
@@ -135,12 +135,12 @@
                     <div class="col-5 text-center">デバイスを選択</div>
                     <div class="col-4">
                         <!-- Option Select Dropdown -->
-                        <select class="form-control" name="select-device" id="select-device">
+                        <select class="form-control" name="select-device-history" id="select-device-history">
                             <!-- Device Number loop -->
                             <?php
                             $dev_num = 0;
                             if (count($device_number_all) != 0) {
-                                echo "<option value='dvTest%' selected>デバイスを選択</option>";
+                                echo "<option value='Sensor%' selected>デバイスを選択</option>";
                                 for ($dev_num; $dev_num < count($device_number_all); $dev_num++) {
                                     echo "<option value='" . $device_number_all[$dev_num]->co2_device_id . "'>" . $device_number_all[$dev_num]->co2_device_id . "</option>";
                                 }
@@ -159,21 +159,52 @@
                     <div class="col-5 text-center">履歴データを選択</div>
                     <div class="col-4">
                         <!-- Option Select Dropdown -->
-                        <select class="form-control">
-                            <option>Default select</option>
-                            <option>select1</option>
-                            <option>select2</option>
-                            <option>select3</option>
+                        <select class="form-control" name="date-history" id="date-history">
+                            
                         </select>
                     </div>
                 <div class="col-2"></div>
 
                 <!-- Export Download Button -->
                 <div class="text-center my-2">
-                    <a href="#" class="btn btn-primary">エクスポート</a>
+                    <input class="btn btn-primary" type="submit" value="エクスポート">
                 </div>
             </form>
         </div>
     </div>
 
 </div>
+
+<script>
+    var history_data_list = histroy_data_string_split = [];
+    var history_data_string = "";
+    <?php 
+    foreach ($history_date_list_all as $value) {
+        foreach ($value as $key) { 
+        ?>
+            var history_data = history_data_list.push('<?php echo $key['co2_device_id'].'_'.$key['date']; ?>');
+        <?php
+        }
+    }?>
+
+    $("#select-device-history").change(function() {
+        for (var index = 0; index < history_data_list.length; index++) {
+            history_data_string = history_data_list[index].toString();
+            // console.log(history_data_string);
+            histroy_data_string_split = history_data_string.split('_');
+            // console.log(histroy_data_string_split[0] + " and " + histroy_data_string_split[1]);
+
+            var select_device = this.value;
+            // console.log(select_device);
+            if (select_device == histroy_data_string_split[0]) {
+                $("#date-history").append(`
+                    <option value = '${histroy_data_string_split[1]}'>${histroy_data_string_split[1]}</option>
+                `);
+            } else {
+                $("#date-history").remove(`
+                    <option value = '${histroy_data_string_split[1]}'>${histroy_data_string_split[1]}</option>
+                `);
+            };
+        }
+    });  
+</script>

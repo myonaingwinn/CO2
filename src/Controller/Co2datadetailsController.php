@@ -134,6 +134,7 @@ class Co2datadetailsController extends AppController
 
     public function csvdownload()
     {
+        // date_default_timezone_set("Asia/Yangon");
         // co2datadetail table query
         $currentDateTime = date('Y-m-d H:m:s');
         $history_date_list_all = [];
@@ -152,25 +153,33 @@ class Co2datadetailsController extends AppController
             ->toArray();
         
         foreach ($device_number_all as $row) {
-            $history_date_list = $this->Co2datadetails->find()
-                ->select(['co2_device_id', 'time_measured'])
-                ->where(['Co2datadetails.co2_device_id' => $row->co2_device_id])
-                ->group(['time_measured'])
-                ->order(['time_measured' => 'ASC'])
-                ->toArray();
+            
+            // Date But Not Time Format Query   
+            $connection = ConnectionManager::get('default');
+
+            $history_date_list = $connection
+            ->execute("SELECT DATE_FORMAT(time_measured, '%Y-%m-%d') as date, co2_device_id 
+                FROM Co2datadetails 
+                WHERE co2_device_id = '".$row->co2_device_id."'
+                GROUP BY date
+                ORDER BY date DESC;")
+            ->fetchAll('assoc');
 
             // array push for each device
             array_push($history_date_list_all, $history_date_list);
         }
+        
         // foreach ($history_date_list_all as $value) {
         //     foreach ($value as $key) {
-        //         echo $key->co2_device_id;
-        //         echo $key->time_measured;
+        //         echo $key['co2_device_id'];
+        //         echo ' // ';
+        //         echo $key['date'];
+        //         echo "<br>";
         //     }
         // }
 
         // sent array data to template
-        $this->set(compact('device_number', 'device_number_all'));
+        $this->set(compact('device_number', 'device_number_all', 'history_date_list_all'));
     }
 
     // CSV Download Time Function
@@ -182,7 +191,7 @@ class Co2datadetailsController extends AppController
         // get value from query url
         $starttime = $this->request->getQuery('start-time');
         $endtime = $this->request->getQuery('end-time');
-        $dev_name = $this->request->getQuery('select-device');
+        $dev_name = $this->request->getQuery('select-device-today');
 
         // csv file download name
         $this->response = $this->response->withDownload('today_data.csv');
@@ -213,7 +222,7 @@ class Co2datadetailsController extends AppController
         // get value from query url
         $startdate = $this->request->getQuery('start-date');
         $enddate = $this->request->getQuery('end-date');
-        $dev_name = $this->request->getQuery('select-device');
+        $dev_name = $this->request->getQuery('select-device-report');
 
         // csv file download name
         $this->response = $this->response->withDownload('report_data.csv');
@@ -235,12 +244,11 @@ class Co2datadetailsController extends AppController
 
     }
 
-    public function csv()
+    public function csvhistory()
     {
         // get value from query url
-        $starttime = $this->request->getQuery('start-time');
-        $endtime = $this->request->getQuery('end-time');
-        $dev_name = $this->request->getQuery('select-device');
+        $dev_name = $this->request->getQuery('select-device-history');
+        $history_date = $this->request->getQuery('date-history');
 
         // csv file download name
         $this->response = $this->response->withDownload('co2datadetails.csv');
@@ -249,7 +257,7 @@ class Co2datadetailsController extends AppController
         $csv_arr = $this->Co2datadetails->find()
             ->select(['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room' => 'r.room_no'])
             ->join(['r' => ['table' => 'Room_Info', 'type' => 'INNER', 'conditions' => 'r.device_id = Co2datadetails.co2_device_id']])
-            ->where(['Co2datadetails.co2_device_id LIKE' => $dev_name, 'Co2datadetails.time_measured >=' => $starttime, 'Co2datadetails.time_measured <=' => $endtime])
+            ->where(['Co2datadetails.co2_device_id LIKE' => $dev_name, 'Co2datadetails.time_measured >=' => $history_date.' 00:00:00', 'Co2datadetails.time_measured <=' => $history_date.' 23:59:59'])
             ->order(['co2_device_id' => 'ASC', 'time_measured' => 'DESC']);
         $_serialize = 'csv_arr';
         $_header = ['ID', '装置名', '温度', '湿度', 'CO2', 'ノイズ', '測定時間', '部屋'];
