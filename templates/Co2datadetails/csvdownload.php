@@ -1,6 +1,10 @@
 <!-- CSV Custom Date Time Download -->
 <h2 class="text-center">CSV ダウンロード</h2>
 <div class="container-fluid">
+    <div class="error-container">
+        <?= $this->Flash->render() ?>
+        <?= $this->fetch('content') ?>
+    </div>
     <!-- Today Data Card -->
     <div class="card border border-primary my-4">
         <!-- Card Header -->
@@ -98,7 +102,7 @@
                     <div class="col-1"></div>
                     <div class="col-5 text-center">開始日付</div>
                     <div class="col-4 md-form">
-                        <input type="date" id="start-date" name="start-date" class="form-control">
+                        <input type="date" id="start-date" name="start-date" class="form-control" required>
                     </div>
                     <div class="col-2"></div>
                 </div>
@@ -108,7 +112,7 @@
                     <div class="col-1"></div>
                     <div class="col-5 text-center">終了日付</div>
                     <div class="col-4 md-form">
-                        <input type="date" id="end-date" name="end-date" class="form-control">
+                        <input type="date" id="end-date" name="end-date" class="form-control" required>
                     </div>
                     <div class="col-2"></div>
                 </div>
@@ -135,7 +139,7 @@
                     <div class="col-5 text-center">デバイスを選択</div>
                     <div class="col-4">
                         <!-- Option Select Dropdown -->
-                        <select class="form-control" name="select-device-history" id="select-device-history">
+                        <select class="form-control" name="select-device-history" id="select-device-history" required>
                             <!-- Device Number loop -->
                             <?php
                             $dev_num = 0;
@@ -159,16 +163,16 @@
                     <div class="col-5 text-center">履歴データを選択</div>
                     <div class="col-4">
                         <!-- Option Select Dropdown -->
-                        <select class="form-control" name="date-history" id="date-history">
-                            
+                        <select class="form-control" name="date-history" id="date-history" required>
+
                         </select>
                     </div>
-                <div class="col-2"></div>
+                    <div class="col-2"></div>
 
-                <!-- Export Download Button -->
-                <div class="text-center my-2">
-                    <input class="btn btn-primary" type="submit" value="エクスポート">
-                </div>
+                    <!-- Export Download Button -->
+                    <div class="text-center my-2">
+                        <input class="btn btn-primary" type="submit" value="エクスポート">
+                    </div>
             </form>
         </div>
     </div>
@@ -178,14 +182,14 @@
 <script>
     var history_data_list = histroy_data_string_split = [];
     var history_data_string = "";
-    <?php 
+    <?php
     foreach ($history_date_list_all as $value) {
-        foreach ($value as $key) { 
-        ?>
-            var history_data = history_data_list.push('<?php echo $key['co2_device_id'].'_'.$key['date']; ?>');
-        <?php
+        foreach ($value as $key) {
+    ?>
+            var history_data = history_data_list.push('<?php echo $key['co2_device_id'] . '_' . $key['date']; ?>');
+    <?php
         }
-    }?>
+    } ?>
 
     $("#select-device-history").change(function() {
         $("#date-history").empty();
@@ -203,7 +207,7 @@
                     "text": histroy_data_string_split[1]
                 }));
             }
-            
+
         }
-    });  
+    });
 </script>
