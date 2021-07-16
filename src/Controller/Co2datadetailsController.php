@@ -31,7 +31,7 @@ class Co2datadetailsController extends AppController
 
     public function index()
     {
-        // Table data   
+        // Table data
         $connection = ConnectionManager::get('default');
 
         $devices = $connection->execute("SELECT c.co2_device_id AS device, c.temperature, c.humidity, c.co2, c.noise, r.room_no AS room FROM Co2datadetails c JOIN Room_Info r ON c.co2_device_id = r.device_id, (SELECT cc.id, cc.co2_device_id, MAX(cc.time_measured) AS maxDate FROM Co2datadetails cc GROUP BY cc.co2_device_id) my WHERE c.co2_device_id=my.co2_device_id AND c.time_measured=my.maxDate AND c.time_measured >= CURDATE();")->fetchAll('assoc');
@@ -151,24 +151,24 @@ class Co2datadetailsController extends AppController
             ->group(['co2_device_id'])
             ->order(['co2_device_id' => 'ASC'])
             ->toArray();
-        
+
         foreach ($device_number_all as $row) {
-            
-            // Date But Not Time Format Query   
+
+            // Date But Not Time Format Query
             $connection = ConnectionManager::get('default');
 
             $history_date_list = $connection
-            ->execute("SELECT DATE_FORMAT(time_measured, '%Y-%m-%d') as date, co2_device_id 
-                FROM Co2datadetails 
-                WHERE co2_device_id = '".$row->co2_device_id."'
+                ->execute("SELECT DATE_FORMAT(time_measured, '%Y-%m-%d') as date, co2_device_id
+                FROM Co2datadetails
+                WHERE co2_device_id = '" . $row->co2_device_id . "'
                 GROUP BY date
                 ORDER BY date DESC;")
-            ->fetchAll('assoc');
+                ->fetchAll('assoc');
 
             // array push for each device
             array_push($history_date_list_all, $history_date_list);
         }
-        
+
         // foreach ($history_date_list_all as $value) {
         //     foreach ($value as $key) {
         //         echo $key['co2_device_id'];
@@ -192,25 +192,24 @@ class Co2datadetailsController extends AppController
         $starttime = $this->request->getQuery('start-time');
         $endtime = $this->request->getQuery('end-time');
         $dev_name = $this->request->getQuery('select-device-today');
-
         // csv file download name
         $this->response = $this->response->withDownload('today_data.csv');
-
-        // csv file query
-        $csv_arr = $this->Co2datadetails->find()
-            ->select(['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room' => 'r.room_no'])
-            ->join(['r' => ['table' => 'Room_Info', 'type' => 'INNER', 'conditions' => 'r.device_id = Co2datadetails.co2_device_id']])
-            ->where(['Co2datadetails.co2_device_id LIKE' => $dev_name, 'Co2datadetails.time_measured >=' => $currentDateTime.' '.$starttime, 'Co2datadetails.time_measured <=' => $currentDateTime.' '.$endtime])
-            ->order(['co2_device_id' => 'ASC', 'time_measured' => 'DESC']);
-        $_serialize = 'csv_arr';
-        $_header = ['ID', '装置名', '温度', '湿度', 'CO2', 'ノイズ', '測定時間', '部屋'];
-        $_extract = ['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room'];
-
-        $this->viewBuilder()->setClassName('CsvView.Csv');
-
-        // downloading file
+        if ($starttime <= $endtime) {
+            // csv file query
+            $csv_arr = $this->Co2datadetails->find()
+                ->select(['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room' => 'r.room_no'])
+                ->join(['r' => ['table' => 'Room_Info', 'type' => 'INNER', 'conditions' => 'r.device_id = Co2datadetails.co2_device_id']])
+                ->where(['Co2datadetails.co2_device_id LIKE' => $dev_name, 'Co2datadetails.time_measured >=' => $currentDateTime . ' ' . $starttime . ':00', 'Co2datadetails.time_measured <=' => $currentDateTime . ' ' . $endtime . ':59'])
+                ->order(['co2_device_id' => 'ASC', 'time_measured' => 'DESC']);
+            $_serialize = 'csv_arr';
+            $_header = ['ID', '装置名', '温度', '湿度', 'CO2', 'ノイズ', '測定時間', '部屋'];
+            $_extract = ['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room'];
+            $this->viewBuilder()->setClassName('CsvView.Csv');
+        } else {
+            $this->Flash->error(__('開始時間は終了時間よりも早くなければなりません。'));
+            return $this->redirect(['action' => 'csvdownload']);
+        }
         $this->set(compact('csv_arr', '_serialize', '_header', '_extract'));
-
     }
 
     // CSV Download Date Function
@@ -226,22 +225,24 @@ class Co2datadetailsController extends AppController
 
         // csv file download name
         $this->response = $this->response->withDownload('report_data.csv');
+        if ($startdate <= $enddate) {
+            // csv file query
+            $csv_arr = $this->Co2datadetails->find()
+                ->select(['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room' => 'r.room_no'])
+                ->join(['r' => ['table' => 'Room_Info', 'type' => 'INNER', 'conditions' => 'r.device_id = Co2datadetails.co2_device_id']])
+                ->where(['Co2datadetails.co2_device_id LIKE' => $dev_name, 'Co2datadetails.time_measured >=' => $startdate . ' 00:00:00', 'Co2datadetails.time_measured <=' => $enddate . ' 23:59:59'])
+                ->order(['co2_device_id' => 'ASC', 'time_measured' => 'DESC']);
+            $_serialize = 'csv_arr';
+            $_header = ['ID', '装置名', '温度', '湿度', 'CO2', 'ノイズ', '測定時間', '部屋'];
+            $_extract = ['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room'];
 
-        // csv file query
-        $csv_arr = $this->Co2datadetails->find()
-            ->select(['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room' => 'r.room_no'])
-            ->join(['r' => ['table' => 'Room_Info', 'type' => 'INNER', 'conditions' => 'r.device_id = Co2datadetails.co2_device_id']])
-            ->where(['Co2datadetails.co2_device_id LIKE' => $dev_name, 'Co2datadetails.time_measured >=' => $startdate.' 00:00:00', 'Co2datadetails.time_measured <=' => $enddate.' 23:59:59'])
-            ->order(['co2_device_id' => 'ASC', 'time_measured' => 'DESC']);
-        $_serialize = 'csv_arr';
-        $_header = ['ID', '装置名', '温度', '湿度', 'CO2', 'ノイズ', '測定時間', '部屋'];
-        $_extract = ['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room'];
-
-        $this->viewBuilder()->setClassName('CsvView.Csv');
-
+            $this->viewBuilder()->setClassName('CsvView.Csv');
+        } else {
+            $this->Flash->error(__('開始日は必ず終了日よりも早くなければなりません。'));
+            return $this->redirect(['action' => 'csvdownload']);
+        }
         // downloading file
         $this->set(compact('csv_arr', '_serialize', '_header', '_extract'));
-
     }
 
     public function csvhistory()
@@ -257,7 +258,7 @@ class Co2datadetailsController extends AppController
         $csv_arr = $this->Co2datadetails->find()
             ->select(['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room' => 'r.room_no'])
             ->join(['r' => ['table' => 'Room_Info', 'type' => 'INNER', 'conditions' => 'r.device_id = Co2datadetails.co2_device_id']])
-            ->where(['Co2datadetails.co2_device_id LIKE' => $dev_name, 'Co2datadetails.time_measured >=' => $history_date.' 00:00:00', 'Co2datadetails.time_measured <=' => $history_date.' 23:59:59'])
+            ->where(['Co2datadetails.co2_device_id LIKE' => $dev_name, 'Co2datadetails.time_measured >=' => $history_date . ' 00:00:00', 'Co2datadetails.time_measured <=' => $history_date . ' 23:59:59'])
             ->order(['co2_device_id' => 'ASC', 'time_measured' => 'DESC']);
         $_serialize = 'csv_arr';
         $_header = ['ID', '装置名', '温度', '湿度', 'CO2', 'ノイズ', '測定時間', '部屋'];
@@ -328,7 +329,7 @@ class Co2datadetailsController extends AppController
         $query_var_two = "";
         $query_arr = [];
 
-        // variable assign 
+        // variable assign
         for ($i = 0; $i < $dev_num; $i++) {
             if ($row_num == $i) $query_var_one = $query_var_one . ($i + 1);
             if ($col_num_one == 1) {
@@ -440,7 +441,7 @@ class Co2datadetailsController extends AppController
                     imagedestroy($img);
                 }
             }
-            //----------End Convert Json to Image 
+            //----------End Convert Json to Image
 
             //----------Line Message Notify
             $line_api = 'https://notify-api.line.me/api/notify';
