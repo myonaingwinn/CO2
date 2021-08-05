@@ -69,6 +69,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
     $builder->connect('/device_reg', ['controller' =>
     'RoomInfo', 'action' => 'add']);
     $builder->connect('/devices', ['controller' => 'RoomInfo', 'action' => 'index']);
+    $builder->connect('/userEdit', ['controller' => 'Users', 'action' => 'edit']);
     /*
     /*
      * Connect catchall routes for all controllers.
@@ -93,10 +94,10 @@ $routes->scope('/', function (RouteBuilder $builder) {
  * ```
  * $routes->scope('/api', function (RouteBuilder $builder) {
  *     // No $builder->applyMiddleware() here.
- *     
+ *
  *     // Parse specified extensions from URLs
  *     // $builder->setExtensions(['json', 'xml']);
- *     
+ *
  *     // Connect API actions here.
  * });
  * ```

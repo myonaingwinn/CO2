@@ -9,6 +9,8 @@ use Cake\I18n\Time;
 use Cake\Auth\DefaultPasswordHasher;
 use Cake\Mailer\Mailer;
 
+use function React\Promise\all;
+
 /**
  * Users Controller
  *
@@ -64,8 +66,8 @@ class UsersController extends AppController
             $userTable =  $this->loadModel('Users');;
             // if ($email == NULL) {
             //     $this->Flash->error(__('メールアドレスは入力必須項目です.'));
-            // } 
-            // else 
+            // }
+            // else
             if ($user = $userTable->find('all')->where(['email' => $email])->first()) {
 
                 $user->token = $token;
@@ -92,6 +94,7 @@ class UsersController extends AppController
     {
         if ($this->request->is('post')) {
             $hasher = new DefaultPasswordHasher();
+            $pass = $this->request->getData('PasswordType');
             //   $newpass = $hasher->hash($this->request->getData('password'));
             $newpass = $this->request->getData('password');
             $userTable = $this->loadModel('Users');
@@ -99,12 +102,16 @@ class UsersController extends AppController
             $user = $userTable->find('all')->where(['token' => $token])->first();
 
             $user->password = $newpass;
+            if ($pass == 'S') {
+                if ($userTable->save($user)) {
 
-            if ($userTable->save($user)) {
 
-                $this->Flash->success(__('パスワードが正常にリセットされました。新しいパスワードを使用してログインしてください。'));
-                // return $this->redirect(['action' => 'login']);
-                return $this->redirect($this->Auth->logout());
+                    $this->Flash->success(__('パスワードが正常にリセットされました。新しいパスワードを使用してログインしてください。'));
+                    // return $this->redirect(['action' => 'login']);
+                    return $this->redirect($this->Auth->logout());
+                }
+            } else if ($pass == 'W') {
+                $this->Flash->error(__('パスワードが弱い'));
             }
         }
     }
@@ -147,7 +154,7 @@ class UsersController extends AppController
         $user = $this->Users->newEmptyEntity();
         if ($this->request->is('post')) {
             $email = $this->request->getData('email');
-
+            $pass = $this->request->getData('PasswordType');
 
             $user_c = $this->Users->find()->where(['email' => $email])->count();
             if ($user_c >= 1) {
@@ -164,13 +171,16 @@ class UsersController extends AppController
 
                 $user->del_flg = 'N';
 
+                if ($pass == 'S') {
+                    if ($this->Users->save($user)) {
+                        $this->Flash->success(__('ユーザーが保存されました。'));
 
-                if ($this->Users->save($user)) {
-                    $this->Flash->success(__('ユーザーが保存されました。'));
-
-                    return $this->redirect(['action' => 'index']);
+                        return $this->redirect(['action' => 'index']);
+                    }
+                    $this->Flash->error(__('The user could not be saved. Please, try again.'));
+                } else if ($pass == 'W') {
+                    $this->Flash->error(__('パスワードが弱い'));
                 }
-                $this->Flash->error(__('The user could not be saved. Please, try again.'));
             }
         }
         $this->set(compact('user'));
@@ -183,7 +193,7 @@ class UsersController extends AppController
      * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function edit($id = null)
+    public function changeRole($id = null)
     { //change role
         $this->request->allowMethod('get');
         $roleData = $this->request->getQuery('role');
@@ -205,7 +215,28 @@ class UsersController extends AppController
         $data = $this->Users->find('all', array('conditions' => array('Users.del_flg' => 'N')));
         $users = $this->paginate($data);
         $this->set(compact('users'));
-        // return $this->redirect(['action' => 'index']); 
+        // return $this->redirect(['action' => 'index']);
+    }
+
+    //edit
+
+    public function edit($id = null)
+    {
+        $data = $this->Users->find('all', array('conditions' => [
+            'and' => ['Users.del_flg' => 'N'],
+            ['Users.id' => $id]
+        ]));
+        $users = $data->toArray();
+        $user = $users[0];
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $user = $this->Users->patchEntity($user, $this->request->getData());
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__('ユーザーが保存されました。'));
+                return $this->redirect('/users');
+            }
+            $this->Flash->error(__('ユーザーを保存できませんでした。 もう一度やり直してください。'));
+        }
+        $this->set(compact('user'));
     }
 
     /**

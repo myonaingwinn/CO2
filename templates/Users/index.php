@@ -10,24 +10,6 @@ $this->assign('title', 'ユーザー一覧');
         text-transform: capitalize;
     }
 
-    /*     #search {
-        width: 300px;
-        height: 40px;
-        border-radius: 5px;
-        margin-top: 30px;
-    } */
-
-    /*     .btn-user {
-        width: 120px;
-        height: 40px;
-        border-radius: 3px;
-        margin-left: 60%;
-    } */
-
-    /*     .searchArea {
-        margin-bottom: 20px;
-    } */
-
     select {
         width: 80px;
         height: 30px;
@@ -63,6 +45,7 @@ $this->assign('title', 'ユーザー一覧');
                     <th><?= $this->Paginator->sort('メールアドレス') ?></th>
                     <th><?= $this->Paginator->sort('最後ログインしたデート') ?></th>
                     <th><?= __('役割') ?></th>
+                    <th><?= __('処理') ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -80,23 +63,27 @@ $this->assign('title', 'ユーザー一覧');
                         <td><?= h($user->email) ?></td>
                         <td><?= h($user->last_login) ?></td>
                         <td>
-                            <select name="role" id="role-<?= $user->id ?>">
-                                <?php
-                                $role = $user->role;
-                                if ($role == 'A') {
-                                    echo
-                                    '<option value="A" selected>管理者</option>
-                                     <option value="U">ユーザー</option>';
-                                }
+                            <!-- <select name="role" id="role-<?= $user->id ?>"> -->
+                            <?php
+                            $role = $user->role;
+                            if ($role == 'A') {
+                                echo '管理者';
+                            }
 
-                                if ($role == 'U') {
-                                    echo
-                                    '<option value="A" selected>管理者</option>
-                                    <option value="U" selected>ユーザー</option>';
-                                }
-                                ?>
-                            </select>
+                            if ($role == 'U') {
+                                echo 'ユーザー';
+                            }
+                            ?>
+                            <!-- </select> -->
                             <input type="hidden" id="origin-<?= $user->id ?>" value=<?= $role ?>>
+                        </td>
+                        <td>
+                            <?= $this->Html->link(
+                                '<span class="fa fa-edit"></span><span class="sr-only">' . __('Edit') . '</span>',
+                                ['action' => 'edit', $user->id],
+                                ['escape' => false, 'title' => __('Edit')]
+                            ) ?>
+                            <!-- <a href="userEdit"><span><i class="fas fa-edit"></i></span></a> -->
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -137,7 +124,7 @@ $this->assign('title', 'ユーザー一覧');
                 role: data,
                 userID: user_id[1]
             },
-            url: "<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'edit']); ?>",
+            url: "<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'changeRole']); ?>",
             success: function(response) {
                 $('.table-responsive').html(response);
             }
