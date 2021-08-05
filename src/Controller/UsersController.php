@@ -26,6 +26,7 @@ class UsersController extends AppController
             if (!$user) {
                 $this->Flash->error(__('ユーザー名かパスワードが間違っています.'));
             } else {
+                date_default_timezone_set("Asia/Yangon");
                 $last_login = date("Y-m-d H:i:s");
 
                 $id = $user['id'];

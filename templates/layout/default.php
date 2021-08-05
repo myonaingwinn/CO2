@@ -160,6 +160,10 @@ $cakeDescription = 'CO2 ';
                     </li>
                     <!-- CSV Download Slide -->
                     <li class="sidenav-item">
+                        <a class="sidenav-link ripple-surface" href="http://localhost:8765/dashboard_graph" tabindex="-1">
+                            <i class="fas fa-chart-area fa-lg pr-2"></i><span>グラフダッシュボード</span></a>
+                    </li>
+                    <li class="sidenav-item">
                         <a class="sidenav-link ripple-surface" href="http://localhost:8765/csvdownloadslide" tabindex="-1">
                             <i class="fas fa-download fa-lg pr-2"></i><span>&ensp;CSVダウンロード</span></a>
                     </li>
@@ -185,6 +189,10 @@ $cakeDescription = 'CO2 ';
                     <li class="sidenav-item">
                         <a class="sidenav-link ripple-surface" href="http://localhost:8765/csvdownloadslide" tabindex="-1">
                             <i class="fas fa-download fa-lg pr-2"></i><span>&ensp;CSVダウンロード</span></a>
+                    </li>
+                    <li class="sidenav-item">
+                        <a class="sidenav-link ripple-surface" href="dashboard_graph" tabindex="-1">
+                            <i class="fas fa-chart-area fa-lg pr-2"></i><span>グラフダッシュボード</span></a>
                     </li>
                     <li class="sidenav-item">
                         <a class="sidenav-link ripple-surface" href="http://localhost:8765/forgotpassword" tabindex="-1">
