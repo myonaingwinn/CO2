@@ -53,10 +53,9 @@ $this->assign('title', 'デバイス一覧');
                         <td><?= h($roomInfo->address) ?></td>
                         <td><?= h($roomInfo->room_no) ?></td>
                         <td class="actions">
-                            <!-- <a href="/room-info/edit/<?= $roomInfo->device_id ?>"><i class="fas fa-edit"></i></a> -->
-                            <a href="#"><i class="fas fa-edit"></i></a>
-                            &ensp;
-                            <?= $this->Form->postLink('<i class="fa fa-trash text-danger"></i>', ['action' => 'delete', $roomInfo->device_id], ['escape' => false, 'confirm' => __('{0} を消去してもよろしいですか?', $roomInfo->device_id)]) ?>
+                            <a href="/device_edit/<?= $roomInfo->device_id ?>"><i class="fas fa-edit fa-lg"></i></a>
+                            &emsp;&ensp;
+                            <?= $this->Form->postLink('<i class="fa fa-trash text-danger fa-lg"></i>', ['action' => 'delete', $roomInfo->device_id], ['escape' => false, 'confirm' => __('{0} を消去してもよろしいですか?', $roomInfo->device_id)]) ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>

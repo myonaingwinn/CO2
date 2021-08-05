@@ -56,9 +56,9 @@
 <div id="graph3">Chart wil render here!</div>
 <hr><h4>Noise For All Device</h4>
 <div id="graph4">Chart wil render here!</div>
-<hr><h4>DvTest1 For All Data</h4>
+<hr><h4>Sensor1 For All Data</h4>
 <div id="graph5">Chart wil render here!</div>
-<hr><h4>DvTest2 For All Data</h4>
+<hr><h4>Sensor2 For All Data</h4>
 <div id="graph6">Chart wil render here!</div>
-<hr><h4>DvTest3 For All Data</h4>
+<hr><h4>Sensor3 For All Data</h4>
 <div id="graph7">Chart wil render here!</div>

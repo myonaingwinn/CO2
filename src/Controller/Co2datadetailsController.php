@@ -28,8 +28,8 @@ class Co2datadetailsController extends AppController
         echo json_encode($data);
         return $this->response;
     }
-    
-     public function index()
+
+    public function index()
     {
         // Table data   
         $connection = ConnectionManager::get('default');
@@ -74,7 +74,7 @@ class Co2datadetailsController extends AppController
         }
 
         $tempalldata = $humalldata = $co2alldata = $noisealldata = [];
-        $dname = "dvTest";
+        $dname = "Sensor";
         $i = 1;
 
         // data split with device loop
@@ -130,6 +130,109 @@ class Co2datadetailsController extends AppController
 
         // sent array data to template
         $this->set(compact('startdate', 'enddate'));
+    }
+
+    public function csvdownload()
+    {
+        // co2datadetail table query
+        $currentDateTime = date('Y-m-d H:m:s');
+        $history_date_list_all = [];
+
+        $device_number = $this->Co2datadetails->find()
+            ->select(['co2_device_id'])
+            ->where(['Co2datadetails.time_measured >=' => $currentDateTime])
+            ->group(['co2_device_id'])
+            ->order(['co2_device_id' => 'ASC'])
+            ->toArray();
+
+        $device_number_all = $this->Co2datadetails->find()
+            ->select(['co2_device_id'])
+            ->group(['co2_device_id'])
+            ->order(['co2_device_id' => 'ASC'])
+            ->toArray();
+        
+        foreach ($device_number_all as $row) {
+            $history_date_list = $this->Co2datadetails->find()
+                ->select(['co2_device_id', 'time_measured'])
+                ->where(['Co2datadetails.co2_device_id' => $row->co2_device_id])
+                ->group(['time_measured'])
+                ->order(['time_measured' => 'ASC'])
+                ->toArray();
+
+            // array push for each device
+            array_push($history_date_list_all, $history_date_list);
+        }
+        // foreach ($history_date_list_all as $value) {
+        //     foreach ($value as $key) {
+        //         echo $key->co2_device_id;
+        //         echo $key->time_measured;
+        //     }
+        // }
+
+        // sent array data to template
+        $this->set(compact('device_number', 'device_number_all'));
+    }
+
+    // CSV Download Time Function
+    public function csvtime()
+    {
+        // co2datadetail table query
+        $currentDateTime = date('Y-m-d');
+
+        // get value from query url
+        $starttime = $this->request->getQuery('start-time');
+        $endtime = $this->request->getQuery('end-time');
+        $dev_name = $this->request->getQuery('select-device');
+
+        // csv file download name
+        $this->response = $this->response->withDownload('today_data.csv');
+
+        // csv file query
+        $csv_arr = $this->Co2datadetails->find()
+            ->select(['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room' => 'r.room_no'])
+            ->join(['r' => ['table' => 'Room_Info', 'type' => 'INNER', 'conditions' => 'r.device_id = Co2datadetails.co2_device_id']])
+            ->where(['Co2datadetails.co2_device_id LIKE' => $dev_name, 'Co2datadetails.time_measured >=' => $currentDateTime.' '.$starttime, 'Co2datadetails.time_measured <=' => $currentDateTime.' '.$endtime])
+            ->order(['co2_device_id' => 'ASC', 'time_measured' => 'DESC']);
+        $_serialize = 'csv_arr';
+        $_header = ['ID', '装置名', '温度', '湿度', 'CO2', 'ノイズ', '測定時間', '部屋'];
+        $_extract = ['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room'];
+
+        $this->viewBuilder()->setClassName('CsvView.Csv');
+
+        // downloading file
+        $this->set(compact('csv_arr', '_serialize', '_header', '_extract'));
+
+    }
+
+    // CSV Download Date Function
+    public function csvdate()
+    {
+        // co2datadetail table query
+        $currentDateTime = date('H:m:s');
+
+        // get value from query url
+        $startdate = $this->request->getQuery('start-date');
+        $enddate = $this->request->getQuery('end-date');
+        $dev_name = $this->request->getQuery('select-device');
+
+        // csv file download name
+        $this->response = $this->response->withDownload('report_data.csv');
+
+        // csv file query
+        $csv_arr = $this->Co2datadetails->find()
+            ->select(['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room' => 'r.room_no'])
+            ->join(['r' => ['table' => 'Room_Info', 'type' => 'INNER', 'conditions' => 'r.device_id = Co2datadetails.co2_device_id']])
+            ->where(['Co2datadetails.co2_device_id LIKE' => $dev_name, 'Co2datadetails.time_measured >=' => $startdate.' 00:00:00', 'Co2datadetails.time_measured <=' => $enddate.' 23:59:59'])
+            ->order(['co2_device_id' => 'ASC', 'time_measured' => 'DESC']);
+        $_serialize = 'csv_arr';
+        $_header = ['ID', '装置名', '温度', '湿度', 'CO2', 'ノイズ', '測定時間', '部屋'];
+        $_extract = ['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room'];
+
+        $this->viewBuilder()->setClassName('CsvView.Csv');
+
+        // downloading file
+        $this->set(compact('csv_arr', '_serialize', '_header', '_extract'));
+
     }
 
     public function csv()
@@ -189,11 +292,11 @@ class Co2datadetailsController extends AppController
             array_push($co2, array($date[0], $row["co2_device_id"], $row["co2"]));
             array_push($noise, array($date[0], $row["co2_device_id"], $row["noise"]));
 
-            if ($row["co2_device_id"] == 'dvTest1')
+            if ($row["co2_device_id"] == 'Sensor1')
                 array_push($dv1, array($date[0], $row["temperature"], $row["humidity"], $row["co2"], $row["noise"], $row["co2_device_id"]));
-            if ($row["co2_device_id"] == 'dvTest2')
+            if ($row["co2_device_id"] == 'Sensor2')
                 array_push($dv2, array($date[0], $row["temperature"], $row["humidity"], $row["co2"], $row["noise"], $row["co2_device_id"]));
-            if ($row["co2_device_id"] == 'dvTest3')
+            if ($row["co2_device_id"] == 'Sensor3')
                 array_push($dv3, array($date[0], $row["temperature"], $row["humidity"], $row["co2"], $row["noise"], $row["co2_device_id"]));
 
             // number of device
@@ -213,7 +316,7 @@ class Co2datadetailsController extends AppController
         list($row, $row_num, $col, $col_num_one, $col_num_two, $graph, $dev_num) = explode("-", $id);
 
         // declare for query variable
-        $query_var_one = "dvTest";
+        $query_var_one = "Sensor";
         $query_var_two = "";
         $query_arr = [];
 
@@ -283,6 +386,7 @@ class Co2datadetailsController extends AppController
         // DATE_FORMAT(TS, '%d-%m-%y %h:%i:%s');
     }
 
+    //Line Message Function Notify()
     public function notify()
     {
 
@@ -309,24 +413,24 @@ class Co2datadetailsController extends AppController
             //----------End Create Json File
 
             //----------Convert Json to Image with Base64 Decoder
-
-
             $imgContents = file_get_contents(WWW_ROOT . '/graph/graphImg.json');
 
             $str_length = strlen($imgContents);
-            //37
-            $sparrow = substr($imgContents, 37, $str_length - 40);
-            $decoder = base64_decode($sparrow);
-            $img = imagecreatefromstring($decoder);
+            $img = "";
+            if ($str_length > 30) {
+                //37
+                $sparrow = substr($imgContents, 37, $str_length - 40);
+                $decoder = base64_decode($sparrow);
+                $img = imagecreatefromstring($decoder);
+                if (!$img) {
+                    die('base 64 value is not a valid image');
+                } else {
+                    header('Content-Type:image/jpeg');
 
-            if (!$img) {
-                die('base 64 value is not a valid image');
-            } else {
-                header('Content-Type:image/jpeg');
+                    imagejpeg($img, WWW_ROOT . '/graph/graphImage.jpeg');
 
-                imagejpeg($img, WWW_ROOT . '/graph/graphImage.jpeg');
-
-                imagedestroy($img);
+                    imagedestroy($img);
+                }
             }
             //----------End Convert Json to Image 
 
@@ -340,22 +444,29 @@ class Co2datadetailsController extends AppController
             $unit = $_POST['unit'];
             //$message = '<span style="color:red">' . $msg_type . '</span>' . ' 警告メッセージ';    //text max 1,000 charecter
             $message = "\n" . $dev_name . "の" . $msg_type . '.警告メッセージ' . "\n" . $msg_type . "値: " . $dev_value . $unit;
-            $image_thumbnail_url = 'https://dummyimage.com/1024x1024/f598f5/fff.jpg';  // max size 240x240px JPEG
-            $image_fullsize_url = 'https://dummyimage.com/1024x1024/844334/fff.jpg'; //max size 1024x1024px JPEG
+            if ($img != "") {
+                $image_thumbnail_url = 'https://dummyimage.com/1024x1024/f598f5/fff.jpg';  // max size 240x240px JPEG
+                $image_fullsize_url = 'https://dummyimage.com/1024x1024/844334/fff.jpg'; //max size 1024x1024px JPEG
 
-            $file_name_with_full_path = WWW_ROOT . '/graph/graphImage.jpeg';
+                $file_name_with_full_path = WWW_ROOT . '/graph/graphImage.jpeg';
 
-            $imageFile = curl_file_create($file_name_with_full_path);
-            $sticker_package_id = '';  // Package ID sticker
-            $sticker_id = '';    // ID sticker
-            $message_data = array(
-                'imageThumbnail' => $image_thumbnail_url,
-                'imageFullsize' => $image_fullsize_url,
-                'message' => $message,
-                'imageFile' => $imageFile,
-                'stickerPackageId' => $sticker_package_id,
-                'stickerId' => $sticker_id
-            );
+                $imageFile = curl_file_create($file_name_with_full_path);
+                $sticker_package_id = '';  // Package ID sticker
+                $sticker_id = '';    // ID sticker
+                $message_data = array(
+                    'imageThumbnail' => $image_thumbnail_url,
+                    'imageFullsize' => $image_fullsize_url,
+                    'message' => $message,
+                    'imageFile' => $imageFile,
+                    'stickerPackageId' => $sticker_package_id,
+                    'stickerId' => $sticker_id
+                );
+            } else {
+                $message_data = array(
+                    'message' => $message
+
+                );
+            }
 
             $headers = array('Method: POST', 'Content-type: multipart/form-data', 'Authorization: Bearer ' . $access_token);
             $ch = curl_init();
@@ -368,5 +479,5 @@ class Co2datadetailsController extends AppController
             //----------End Line Message Notify
 
         } //end of isset IF
-    }
+    } //end of Line message Function
 }
