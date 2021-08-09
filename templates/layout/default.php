@@ -168,6 +168,10 @@ $cakeDescription = 'CO2 ';
                             <i class="fas fa-lock fa-lg pr-2"></i><span>&ensp;パスワードを再設定する</span></a>
                     </li>
                     <li class="sidenav-item">
+                        <a class="sidenav-link ripple-surface" href="monitor" tabindex="-1">
+                            <i class="fas fa-desktop fa-lg pr-2"></i><span>&nbsp;モニター</span></a>
+                    </li>
+                    <li class="sidenav-item">
                         <a class="sidenav-link ripple-surface" href="logout" tabindex="-1">
                             <i class="fas fa-sign-out-alt text-danger fa-lg pr-2"></i><span>&nbsp;ログアウト</span></a>
                     </li>

@@ -54,6 +54,8 @@ $routes->scope('/', function (RouteBuilder $builder) {
      */
     $builder->connect('/dashboard', ['controller' => 'Co2datadetails', 'action' => 'index']);
     $builder->connect('/dashboard_plus', ['controller' => 'Co2datadetails', 'action' => 'view']);
+    $builder->connect('/monitor', ['controller' => 'Co2datadetails', 'action' => 'monitor']);
+    
 
     // $builder->connect('/pages/*', 'Pages::display');
 

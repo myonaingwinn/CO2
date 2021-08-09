@@ -163,8 +163,7 @@
                     <div class="col-5 text-center">履歴データを選択</div>
                     <div class="col-4">
                         <!-- Option Select Dropdown -->
-                        <select class="form-control" name="date-history" id="date-history" required>
-
+                        <select class="form-control" name="date-history" id="date-history" required disabled>
                         </select>
                     </div>
                     <div class="col-2"></div>
@@ -192,6 +191,7 @@
     } ?>
 
     $("#select-device-history").change(function() {
+        $("#date-history").prop('disabled', false);
         $("#date-history").empty();
         for (var index = 0; index < history_data_list.length; index++) {
             history_data_string = history_data_list[index].toString();
