@@ -31,7 +31,7 @@ class Co2datadetailsController extends AppController
 
     public function index()
     {
-        // Table data   
+        // Table data
         $connection = ConnectionManager::get('default');
 
         $devices = $connection->execute("SELECT c.co2_device_id AS device, c.temperature, c.humidity, c.co2, c.noise, r.room_no AS room FROM Co2datadetails c JOIN Room_Info r ON c.co2_device_id = r.device_id, (SELECT cc.id, cc.co2_device_id, MAX(cc.time_measured) AS maxDate FROM Co2datadetails cc GROUP BY cc.co2_device_id) my WHERE c.co2_device_id=my.co2_device_id AND c.time_measured=my.maxDate AND c.time_measured >= CURDATE();")->fetchAll('assoc');
@@ -134,6 +134,7 @@ class Co2datadetailsController extends AppController
 
     public function csvdownload()
     {
+        // date_default_timezone_set("Asia/Yangon");
         // co2datadetail table query
         $currentDateTime = date('Y-m-d H:m:s');
         $history_date_list_all = [];
@@ -150,27 +151,35 @@ class Co2datadetailsController extends AppController
             ->group(['co2_device_id'])
             ->order(['co2_device_id' => 'ASC'])
             ->toArray();
-        
+
         foreach ($device_number_all as $row) {
-            $history_date_list = $this->Co2datadetails->find()
-                ->select(['co2_device_id', 'time_measured'])
-                ->where(['Co2datadetails.co2_device_id' => $row->co2_device_id])
-                ->group(['time_measured'])
-                ->order(['time_measured' => 'ASC'])
-                ->toArray();
+
+            // Date But Not Time Format Query
+            $connection = ConnectionManager::get('default');
+
+            $history_date_list = $connection
+                ->execute("SELECT DATE_FORMAT(time_measured, '%Y-%m-%d') as date, co2_device_id
+                FROM Co2datadetails
+                WHERE co2_device_id = '" . $row->co2_device_id . "'
+                GROUP BY date
+                ORDER BY date DESC;")
+                ->fetchAll('assoc');
 
             // array push for each device
             array_push($history_date_list_all, $history_date_list);
         }
+
         // foreach ($history_date_list_all as $value) {
         //     foreach ($value as $key) {
-        //         echo $key->co2_device_id;
-        //         echo $key->time_measured;
+        //         echo $key['co2_device_id'];
+        //         echo ' // ';
+        //         echo $key['date'];
+        //         echo "<br>";
         //     }
         // }
 
         // sent array data to template
-        $this->set(compact('device_number', 'device_number_all'));
+        $this->set(compact('device_number', 'device_number_all', 'history_date_list_all'));
     }
 
     // CSV Download Time Function
@@ -182,26 +191,25 @@ class Co2datadetailsController extends AppController
         // get value from query url
         $starttime = $this->request->getQuery('start-time');
         $endtime = $this->request->getQuery('end-time');
-        $dev_name = $this->request->getQuery('select-device');
-
+        $dev_name = $this->request->getQuery('select-device-today');
         // csv file download name
         $this->response = $this->response->withDownload('today_data.csv');
-
-        // csv file query
-        $csv_arr = $this->Co2datadetails->find()
-            ->select(['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room' => 'r.room_no'])
-            ->join(['r' => ['table' => 'Room_Info', 'type' => 'INNER', 'conditions' => 'r.device_id = Co2datadetails.co2_device_id']])
-            ->where(['Co2datadetails.co2_device_id LIKE' => $dev_name, 'Co2datadetails.time_measured >=' => $currentDateTime.' '.$starttime, 'Co2datadetails.time_measured <=' => $currentDateTime.' '.$endtime])
-            ->order(['co2_device_id' => 'ASC', 'time_measured' => 'DESC']);
-        $_serialize = 'csv_arr';
-        $_header = ['ID', '装置名', '温度', '湿度', 'CO2', 'ノイズ', '測定時間', '部屋'];
-        $_extract = ['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room'];
-
-        $this->viewBuilder()->setClassName('CsvView.Csv');
-
-        // downloading file
+        if ($starttime <= $endtime) {
+            // csv file query
+            $csv_arr = $this->Co2datadetails->find()
+                ->select(['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room' => 'r.room_no'])
+                ->join(['r' => ['table' => 'Room_Info', 'type' => 'INNER', 'conditions' => 'r.device_id = Co2datadetails.co2_device_id']])
+                ->where(['Co2datadetails.co2_device_id LIKE' => $dev_name, 'Co2datadetails.time_measured >=' => $currentDateTime . ' ' . $starttime . ':00', 'Co2datadetails.time_measured <=' => $currentDateTime . ' ' . $endtime . ':59'])
+                ->order(['co2_device_id' => 'ASC', 'time_measured' => 'DESC']);
+            $_serialize = 'csv_arr';
+            $_header = ['ID', '装置名', '温度', '湿度', 'CO2', 'ノイズ', '測定時間', '部屋'];
+            $_extract = ['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room'];
+            $this->viewBuilder()->setClassName('CsvView.Csv');
+        } else {
+            $this->Flash->error(__('開始時間は終了時間よりも早くなければなりません。'));
+            return $this->redirect(['action' => 'csvdownload']);
+        }
         $this->set(compact('csv_arr', '_serialize', '_header', '_extract'));
-
     }
 
     // CSV Download Date Function
@@ -213,34 +221,35 @@ class Co2datadetailsController extends AppController
         // get value from query url
         $startdate = $this->request->getQuery('start-date');
         $enddate = $this->request->getQuery('end-date');
-        $dev_name = $this->request->getQuery('select-device');
+        $dev_name = $this->request->getQuery('select-device-report');
 
         // csv file download name
         $this->response = $this->response->withDownload('report_data.csv');
+        if ($startdate <= $enddate) {
+            // csv file query
+            $csv_arr = $this->Co2datadetails->find()
+                ->select(['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room' => 'r.room_no'])
+                ->join(['r' => ['table' => 'Room_Info', 'type' => 'INNER', 'conditions' => 'r.device_id = Co2datadetails.co2_device_id']])
+                ->where(['Co2datadetails.co2_device_id LIKE' => $dev_name, 'Co2datadetails.time_measured >=' => $startdate . ' 00:00:00', 'Co2datadetails.time_measured <=' => $enddate . ' 23:59:59'])
+                ->order(['co2_device_id' => 'ASC', 'time_measured' => 'DESC']);
+            $_serialize = 'csv_arr';
+            $_header = ['ID', '装置名', '温度', '湿度', 'CO2', 'ノイズ', '測定時間', '部屋'];
+            $_extract = ['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room'];
 
-        // csv file query
-        $csv_arr = $this->Co2datadetails->find()
-            ->select(['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room' => 'r.room_no'])
-            ->join(['r' => ['table' => 'Room_Info', 'type' => 'INNER', 'conditions' => 'r.device_id = Co2datadetails.co2_device_id']])
-            ->where(['Co2datadetails.co2_device_id LIKE' => $dev_name, 'Co2datadetails.time_measured >=' => $startdate.' 00:00:00', 'Co2datadetails.time_measured <=' => $enddate.' 23:59:59'])
-            ->order(['co2_device_id' => 'ASC', 'time_measured' => 'DESC']);
-        $_serialize = 'csv_arr';
-        $_header = ['ID', '装置名', '温度', '湿度', 'CO2', 'ノイズ', '測定時間', '部屋'];
-        $_extract = ['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room'];
-
-        $this->viewBuilder()->setClassName('CsvView.Csv');
-
+            $this->viewBuilder()->setClassName('CsvView.Csv');
+        } else {
+            $this->Flash->error(__('開始日は必ず終了日よりも早くなければなりません。'));
+            return $this->redirect(['action' => 'csvdownload']);
+        }
         // downloading file
         $this->set(compact('csv_arr', '_serialize', '_header', '_extract'));
-
     }
 
-    public function csv()
+    public function csvhistory()
     {
         // get value from query url
-        $starttime = $this->request->getQuery('start-time');
-        $endtime = $this->request->getQuery('end-time');
-        $dev_name = $this->request->getQuery('select-device');
+        $dev_name = $this->request->getQuery('select-device-history');
+        $history_date = $this->request->getQuery('date-history');
 
         // csv file download name
         $this->response = $this->response->withDownload('co2datadetails.csv');
@@ -249,7 +258,7 @@ class Co2datadetailsController extends AppController
         $csv_arr = $this->Co2datadetails->find()
             ->select(['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room' => 'r.room_no'])
             ->join(['r' => ['table' => 'Room_Info', 'type' => 'INNER', 'conditions' => 'r.device_id = Co2datadetails.co2_device_id']])
-            ->where(['Co2datadetails.co2_device_id LIKE' => $dev_name, 'Co2datadetails.time_measured >=' => $starttime, 'Co2datadetails.time_measured <=' => $endtime])
+            ->where(['Co2datadetails.co2_device_id LIKE' => $dev_name, 'Co2datadetails.time_measured >=' => $history_date . ' 00:00:00', 'Co2datadetails.time_measured <=' => $history_date . ' 23:59:59'])
             ->order(['co2_device_id' => 'ASC', 'time_measured' => 'DESC']);
         $_serialize = 'csv_arr';
         $_header = ['ID', '装置名', '温度', '湿度', 'CO2', 'ノイズ', '測定時間', '部屋'];
@@ -320,7 +329,7 @@ class Co2datadetailsController extends AppController
         $query_var_two = "";
         $query_arr = [];
 
-        // variable assign 
+        // variable assign
         for ($i = 0; $i < $dev_num; $i++) {
             if ($row_num == $i) $query_var_one = $query_var_one . ($i + 1);
             if ($col_num_one == 1) {
@@ -432,7 +441,7 @@ class Co2datadetailsController extends AppController
                     imagedestroy($img);
                 }
             }
-            //----------End Convert Json to Image 
+            //----------End Convert Json to Image
 
             //----------Line Message Notify
             $line_api = 'https://notify-api.line.me/api/notify';
@@ -480,4 +489,193 @@ class Co2datadetailsController extends AppController
 
         } //end of isset IF
     } //end of Line message Function
+
+    // all graph data dynamically show
+    public function monitor () {
+        
+        // Table data
+        $connection = ConnectionManager::get('default');
+
+        $devices = $connection->execute("SELECT c.co2_device_id AS device, c.temperature, c.humidity, c.co2, c.noise, r.room_no AS room FROM Co2datadetails c JOIN Room_Info r ON c.co2_device_id = r.device_id, (SELECT cc.id, cc.co2_device_id, MAX(cc.time_measured) AS maxDate FROM Co2datadetails cc GROUP BY cc.co2_device_id) my WHERE c.co2_device_id=my.co2_device_id AND c.time_measured=my.maxDate AND c.time_measured >= CURDATE();")->fetchAll('assoc');
+
+        $this->set(compact('devices'));
+
+        // co2datadetail table query
+        $currentDateTime = date('Y-m-d H:m:s');
+
+        $query = $this->Co2datadetails->find()
+            ->select(['co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room' => 'r.room_no'])
+            ->join(['r' => ['table' => 'Room_Info', 'type' => 'INNER', 'conditions' => 'r.device_id = Co2datadetails.co2_device_id']])
+            ->where(['Co2datadetails.time_measured >=' => $currentDateTime])
+            ->order(['co2_device_id' => 'ASC', 'time_measured' => 'DESC'])
+            ->limit(86400)
+            ->toArray();
+
+        // declare for each graph data array
+        $num_devices = $temp = $hum = $co2 = $noise = [];
+        $current_dev = $next_dev = '';
+
+        // data split with censor data loop
+        foreach ($query as $row) {
+            // time measured standard schema
+            $dateArr = (array) $row["time_measured"];
+            $dateStr = implode("", $dateArr);
+            $date = explode(".", $dateStr);
+
+            // array push for each graph
+            array_push($temp, array($date[0], $row["temperature"], $row["co2_device_id"]));
+            array_push($hum, array($date[0], $row["humidity"], $row["co2_device_id"]));
+            array_push($co2, array($date[0], $row["co2"], $row["co2_device_id"]));
+            array_push($noise, array($date[0], $row["noise"], $row["co2_device_id"]));
+
+            // number of device
+            $current_dev = $row["co2_device_id"];
+            if ($current_dev != $next_dev)
+                array_push($num_devices, array($row["co2_device_id"]));
+            $next_dev = $row["co2_device_id"];
+        }
+
+        $tempalldata = $humalldata = $co2alldata = $noisealldata = [];
+        $dname = "Sensor";
+        $i = 1;
+
+        // data split with device loop
+        for ($i; $i <= count($num_devices); $i++) {
+
+            ${"temp$i"} = ${"hum$i"} = ${"co2$i"} = ${"noise$i"} = [];
+
+            foreach ($temp as $tempdata) {
+                if ($tempdata[2] == $dname . $i)
+                    array_push(${"temp$i"}, $tempdata);
+            }
+            array_push($tempalldata, ${"temp$i"});
+
+            foreach ($hum as $humdata) {
+                if ($humdata[2] == $dname . $i)
+                    array_push(${"hum$i"}, $humdata);
+            }
+            array_push($humalldata, ${"hum$i"});
+
+            foreach ($co2 as $co2data) {
+                if ($co2data[2] == $dname . $i)
+                    array_push(${"co2$i"}, $co2data);
+            }
+            array_push($co2alldata, ${"co2$i"});
+
+            foreach ($noise as $noisedata) {
+                if ($noisedata[2] == $dname . $i)
+                    array_push(${"noise$i"}, $noisedata);
+            }
+            array_push($noisealldata, ${"noise$i"});
+        }
+
+        // sent array data to template
+        $this->set(compact('tempalldata', 'humalldata', 'co2alldata', 'noisealldata', 'num_devices'));
+        
+    }
+
+    // Monitor One Time Data Methods === 4
+    public function monitorTemp () {
+        $this->request->allowMethod('get');
+
+        $data = 0;
+
+        $type = $_GET['type'];
+        $device = $_GET['device'];
+
+        // assign variables query
+        $query = $this->Co2datadetails->find()
+            ->select(['type'  => $type, 'time_measured'])
+            ->where(['co2_device_id' => $device])
+            ->order(['time_measured' => 'DESC'])
+            ->first();
+
+        $time = json_encode($query->time_measured);
+        list($timedate, $timezone) = explode("+", $time);
+        list($date, $clock) = explode("T", $timedate);
+        $timeresult = $date . ' ' . $clock;
+        $data = $query->type;
+
+        echo $data . $timeresult;
+        return $this->response;
+        // DATE_FORMAT(TS, '%d-%m-%y %h:%i:%s');
+    }
+
+    public function monitorHum () {
+        $this->request->allowMethod('get');
+
+        $data = 0;
+
+        $type = $_GET['type'];
+        $device = $_GET['device'];
+
+        // assign variables query
+        $query = $this->Co2datadetails->find()
+            ->select(['type'  => $type, 'time_measured'])
+            ->where(['co2_device_id' => $device])
+            ->order(['time_measured' => 'DESC'])
+            ->first();
+
+        $time = json_encode($query->time_measured);
+        list($timedate, $timezone) = explode("+", $time);
+        list($date, $clock) = explode("T", $timedate);
+        $timeresult = $date . ' ' . $clock;
+        $data = $query->type;
+
+        echo $data . $timeresult;
+        return $this->response;
+        // DATE_FORMAT(TS, '%d-%m-%y %h:%i:%s');
+    }
+
+    public function monitorCo2 () {
+        $this->request->allowMethod('get');
+
+        $data = 0;
+
+        $type = $_GET['type'];
+        $device = $_GET['device'];
+
+        // assign variables query
+        $query = $this->Co2datadetails->find()
+            ->select(['type'  => $type, 'time_measured'])
+            ->where(['co2_device_id' => $device])
+            ->order(['time_measured' => 'DESC'])
+            ->first();
+
+        $time = json_encode($query->time_measured);
+        list($timedate, $timezone) = explode("+", $time);
+        list($date, $clock) = explode("T", $timedate);
+        $timeresult = $date . ' ' . $clock;
+        $data = $query->type;
+
+        echo $data . $timeresult;
+        return $this->response;
+        // DATE_FORMAT(TS, '%d-%m-%y %h:%i:%s');
+    }
+
+    public function monitorNoise () {
+        $this->request->allowMethod('get');
+
+        $data = 0;
+
+        $type = $_GET['type'];
+        $device = $_GET['device'];
+
+        // assign variables query
+        $query = $this->Co2datadetails->find()
+            ->select(['type'  => $type, 'time_measured'])
+            ->where(['co2_device_id' => $device])
+            ->order(['time_measured' => 'DESC'])
+            ->first();
+
+        $time = json_encode($query->time_measured);
+        list($timedate, $timezone) = explode("+", $time);
+        list($date, $clock) = explode("T", $timedate);
+        $timeresult = $date . ' ' . $clock;
+        $data = $query->type;
+
+        echo $data . $timeresult;
+        return $this->response;
+        // DATE_FORMAT(TS, '%d-%m-%y %h:%i:%s');
+    }
 }

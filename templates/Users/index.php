@@ -79,7 +79,7 @@ $this->assign('title', 'ユーザー一覧');
                         </td>
                         <td>
                             <?= $this->Html->link(
-                                '<span class="fa fa-edit"></span><span class="sr-only">' . __('Edit') . '</span>',
+                                '<span class="fa fa-edit fa-lg"></span><span class="sr-only">' . __('Edit') . '</span>',
                                 ['action' => 'edit', $user->id],
                                 ['escape' => false, 'title' => __('Edit')]
                             ) ?>
