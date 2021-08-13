@@ -1,129 +1,149 @@
 <?php
-// echo $this->Html->script('jquery.canvasjs.min.js');
-// echo $this->Html->script('canvasjs.min.js');
-echo $this->Html->script('canvasjs.stock.min.js');
+include("fusioncharts.php");
+echo $this->Html->script('fusioncharts/fusioncharts');
+foreach ($device_name as $devices) {
+	echo "<h2>$devices</h2>";
+	echo "<div id='chart-$devices'></div>";
+}
+$no = 0;
+
 ?>
 
-<!-- <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script> -->
-<style>
-a.canvasjs-chart-credit{
-	visibility: hidden;
-}
-h4{
-    margin-top: 60px;
-    text-align: center;
-    font-family: grapheme_strstr;
-    font-weight: bolder;
-}
-</style>
-<h4>ROOM TEMPERATURE</h4>
-<div id="chartContainer" style="height: 370px; width: 100%; margin-top:100px;"></div>
 
-<div id="ranNumber">
-<input type="hidden" id="getTemperature" value="<?php echo $temperature; ?>" />
-<input type="hidden" id="getTime" value="<?php echo $time; ?>" />
-</div>
+
+
+
 <script>
-window.onload = function() {
-   
+	'use strict';
 
-var initialNumberOfDataPoints = 700;
-var updateInterval =  2000;
-var dataPoints1 = [];
-var dataTime = <?php echo time();  ?>;
-var yValue1 = dataTime * 1000 - updateInterval * initialNumberOfDataPoints;
-var xValue = 150;
+	var schema = [{
+			"name": "Time",
+			"type": "date",
+			"format": "%Y-%m-%d %H:%M:%S"
+		},
+		{
+			"name": "Temperature",
+			"type": "number"
+		}, {
+			"name": "Humidity",
+			"type": "number"
+		}, {
+			"name": "Co2",
+			"type": "number"
+		}, {
+			"name": "Noise",
+			"type": "number"
+		}
+	]
 
-// for(let i = 0; i < hh; i++){
-// 	yValue1 += round(rand(-2, 2));
-// 	// array_push($dataPoints1, array("x" => 0, "y" => 0));
-// 	xValue += 2000;
-// }
- 
-var chart = new CanvasJS.Chart("chartContainer", {
-	zoomEnabled: true,
-	title: {
-		text: " "
-	},
-	axisX: {
-		title: "Time"
-	},
-	axisY:{
-        title: "Temperature",
-		suffix: "°"
-	}, 
-	toolTip: {
-		shared: true
-	},
-	legend: {
-		cursor:"pointer",
-		verticalAlign: "top",
-		fontSize: 22,
-		fontColor: "dimGrey",
-		itemclick : toggleDataSeries
-	},
-	data: [{ 
-			type: "line",
-			name: "Room A",
-			xValueType: "dateTime",
-			yValueFormatString: "#,### °C",
-			xValueFormatString: "hh:mm:ss TT",
-			showInLegend: true,
-			legendText: "{name} " + yValue1 + " watts",
-			dataPoints: dataPoints1
-		}]
-});
- 
-chart.render();
-setInterval(function(){ dataLoaded(); updateChart();}, updateInterval);
-chart.render();
-
-function toggleDataSeries(e) {
-	if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-		e.dataSeries.visible = false;
+	var sensorData = function sensorData(dev_name) {
+		var dataAjax = $.ajax({
+			type: "GET",
+			url: "<?= $this->Url->build(['controller' => 'UserGraphDisplay', 'action' => 'onetimedata']) ?>",
+			data: {
+				type: dev_name
+			},
+			dataType: 'text',
+			success: function(data) {
+				return (data);
+			},
+			error: function() {
+				return "Not Working!!!";
+			},
+			async: false,
+			headers: {
+				'X-CSRF-Token': $('meta[name="csrfToken"]').attr('content')
+			}
+		});
+		return dataAjax.responseText;
 	}
-	else {
-		e.dataSeries.visible = true;
-	}
-	chart.render();
-}
 
-function dataLoaded(){
-    var nValue1 = Math.floor((Math.random() * 10) + 1);
-    $.ajax({
-            method: 'get',
-            data: {
-                role: nValue1
-            },
-            url: "<?php echo $this->Url->build(['controller' => 'UserGraphDisplay', 'action' => 'edit']); ?>",
-            success: function(response) {
-                $('#ranNumber').html(response);
-            }
-			
-    });
-  }
- 
-function updateChart() {
-	var deltaY1, deltaY2;
-	xValue += updateInterval;
-	// adding random value
-	// yValue1 = Math.round($("#getTemperature").val());
-	// yValue1 = Math.round(gg);
-	yValue1 =  Math.round(2 + Math.random() *(-2-2));
-	// console.log(gg);
-    if(dataPoints1.length > 700){
-        dataPoints1.shift();
-    }
-	// pushing the new values
-	dataPoints1.push({
-		x: xValue,
-		y: yValue1
-	});
- 
-	// updating legend text with  updated with y Value 
-	chart.options.data[0].legendText = "Room A " + yValue1 + "°C";
-	chart.render();
-}
- 
-}
-</script>          
+
+	var fusionGraph = function fusionGraph(json_data, dev_name) {
+		// Fusioncharts data store
+		var dataStore = new FusionCharts.DataStore().createDataTable(json_data, schema);
+		// time series chart instance
+		var realtimeChart = new FusionCharts({
+			type: 'timeseries',
+			renderAt: 'chart-' + dev_name,
+			width: '100%',
+			height: '500',
+			dataSource: {
+				chart: {
+					theme: 'candy'
+				},
+				data: dataStore,
+				series: 'Type',
+				navigator: {
+					enabled: 0
+				},
+				legend: {
+					enabled: 0
+				}
+			},
+
+		});
+
+
+		var sensorData = function sensorData(dev_name) {
+			var dataAjax = $.ajax({
+				type: "GET",
+				url: "<?= $this->Url->build(['controller' => 'UserGraphDisplay', 'action' => 'onetimedata']) ?>",
+				data: {
+					type: dev_name
+				},
+				dataType: 'text',
+				success: function(data) {
+					return (data);
+				},
+				error: function() {
+					return "Not Working!!!";
+				},
+				async: false,
+				headers: {
+					'X-CSRF-Token': $('meta[name="csrfToken"]').attr('content')
+				}
+			});
+			return dataAjax.responseText;
+		}
+
+		realtimeChart.addEventListener("rendered", function(_ref) {
+			var realtimeChart = _ref.sender;
+			realtimeChart.incrementor = setInterval(function() {
+				var myArr = sensorData(dev_name).split("#");
+				var dTemperature = myArr[0];
+				var dHumidity = myArr[1];
+				var dCo2 = myArr[2];
+				var dNoise = myArr[3];
+				var ddate = myArr[4];
+				if (realtimeChart.feedData) {
+					realtimeChart.feedData([
+						[ddate, dTemperature, dHumidity, dCo2, dNoise]
+					]);
+				}
+				// realtimeChart.render();
+			}, 5000);
+		});
+
+
+
+
+		realtimeChart.addEventListener("disposed", function(eventObj) {
+			var chartRef = eventObj;
+			clearInterval(chartRef.incrementor);
+		})
+
+		realtimeChart.render();
+	}
+
+
+
+	var device_name = <?php echo json_encode($device_name); ?>;
+	var dev_data = <?php echo json_encode($device); ?>;
+	var x;
+	var dev_name;
+	var json_data;
+	for (x = 0; x < device_name.length; x++) {
+		fusionGraph(dev_data[x], device_name[x]);
+	}
+</script>

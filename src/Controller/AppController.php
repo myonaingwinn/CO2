@@ -64,12 +64,12 @@ class AppController extends Controller
                     ]
                 ]
             ],
-            
+
             'loginRedirect' => [
                 'controller' => 'Co2datadetails',
                 'action' => 'index'
             ],
-            
+
             'logoutRedirect' => [
                 'controller' => 'Users',
                 'action' => 'login'
@@ -101,9 +101,9 @@ class AppController extends Controller
             $this->set('Auser', $this->Auth->user());
 
             if ($this->Auth->user('role') == 'A') {
-                $this->Auth->allow(['index', 'logout', 'add', 'notify', 'search', 'edit', 'csv', 'view', 'detail', 'onetimedata']);
+                $this->Auth->allow(['index', 'logout', 'add', 'notify', 'search', 'edit', 'csv', 'view', 'detail', 'onetimedata', 'csvdownload', 'getData']);
             } else {
-                $this->Auth->allow(['index', 'logout', 'notify', 'csv', 'detail', 'onetimedata']);
+                $this->Auth->allow(['index', 'logout', 'notify', 'csv', 'detail', 'onetimedata', 'csvdownload', 'getData']);
             }
         } else {
             $this->set('Auser', null);
