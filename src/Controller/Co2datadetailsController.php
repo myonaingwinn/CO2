@@ -159,7 +159,7 @@ class Co2datadetailsController extends AppController
 
             $history_date_list = $connection
                 ->execute("SELECT DATE_FORMAT(time_measured, '%Y-%m-%d') as date, co2_device_id
-                FROM Co2datadetails
+                FROM Co2datadetails_history
                 WHERE co2_device_id = '" . $row->co2_device_id . "'
                 GROUP BY date
                 ORDER BY date DESC;")
@@ -209,64 +209,6 @@ class Co2datadetailsController extends AppController
             $this->Flash->error(__('開始時間は終了時間よりも早くなければなりません。'));
             return $this->redirect(['action' => 'csvdownload']);
         }
-        $this->set(compact('csv_arr', '_serialize', '_header', '_extract'));
-    }
-
-    // CSV Download Date Function
-    public function csvdate()
-    {
-        // co2datadetail table query
-        $currentDateTime = date('H:m:s');
-
-        // get value from query url
-        $startdate = $this->request->getQuery('start-date');
-        $enddate = $this->request->getQuery('end-date');
-        $dev_name = $this->request->getQuery('select-device-report');
-
-        // csv file download name
-        $this->response = $this->response->withDownload('report_data.csv');
-        if ($startdate <= $enddate) {
-            // csv file query
-            $csv_arr = $this->Co2datadetails->find()
-                ->select(['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room' => 'r.room_no'])
-                ->join(['r' => ['table' => 'Room_Info', 'type' => 'INNER', 'conditions' => 'r.device_id = Co2datadetails.co2_device_id']])
-                ->where(['Co2datadetails.co2_device_id LIKE' => $dev_name, 'Co2datadetails.time_measured >=' => $startdate . ' 00:00:00', 'Co2datadetails.time_measured <=' => $enddate . ' 23:59:59'])
-                ->order(['co2_device_id' => 'ASC', 'time_measured' => 'DESC']);
-            $_serialize = 'csv_arr';
-            $_header = ['ID', '装置名', '温度', '湿度', 'CO2', 'ノイズ', '測定時間', '部屋'];
-            $_extract = ['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room'];
-
-            $this->viewBuilder()->setClassName('CsvView.Csv');
-        } else {
-            $this->Flash->error(__('開始日は必ず終了日よりも早くなければなりません。'));
-            return $this->redirect(['action' => 'csvdownload']);
-        }
-        // downloading file
-        $this->set(compact('csv_arr', '_serialize', '_header', '_extract'));
-    }
-
-    public function csvhistory()
-    {
-        // get value from query url
-        $dev_name = $this->request->getQuery('select-device-history');
-        $history_date = $this->request->getQuery('date-history');
-
-        // csv file download name
-        $this->response = $this->response->withDownload('co2datadetails.csv');
-
-        // csv file query
-        $csv_arr = $this->Co2datadetails->find()
-            ->select(['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room' => 'r.room_no'])
-            ->join(['r' => ['table' => 'Room_Info', 'type' => 'INNER', 'conditions' => 'r.device_id = Co2datadetails.co2_device_id']])
-            ->where(['Co2datadetails.co2_device_id LIKE' => $dev_name, 'Co2datadetails.time_measured >=' => $history_date . ' 00:00:00', 'Co2datadetails.time_measured <=' => $history_date . ' 23:59:59'])
-            ->order(['co2_device_id' => 'ASC', 'time_measured' => 'DESC']);
-        $_serialize = 'csv_arr';
-        $_header = ['ID', '装置名', '温度', '湿度', 'CO2', 'ノイズ', '測定時間', '部屋'];
-        $_extract = ['id', 'co2_device_id', 'temperature', 'humidity', 'co2', 'noise', 'time_measured', 'room'];
-
-        $this->viewBuilder()->setClassName('CsvView.Csv');
-
-        // downloading file
         $this->set(compact('csv_arr', '_serialize', '_header', '_extract'));
     }
 

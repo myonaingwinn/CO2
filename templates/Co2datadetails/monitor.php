@@ -55,7 +55,7 @@
 
       var json_data = <?php echo json_encode($tempalldata[0]); ?>;
       
-      // update date & reload after 1000 mili seconds
+      // update date & reload after 10000 mili seconds
       var getNextRandomDate = function getNextRandomDate(d) {
         return new Date(new Date(d).getTime() + 10000);
       };
@@ -174,7 +174,7 @@
       
       var json_data = <?php echo json_encode($humalldata[0]); ?>;
       
-      // update date & reload after 1000 mili seconds
+      // update date & reload after 10000 mili seconds
       var getNextRandomDate = function getNextRandomDate(d) {
         return new Date(new Date(d).getTime() + 10000);
       };
@@ -293,7 +293,7 @@
       
       var json_data = <?php echo json_encode($co2alldata[0]); ?>;
       
-      // update date & reload after 1000 mili seconds
+      // update date & reload after 10000 mili seconds
       var getNextRandomDate = function getNextRandomDate(d) {
         return new Date(new Date(d).getTime() + 10000);
       };
@@ -412,9 +412,9 @@
       
       var json_data = <?php echo json_encode($noisealldata[0]); ?>;
       
-      // update date & reload after 1000 mili seconds
+      // update date & reload after 10000 mili seconds
       var getNextRandomDate = function getNextRandomDate(d) {
-        return new Date(new Date(d).getTime() + 10000);
+        return new Date(new Date(d).getTime() + 100000);
       };
 
       var fd = function fd(d) {

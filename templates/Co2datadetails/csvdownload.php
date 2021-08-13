@@ -72,7 +72,7 @@
         <!-- Card Body -->
         <div class="card-body">
             <!-- Form Action -->
-            <form action="co2datadetails/csvdate/" method="get">
+            <form action="co2datadetailshistory/csvdate/" method="get">
                 <!-- First Row // Select Device -->
                 <div class="row">
                     <div class="col-1"></div>
@@ -102,7 +102,7 @@
                     <div class="col-1"></div>
                     <div class="col-5 text-center">開始日付</div>
                     <div class="col-4 md-form">
-                        <input type="date" id="start-date" name="start-date" class="form-control" required>
+                        <input type="date" id="start-date" name="start-date" class="form-control" required >
                     </div>
                     <div class="col-2"></div>
                 </div>
@@ -132,7 +132,7 @@
         <!-- Card Body -->
         <div class="card-body">
             <!-- Form Action -->
-            <form action="co2datadetails/csvhistory/" method="get">
+            <form action="co2datadetailshistory/csvhistory/" method="get">
                 <!-- First Row // Select Device -->
                 <div class="row">
                     <div class="col-1"></div>
